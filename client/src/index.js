@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+// Using BrowserRouter to keep UI in sync with the URL (responsive design)
 import {BrowserRouter} from "react-router-dom";
 
 ReactDOM.render(
