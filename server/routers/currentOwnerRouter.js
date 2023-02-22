@@ -37,4 +37,4 @@ router.get(`/relationship/:relationship`, async (req, res) => {
     res.send(farmMatches);
 })
 
-export default router;
+module.exports = router;
