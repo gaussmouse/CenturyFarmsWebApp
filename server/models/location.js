@@ -1,4 +1,6 @@
-import mongoose from 'mongoose';
+'use strict';
+
+const mongoose = require("mongoose");
 
 const locationSchema = mongoose.Schema({
     locationID: Number,
@@ -11,4 +13,4 @@ const locationSchema = mongoose.Schema({
 
 const Location = mongoose.model('Location', locationSchema);
 
-export default Location;
+module.exports = Location;

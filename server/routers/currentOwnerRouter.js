@@ -1,3 +1,5 @@
+'use strict';
+
 const express = require("express");
 const CurrentOwner = require("../models/currentOwner.js");
 const router = express.Router();

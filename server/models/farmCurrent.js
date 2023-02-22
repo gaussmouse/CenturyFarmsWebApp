@@ -1,4 +1,6 @@
-import mongoose from 'mongoose';
+'use strict';
+
+const mongoose = require("mongoose");
 
 const farmCurrentSchema = mongoose.Schema({
     farmCurrentID: Number,
@@ -11,4 +13,4 @@ const farmCurrentSchema = mongoose.Schema({
 
 const FarmCurrent = mongoose.model('FarmCurrent', farmCurrentSchema);
 
-export default FarmCurrent;
+module.exports = FarmCurrent;

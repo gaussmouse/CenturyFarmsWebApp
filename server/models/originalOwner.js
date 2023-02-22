@@ -1,4 +1,6 @@
-import mongoose from 'mongoose';
+'use strict';
+
+const mongoose = require("mongoose");
 
 const originalOwnerSchema = mongoose.Schema({
     originalOwnerID: Number,
@@ -9,4 +11,4 @@ const originalOwnerSchema = mongoose.Schema({
 
 const OriginalOwner = mongoose.model('OriginalOwner', originalOwnerSchema);
 
-export default OriginalOwner;
+module.exports = originalOwner;

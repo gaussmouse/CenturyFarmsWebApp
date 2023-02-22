@@ -1,5 +1,7 @@
-import express from 'express';
-import FarmPast from '../models/farmPast.js';
+'use strict';
+
+const express = require("express");
+const FarmPast = require('../models/farmPast.js');
 const router = express.Router();
 
 //Get all current farm info
@@ -40,4 +42,4 @@ router.get(`/originalLivestock/:livestockid`, async (req, res) => {
     res.send(farmMatches);
 })
 
-export default router;
+module.exports = router;

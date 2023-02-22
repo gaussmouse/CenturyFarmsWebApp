@@ -1,5 +1,7 @@
-import express from 'express';
-import Location from '../models/location.js';
+'use strict';
+
+const express = require("express");
+const Location = require('../models/location.js');
 const router = express.Router();
 
 //Get all locations
@@ -53,4 +55,4 @@ router.get(`/legalDesc/:legal`, async (req, res) => {
     res.send(farmMatches);
 })
 
-export default router;
+module.exports = router;

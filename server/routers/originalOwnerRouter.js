@@ -1,5 +1,7 @@
-import express from 'express';
-import OriginalOwner from '../models/originalOwner.js';
+'use strict';
+
+const express = require("express");
+const OriginalOwner = require('../models/originalOwner.js');
 const router = express.Router();
 
 //Get all original owners
@@ -45,4 +47,4 @@ router.get(`/ethnicOrigin/:origin`, async (req, res) => {
     res.send(farmMatches);
 })
 
-export default router;
+module.exports = router;
