@@ -7,9 +7,9 @@ import * as React from 'react';
 // Use Route and Routes to define different application routes
 import { Route, Routes } from "react-router-dom";
 // Import needed components for routings
-import Wrapper from './reactComponents/Wrapper';
-import FarmPage from "./reactComponents/FarmPage";
-import FarmsMap from "./reactComponents/FarmsMap";
+//import Wrapper from './reactComponents/Wrapper';
+import FarmsPage from "./components/FarmsPage";
+//import FarmsMap from "./reactComponents/FarmsMap";
 
 // Application component routing
 // Home page is a map with an overlaid search bar
@@ -19,10 +19,7 @@ const App = () => {
   return (
     <div>
         <Routes>
-          <Route path="/" element={<Wrapper />}>
-              <Route index element={<FarmsMap />}/>
-          </Route>
-          <Route path="" element={<FarmPage />}/>
+          <Route path="/" element={<FarmsPage />}/>
         </Routes>
     </div>
   )
