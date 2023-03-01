@@ -2,9 +2,9 @@ import React, {useRef, useState, useEffect} from 'react';
 import mapboxgl from '!mapbox-gl'; // eslint-disable-line import/no-webpack-loader-syntax
 import geoJson from "../farms.json";
 
-const mapboxPrivateToken = await fetch('http://localhost:5000/map-data');
+// const mapboxPrivateToken = await fetch('http://localhost:5000/map-data');
 
-mapboxgl.accessToken = mapboxPrivateToken; // not sure if this format works, token previously pasted directly in
+mapboxgl.accessToken = "add token here"; // not sure if this format works, token previously pasted directly in
 
 export default function FarmsMap () {
   const mapContainer = useRef(null);
