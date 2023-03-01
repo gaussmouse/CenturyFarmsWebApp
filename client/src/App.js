@@ -18,12 +18,15 @@ import FarmsMap from "./components/FarmsMap";
 const App = () => {
   return (
     <div>
-        <Routes>
-          <Route path="/" element={<FarmsMap />}/>
-        </Routes>
+      <FarmsMap />
+      <FarmsPage />
     </div>
   )
 }
+
+//<Routes>
+//<Route path="/" element={<FarmsMap />}/>
+//</Routes>
 
 // <Route path="/" element={<FarmsPage />}/>
 
