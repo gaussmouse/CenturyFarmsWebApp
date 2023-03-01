@@ -79,7 +79,8 @@
 // //     console.log(`Server is running on port: ${port}`);
 // //   });
 import * as dotenv from 'dotenv'; 
-dotenv.config();
+dotenv.config({ path: "./config.env" });
+
 
 import express from 'express';
 import bodyParser from 'body-parser';
@@ -119,7 +120,6 @@ app.use(`/currentOwner`, currentOwnerRouter);
 mongoose.connect(connection_string, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
-    //strictQuery: true,
     dbName: 'CFDB'
 })
 .then(() =>{
