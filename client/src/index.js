@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import 'mapbox-gl/dist/mapbox-gl.css';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
@@ -13,7 +14,7 @@ root.render(
     <BrowserRouter>
       <App />
     </BrowserRouter>
-  </React.StrictMode>,
+  </React.StrictMode>
 );
 
 // const root = ReactDOM.createRoot(document.getElementById('root'));
