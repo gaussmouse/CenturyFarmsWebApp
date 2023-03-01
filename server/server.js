@@ -100,9 +100,10 @@ const app = express();
 app.use(cors());
 app.options('*', cors());
 
-const api = process.env.API_URL;
+//const api = process.env.API_URL;
 const connection_string = process.env.ATLAS_URI;
 
+const mapbox_token = process.env.REACT_APP_MAPBOX_ACCESS_KEY;
 
 app.use(bodyParser.json());
 app.use(morgan('tiny'));
@@ -128,8 +129,12 @@ mongoose.connect(connection_string, {
     console.log(err);
 })
 
+app.get('/map-data', async (res) => {
+    const response = await fetch(mapbox_token);
+    const mapboxPrivateToken = response.json();
+    res.json({mapboxPrivateToken});
+})
 
 app.listen(5000, ()=>{
-    console.log(api);
     console.log('Server is running on port 5000');
 })
