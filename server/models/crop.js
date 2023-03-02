@@ -1,6 +1,6 @@
 'use strict';
 
-const mongoose = require("mongoose");
+import mongoose from 'mongoose';
 
 const cropSchema = mongoose.Schema({
     cropID: Number,
@@ -9,4 +9,4 @@ const cropSchema = mongoose.Schema({
 
 const Crop = mongoose.model('Crop', cropSchema);
 
-module.exports = Crop;
+export default Crop;

@@ -1,7 +1,7 @@
 'use strict';
 
-const express = require("express");
-const Livestock = require('../models/livestock.js');
+import express from 'express';
+import Livestock from '../models/livestock.js';
 const router = express.Router();
 
 //Get all livestock
@@ -27,4 +27,4 @@ router.get(`/name/:name`, async (req, res) => {
     res.send(livestock);
 })
 
-module.exports = router;
+export default router;

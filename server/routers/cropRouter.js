@@ -1,9 +1,8 @@
 'use strict';
 
-const express = require("express");
-const Crop = require("../models/crop.js");
+import express from 'express';
+import Crop from '../models/crop.js';
 const router = express.Router();
-
 
 //Get all crops
 router.get(`/`, async (req, res) => {
@@ -29,4 +28,4 @@ router.get(`/name/:name`, async (req, res) => {
     res.send(crop);
 })
 
-module.exports = router;
+export default router;

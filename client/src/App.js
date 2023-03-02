@@ -7,8 +7,8 @@ import * as React from 'react';
 // Use Route and Routes to define different application routes
 import { Route, Routes } from "react-router-dom";
 // Import needed components for routings
-//import Wrapper from './reactComponents/Wrapper';
-import FarmsPage from "./components/FarmsPage";
+//import Wrapper from './components/Wrapper';
+import FarmPage from "./components/FarmsPage";
 import FarmsMap from "./components/FarmsMap";
 
 // Application component routing
@@ -16,11 +16,11 @@ import FarmsMap from "./components/FarmsMap";
 // TODO: routing to individual farms
 // TODO: redo inheritance of "navigation" variable into Wrapper, FarmsPage
 const App = () => {
-  return (
-    <div>
-      <FarmsMap />
-      <FarmsPage />
-    </div>
+  return(
+    <Routes>
+        <Route path="/" element={<FarmsMap />}/> 
+        <Route path="/farms" element={<FarmPage />}/>
+    </Routes>
   )
 }
 

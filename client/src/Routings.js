@@ -14,7 +14,7 @@ const Routings = () => (
         <Route path="/" element={<Wrapper />}>
             <Route index element={<FarmsMap />}/>
         </Route>
-        <Route path="" element={<FarmPage />}/>
+        <Route path="/farms" element={<FarmPage />}/>
     </Routes>
 )
 

@@ -1,6 +1,6 @@
 'use strict';
 
-const mongoose = require("mongoose");
+import mongoose from 'mongoose';
 
 const farmDescriptionSchema = mongoose.Schema({
     farmPastID: Number,
@@ -15,4 +15,4 @@ const farmDescriptionSchema = mongoose.Schema({
 
 const FarmDescription = mongoose.model('FarmDescription', farmDescriptionSchema);
 
-module.exports = FarmDescription;
+export default FarmDescription;

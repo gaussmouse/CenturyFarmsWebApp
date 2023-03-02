@@ -1,7 +1,7 @@
 'use strict';
 
-const express = require("express");
-const FarmDescription = require('../models/farmDescription.js');
+import express from 'express';
+import FarmDescription from '../models/farmDescription.js';
 const router = express.Router();
 
 //Get all farm descriptions
@@ -73,4 +73,4 @@ router.get(`/award/:name`, async (req, res) => {
     res.send(farmMatches);
 })
 
-module.exports = router;
+export default router;

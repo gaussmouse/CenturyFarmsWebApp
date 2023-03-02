@@ -1,6 +1,6 @@
 'use strict';
 
-const mongoose = require("mongoose");
+import mongoose from 'mongoose';
 
 const livestockSchema = mongoose.Schema({
     livestockID: Number,
@@ -9,4 +9,4 @@ const livestockSchema = mongoose.Schema({
 
 const Livestock = mongoose.model('Livestock', livestockSchema);
 
-module.exports = Livestock;
+export default Livestock;

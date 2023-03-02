@@ -4,7 +4,7 @@ import geoJson from "../farms.json";
 
 // const mapboxPrivateToken = await fetch('http://localhost:5000/map-data');
 
-mapboxgl.accessToken = "add token here"; // not sure if this format works, token previously pasted directly in
+mapboxgl.accessToken = "token here"; // not sure if this format works, token previously pasted directly in
 
 export default function FarmsMap () {
   const mapContainer = useRef(null);
@@ -38,7 +38,11 @@ export default function FarmsMap () {
       Longitude: {lng} | Latitude: {lat} | Zoom: {zoom}
       </div>
       <div ref={mapContainer} className="map-container" />
+      <a href="/farms">
+         Click Here to Redirect to Farms page
+    </a>
     </div>
+    
   );
 }
 
