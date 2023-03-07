@@ -4,6 +4,8 @@
 // TODO: Convert mobile "StyleSheet" inside react-components to .css file or start fresh
 //import './App.css';
 import * as React from 'react';
+/// mapbox styling
+import 'mapbox-gl/dist/mapbox-gl.css';
 // Use Route and Routes to define different application routes
 import { Route, Routes } from "react-router-dom";
 // Import needed components for routings
@@ -23,11 +25,5 @@ const App = () => {
     </Routes>
   )
 }
-
-//<Routes>
-//<Route path="/" element={<FarmsMap />}/>
-//</Routes>
-
-// <Route path="/" element={<FarmsPage />}/>
 
 export default App;
