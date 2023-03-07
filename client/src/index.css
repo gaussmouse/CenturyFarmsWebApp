@@ -1,5 +1,9 @@
 .map-container {
-  height: 400px;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
 }
 
 .sidebar {
@@ -10,7 +14,34 @@
   z-index: 1;
   position: absolute;
   top: 0;
+  bottom: 0;
   left: 0;
   margin: 12px;
+  overflow: hidden;
   border-radius: 4px;
+}
+
+.heading {
+  border-bottom: 1px solid #eee;
+  text-align: center;
+  height: 60px;
+  line-height: 60px;
+  padding: 0 5px;
+}
+
+h1 {
+  font-size: 22px;
+  margin: 0;
+  font-weight: 400;
+  line-height: 20px;
+  padding: 20px 2px;
+}
+
+a {
+  color: #404040;
+  text-decoration: none;
+}
+
+a:hover {
+  color: #101010;
 }
