@@ -95,19 +95,20 @@ const PastDataTab = () => {
           data={fahrenheitMinTemps}
           style={{data: {stroke: "blue", strokeWidth: 0.25}}}
           />
-         <VictoryLegend x={230} y={10}
+         <VictoryLegend x={295} y={50}
             orientation="vertical"
-            gutter={20}
-            title="Legend"
+            gutter={10}
+            title="Key"
             style={{ 
               border: { stroke: "black" }, 
-              title: {fontSize: 5 },
-              labels: {fontSize: 5 } 
+              title: {fontSize: 4},
+              labels: {fontSize: 3 }
               }}
             data={[
-              { name: "Average Max Temperature", symbol: { fill: "red" } },
-              { name: "Average Min Temperature", symbol: { fill: "blue" } },
-        ]}
+              { name: "Average Max \nTemperature", symbol: { fill: "red" } },
+              { name: "Average Min \nTemperature", symbol: { fill: "blue" } },
+            ]}
+            centerTitle
       /> 
         <VictoryAxis 
           label="Year"
