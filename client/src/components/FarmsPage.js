@@ -7,7 +7,7 @@ import { historicMaxTemp } from "../historicMaxTempData";
 import { historicMinTemp } from "../historicMinTemp";
 //import Graphs from "./Graphs";
 import ReactDOM from 'react-dom';
-import { VictoryBar, VictoryLine, VictoryChart, VictoryAxis, VictoryLabel } from 'victory';
+import { VictoryBar, VictoryLegend, VictoryLine, VictoryChart, VictoryAxis, VictoryLabel } from 'victory';
 
 // Component Example
 const CurrDataTab = () => {
@@ -95,6 +95,20 @@ const PastDataTab = () => {
           data={fahrenheitMinTemps}
           style={{data: {stroke: "blue", strokeWidth: 0.25}}}
           />
+         <VictoryLegend x={230} y={10}
+            orientation="vertical"
+            gutter={20}
+            title="Legend"
+            style={{ 
+              border: { stroke: "black" }, 
+              title: {fontSize: 5 },
+              labels: {fontSize: 5 } 
+              }}
+            data={[
+              { name: "Average Max Temperature", symbol: { fill: "red" } },
+              { name: "Average Min Temperature", symbol: { fill: "blue" } },
+        ]}
+      /> 
         <VictoryAxis 
           label="Year"
           tickCount={21}
