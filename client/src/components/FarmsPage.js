@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from "react";
 import 'react-tabs/style/react-tabs.css';
-import { Tabs } from 'react-simple-tabs-component'
-import 'react-simple-tabs-component/dist/index.css'
+import { Tabs } from 'react-simple-tabs-component';
+import 'react-simple-tabs-component/dist/index.css';
+import { hPrecipitation } from "../historicPrecipitationData";
 //import Graphs from "./Graphs";
+import ReactDOM from 'react-dom';
+import { VictoryBar, VictoryChart, VictoryAxis, VictoryLabel } from 'victory';
 
 // Component Example
 const CurrDataTab = () => {
@@ -27,14 +30,50 @@ const PastDataTab = () => {
     )
   }
 
-// const ClimateGraphTab = () => {
-//   <View style={styles.graphsCard}>
-//     <Text style={styles.cardTitle}>Graphs</Text>
-//     <View style={styles.graphsContainer}>
-//       <Graphs years={farm.years} precipData={farm.precipData} tminData={farm.tminData} tmaxData={farm.tmaxData}/>
-//     </View>
-//   </View>
-// }
+ const ClimateGraphTab = () => {
+  const labels = ["1920", "1921", "1922", "1923", "1924", "1925", "1926", "1927", "1928", "1929", "1930", "1931", "1932", "1933", "1934", "1935", "1936", "1937", 
+  "1938", "1939", "1940", "1941", "1942", "1943", "1944", "1945", "1946", "1947", "1948", "1949", "1950", "1951", "1952", "1953", "1954", "1955", 
+  "1956", "1957", "1958", "1959", "1960", "1961", "1962", "1963", "1964", "1965", "1966", "1967", "1968", "1969", "1970", "1971", "1972", "1973",
+  "1974", "1975", "1976", "1978", "1979", "1980", "1981", "1982", "1983", "1984", "1985", "1986", "1987", "1988", "1989", "1990", "1991", "1992",
+  "1993", "1994", "1995", "1996", "1997", "1998", "1999", "2000", "2001", "2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009", "2010", 
+  "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021"];
+
+  return (
+    <div>
+      <VictoryChart maxDomain={{ y: 2000, x: 101}} height={150} width={340}>
+      <VictoryLabel 
+        text="Precipitation Over Time" 
+        x={170} 
+        y={30} 
+        textAnchor="middle"
+        padding={0}
+        style={{ fontSize: 10 }}
+        />
+        <VictoryAxis 
+          label="Year"
+          tickCount={20}
+          style={{
+            axisLabel: {padding: 25, fontSize: 8},
+            tickLabels: {padding: 5, angle: -45, textAnchor: 'end', fontSize: 5},
+            ticks: {stroke: "grey", size: 5}
+            }}
+          tickValues={labels}
+          />
+        <VictoryAxis dependentAxis
+          label="Precipitation (mm)"
+          style={{
+            grid: { stroke: "#e0e0e0", strokeWidth: 1 },
+            axisLabel: {padding: 25, fontSize: 8},
+            tickLabels: {padding: 5, textAnchor: 'end', fontSize: 5},
+            ticks: {stroke: "grey", size: 5}
+            }}
+          />
+        <VictoryBar width={50} style={{data: {fill: "#66ccff"}}} data={Object.values(hPrecipitation[1])} />
+      </VictoryChart>
+
+    </div>
+  )
+}
 
 // Tabs structure Array
 const tabs = [
@@ -45,11 +84,11 @@ const tabs = [
   {
     label: 'Historical Data',
     Component: PastDataTab
+  },
+  {
+    label: 'Climate Graphs',
+    Component: ClimateGraphTab
   }
-  // {
-  //   label: 'Climate Graphs',
-  //   Component: ClimateGraphTab
-  // }
 ]
 
 export default function App() {
