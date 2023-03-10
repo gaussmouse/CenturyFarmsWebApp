@@ -3,9 +3,11 @@ import 'react-tabs/style/react-tabs.css';
 import { Tabs } from 'react-simple-tabs-component';
 import 'react-simple-tabs-component/dist/index.css';
 import { hPrecipitation } from "../historicPrecipitationData";
+import { historicMaxTemp } from "../historicMaxTempData";
+import { historicMinTemp } from "../historicMinTemp";
 //import Graphs from "./Graphs";
 import ReactDOM from 'react-dom';
-import { VictoryBar, VictoryChart, VictoryAxis, VictoryLabel } from 'victory';
+import { VictoryBar, VictoryLine, VictoryChart, VictoryAxis, VictoryLabel } from 'victory';
 
 // Component Example
 const CurrDataTab = () => {
@@ -37,7 +39,12 @@ const PastDataTab = () => {
   "1974", "1975", "1976", "1978", "1979", "1980", "1981", "1982", "1983", "1984", "1985", "1986", "1987", "1988", "1989", "1990", "1991", "1992",
   "1993", "1994", "1995", "1996", "1997", "1998", "1999", "2000", "2001", "2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009", "2010", 
   "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021"];
+  console.log(Object.values(historicMaxTemp[1]));
+  const celsiusMaxTemps = Object.values(historicMaxTemp[1]);
+  const fahrenheitMaxTemps = celsiusMaxTemps.map(temp => (temp * 9/5) + 32);
 
+  const celsiusMinTemps = Object.values(historicMinTemp[1]);
+  const fahrenheitMinTemps = celsiusMinTemps.map(temp => (temp * 9/5) + 32);
   return (
     <div>
       <VictoryChart maxDomain={{ y: 2000, x: 101}} height={150} width={340}>
@@ -51,7 +58,7 @@ const PastDataTab = () => {
         />
         <VictoryAxis 
           label="Year"
-          tickCount={20}
+          tickCount={21}
           style={{
             axisLabel: {padding: 25, fontSize: 8},
             tickLabels: {padding: 5, angle: -45, textAnchor: 'end', fontSize: 5},
@@ -70,6 +77,46 @@ const PastDataTab = () => {
           />
         <VictoryBar width={50} style={{data: {fill: "#66ccff"}}} data={Object.values(hPrecipitation[1])} />
       </VictoryChart>
+ 
+      <VictoryChart maxDomain={{ y: 75, x: 101}} minDomain={{ y: 25, x: 0}} height={150} width={340}>
+      <VictoryLabel 
+        text="Temperature Over Time" 
+        x={170} 
+        y={30} 
+        textAnchor="middle"
+        padding={0}
+        style={{ fontSize: 10 }}
+        />
+        <VictoryLine 
+          data={fahrenheitMaxTemps}
+          style={{data: {stroke: "red", strokeWidth: 0.25}}}
+          />
+        <VictoryLine 
+          data={fahrenheitMinTemps}
+          style={{data: {stroke: "blue", strokeWidth: 0.25}}}
+          />
+        <VictoryAxis 
+          label="Year"
+          tickCount={21}
+          style={{
+            grid: { stroke: "#e0e0e0", strokeWidth: 1 },
+            axisLabel: {padding: 25, fontSize: 8},
+            tickLabels: {padding: 5, angle: -45, textAnchor: 'end', fontSize: 5},
+            ticks: {stroke: "grey", size: 3}
+            }}
+          tickValues={labels}
+          />
+        <VictoryAxis dependentAxis
+          label="Temperature (F)"
+          tickCount={10}
+          style={{
+            grid: { stroke: "#e0e0e0", strokeWidth: 1 },
+            axisLabel: {padding: 25, fontSize: 8},
+            tickLabels: {padding: 5, textAnchor: 'end', fontSize: 5},
+            ticks: {stroke: "grey", size: 3}
+            }}
+          />
+      </VictoryChart> 
 
     </div>
   )
