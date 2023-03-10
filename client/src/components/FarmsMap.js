@@ -11,6 +11,7 @@ export default function FarmsMap () {
   const [zoom, setZoom] = useState(8);
 
   const [farms, setFarms] = useState([])
+  //const listings = useRef(null);
   // -----------------------------------------------------------------------------
   /*
   // TODO: attempt at incorporating existing structures
@@ -45,7 +46,7 @@ export default function FarmsMap () {
         zoom: zoom
       });
       const farmData = await getFarmLocations();
-      setFarms(farmData);
+      setFarms(farmData); 
       showFarmLocations(farmData);
     }
     initializeMap();
@@ -54,77 +55,169 @@ export default function FarmsMap () {
   /*
   * Gets farm locations to populate map with location markers
   */
-    const getFarmLocations = async () => {
-      const response = await fetch(`http://localhost:5000/location/`);
-      console.log(response);
-      
-      if (!response.ok) {
-        const message = `An error occurred: ${response.statusText}`;
-        window.alert(message);
-        return;
-      }
+  const getFarmLocations = async () => {
+    const response = await fetch(`http://localhost:5000/location/`);
+    console.log(response);
+    
+    if (!response.ok) {
+      const message = `An error occurred: ${response.statusText}`;
+      window.alert(message);
+      return;
+    }
 
-      const records = await response.json();
-      console.log(records);
-      //setFarms(records);
-      let farmPins = records.map(farm => (
-        {
-          type: 'Feature',
-          geometry: {
-              type: 'Point',
-              coordinates: [farm.longitude, farm.latitude]
-          },
-          properties: {
-              //farmName: farm.name,
-              address: farm.address
-          }
+    const records = await response.json();
+    console.log(records);
+    let farmPins = records.map(farm => (
+      {
+        type: 'Feature',
+        geometry: {
+            type: 'Point',
+            coordinates: [farm.longitude, farm.latitude]
+        },
+        properties: {
+            name: farm.name,
+            county: farm.county,
+            id: farm.locationID,
+            address: farm.address
         }
-      ));
-      return farmPins;
-    };
+      }
+    ));
+    return farmPins;
+  };
 
   /*
   * Show farm locations on map
   */
-    const showFarmLocations = (farmData) => {
-      map.current.on('load', () => {
-        // Add a layer to use the image to represent the data.
-        // Add an image to use as a custom marker
-        map.current.loadImage(
-          'https://docs.mapbox.com/mapbox-gl-js/assets/custom_marker.png',
-          (error, image) => {
-          if (error) throw error;
-          map.current.addImage('custom-marker', image);
-          // Add a GeoJSON source
-            map.current.addSource('points', {
-              type: 'geojson',
-              data: {
-                type: 'FeatureCollection',
-                features: farmData
-              }
-            });
-          
-          map.current.addLayer({
-            id: 'points',
-            type: 'symbol',
-            minzoom: 0,
-            source: 'points',
-            layout: {
-              'icon-image': 'custom-marker',
-              // get the title name from the source's "title" property
-              'text-field': ['get', 'title'],
-              'text-font': [
-              'Open Sans Semibold',
-              'Arial Unicode MS Bold'
-              ],
-              'text-offset': [0, 1.25],
-              'text-anchor': 'top'
-            },
+  const showFarmLocations = (farmData) => {
+    map.current.on('load', () => {
+      /*
+      // Add a layer to use the image to represent the data.
+      // Add an image to use as a custom marker
+      map.current.loadImage(
+        'https://docs.mapbox.com/mapbox-gl-js/assets/custom_marker.png',
+        (error, image) => {
+        if (error) throw error;
+        map.current.addImage('custom-marker', image);
+        // Add a GeoJSON source
+          map.current.addSource('points', {
+            type: 'geojson',
+            data: {
+              type: 'FeatureCollection',
+              features: farmData
+            }
           });
+        
+        map.current.addLayer({
+          id: 'points',
+          type: 'symbol',
+          minzoom: 0,
+          source: 'points',
+          layout: {
+            'icon-image': 'custom-marker',
+            // get the farm name from the source's "name" property
+            'text-field': ['get', 'name'],
+            'text-font': [
+            'Open Sans Semibold',
+            'Arial Unicode MS Bold'
+            ],
+            'text-offset': [0, 0.9],
+            'text-anchor': 'top'
+          },
         });
       });
-    }
+      */
+
+      // Add a popup for each marker
+      farmData.forEach((farm) => {
+        const popup = new mapboxgl.Popup({
+          closeButton: true,
+          closeOnClick: true
+        }).setHTML(
+          `<h3>${farm.properties.name}</h3><p>${farm.properties.address}</p>`
+        );
+        const marker = new mapboxgl.Marker({
+          color: '#25921B',
+        })
+          .setLngLat(farm.geometry.coordinates)
+          .setPopup(popup)
+          .addTo(map.current);
+      });
       
+      /*
+      // from mapbox store locator tutorial (https://docs.mapbox.com/help/tutorials/building-a-store-locator/)
+      map.current.on('click', (event) => {
+        // Determine if a feature in the "locations" layer exists at that point. 
+        const features = map.queryRenderedFeatures(event.point, {
+          layers: ['points']
+        });
+  
+        // If it does not exist, return
+        if (!features.length) return;
+  
+        const clickedPoint = features[0];
+  
+        // Fly to the point
+        flyToFarm(clickedPoint);
+  
+        // Close all other popups and display popup for clicked farm
+        createPopUp(clickedPoint);
+  
+        // Highlight listing in sidebar (and remove highlight for all other listings)
+        const activeItem = document.getElementsByClassName('active');
+        if (activeItem[0]) {
+          activeItem[0].classList.remove('active');
+        }
+        const listing = document.getElementById(
+          `listing-${clickedPoint.properties.id}`
+        );
+        listing.classList.add('active');
+      });
+      */
+
+      buildLocationList(farmData); // build out side bar from farm locations
+    });
+  }   
+
+  /*
+  * Show farm locations on map
+  * Code adapted from (https://docs.mapbox.com/help/tutorials/building-a-store-locator/)
+  */
+  const buildLocationList = (farmData) => {
+    for (const farm of farmData) {
+      /* Add a new listing section to the sidebar. */
+      const listings = document.getElementById('listings');
+      const listing = listings.appendChild(document.createElement('div'));
+      /* Assign a unique `id` to the listing. */
+      listing.id = `listing-${farm.properties.id}`;
+      /* Assign the `item` class to each listing for styling. */
+      listing.className = 'item';
+  
+      /* Add the link to the individual listing created above. */
+      const link = listing.appendChild(document.createElement('a'));
+      link.href = '#';
+      link.className = 'title';
+      link.id = `link-${farm.properties.id}`;
+      link.innerHTML = `${farm.properties.name}`;
+  
+      /* Add details to the individual listing. */
+      const details = listing.appendChild(document.createElement('div'));
+      details.innerHTML = `${farm.properties.address}`;
+      
+      link.addEventListener('click', function () {
+        for (const farm of farmData) {
+          if (this.id === `link-${farm.properties.id}`) {
+            flyToFarm(farm);
+            //createPopUp(farm);
+          }
+        }
+        const activeItem = document.getElementsByClassName('active');
+        if (activeItem[0]) {
+          activeItem[0].classList.remove('active');
+        }
+        this.parentNode.classList.add('active');
+      });
+    }
+  }
   
   /*
   * Sets new longitude, latitude, zoom on move
@@ -138,6 +231,35 @@ export default function FarmsMap () {
     });
   });
     
+  /*
+  * Reorients map to focus on selected farm
+  * Code adapted from (https://docs.mapbox.com/help/tutorials/building-a-store-locator/)
+  */
+  const flyToFarm = (currentFeature) => {
+    map.current.flyTo({
+      center: currentFeature.geometry.coordinates,
+      zoom: 15
+    });
+  }
+  
+  /*
+  * Creates popup for markers - this can be reworked to be integrated
+  *   into the creation of markers
+  * Code adapted from (https://docs.mapbox.com/help/tutorials/building-a-store-locator/)
+  */
+ /*
+  const createPopUp = (currentFeature) => {
+    const popUps = document.getElementsByClassName('mapboxgl-popup');
+    // Check if there is already a popup on the map and if so, remove it 
+    if (popUps[0]) popUps[0].remove();
+  
+    const popup = new mapboxgl.Popup({ closeOnClick: false })
+      .setLngLat(currentFeature.geometry.coordinates)
+      .setHTML(`<h3>${currentFeature.properties.name}</h3><h4>${currentFeature.properties.address}</h4>`)
+      .addTo(map.current);
+  }
+  */
+
   //----------------------API Query----------------------
   /**
    * Requests data from daymet API 
@@ -157,7 +279,6 @@ export default function FarmsMap () {
     }
   }
   */
-
 
   return (
     <div>
