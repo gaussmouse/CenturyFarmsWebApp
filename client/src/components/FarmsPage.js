@@ -5,6 +5,9 @@ import 'react-simple-tabs-component/dist/index.css';
 import { hPrecipitation } from "../historicPrecipitationData";
 import { historicMaxTemp } from "../historicMaxTempData";
 import { historicMinTemp } from "../historicMinTemp";
+import { futureMaxTemp } from "../futureMaxTempData";
+import { futureMinTemp } from "../futureMinTempData";
+import { futurePrecipitation } from "../futurePrecipitationData";
 //import Graphs from "./Graphs";
 import ReactDOM from 'react-dom';
 import { VictoryBar, VictoryLegend, VictoryLine, VictoryChart, VictoryAxis, VictoryLabel } from 'victory';
@@ -32,14 +35,13 @@ const PastDataTab = () => {
     )
   }
 
- const ClimateGraphTab = () => {
+ const HistoricClimateGraphTab = () => {
   const labels = ["1920", "1921", "1922", "1923", "1924", "1925", "1926", "1927", "1928", "1929", "1930", "1931", "1932", "1933", "1934", "1935", "1936", "1937", 
   "1938", "1939", "1940", "1941", "1942", "1943", "1944", "1945", "1946", "1947", "1948", "1949", "1950", "1951", "1952", "1953", "1954", "1955", 
   "1956", "1957", "1958", "1959", "1960", "1961", "1962", "1963", "1964", "1965", "1966", "1967", "1968", "1969", "1970", "1971", "1972", "1973",
   "1974", "1975", "1976", "1978", "1979", "1980", "1981", "1982", "1983", "1984", "1985", "1986", "1987", "1988", "1989", "1990", "1991", "1992",
   "1993", "1994", "1995", "1996", "1997", "1998", "1999", "2000", "2001", "2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009", "2010", 
   "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021"];
-  console.log(Object.values(historicMaxTemp[1]));
   const celsiusMaxTemps = Object.values(historicMaxTemp[1]);
   const fahrenheitMaxTemps = celsiusMaxTemps.map(temp => (temp * 9/5) + 32);
 
@@ -137,6 +139,106 @@ const PastDataTab = () => {
   )
 }
 
+const FutureClimateGraphTab = () => {
+  const futureLabels = ["2022", "2023", "2024", "2025", "2026", "2027", "2028", "2029", "2030", "2031", "2032", "2033", "2034", "2035", "2036",
+  "2037", "2038", "2039", "2040", "2041", "2042", "2043", "2044", "2045", "2046", "2047", "2048", "2049", "2050"];
+  const celsiusMaxTemps = Object.values(futureMaxTemp[1]);
+  const fahrenheitMaxTemps = celsiusMaxTemps.map(temp => (temp * 9/5) + 32);
+
+  const celsiusMinTemps = Object.values(futureMinTemp[1]);
+  const fahrenheitMinTemps = celsiusMinTemps.map(temp => (temp * 9/5) + 32);
+  return (
+    <div>
+      <VictoryChart maxDomain={{ y: 1500, x: 29}} height={150} width={340}>
+      <VictoryLabel 
+        text="Precipitation Over Time" 
+        x={170} 
+        y={30} 
+        textAnchor="middle"
+        padding={0}
+        style={{ fontSize: 10 }}
+        />
+        <VictoryAxis 
+          label="Year"
+          tickCount={28}
+          style={{
+            axisLabel: {padding: 25, fontSize: 8},
+            tickLabels: {padding: 5, angle: -45, textAnchor: 'end', fontSize: 5},
+            ticks: {stroke: "grey", size: 5}
+            }}
+          tickValues={futureLabels}
+          />
+        <VictoryAxis dependentAxis
+          label="Precipitation (mm)"
+          style={{
+            grid: { stroke: "#e0e0e0", strokeWidth: 1 },
+            axisLabel: {padding: 25, fontSize: 8},
+            tickLabels: {padding: 5, textAnchor: 'end', fontSize: 5},
+            ticks: {stroke: "grey", size: 5}
+            }}
+          />
+        <VictoryBar width={50} style={{data: {fill: "#66ccff"}}} data={Object.values(futurePrecipitation[1])} />
+      </VictoryChart>
+ 
+      <VictoryChart maxDomain={{ y: 75, x: 29}} minDomain={{ y: 25, x: 0}} height={150} width={340}>
+      <VictoryLabel 
+        text="Temperature Over Time" 
+        x={170} 
+        y={30} 
+        textAnchor="middle"
+        padding={0}
+        style={{ fontSize: 10 }}
+        />
+        <VictoryLine 
+          data={fahrenheitMaxTemps}
+          style={{data: {stroke: "red", strokeWidth: 0.25}}}
+          />
+        <VictoryLine 
+          data={fahrenheitMinTemps}
+          style={{data: {stroke: "blue", strokeWidth: 0.25}}}
+          />
+         <VictoryLegend x={295} y={50}
+            orientation="vertical"
+            gutter={10}
+            title="Key"
+            style={{ 
+              border: { stroke: "black" }, 
+              title: {fontSize: 4},
+              labels: {fontSize: 3 }
+              }}
+            data={[
+              { name: "Average Max \nTemperature", symbol: { fill: "red" } },
+              { name: "Average Min \nTemperature", symbol: { fill: "blue" } },
+            ]}
+            centerTitle
+      /> 
+        <VictoryAxis 
+          label="Year"
+          //tickCount={28}
+          style={{
+            grid: { stroke: "#e0e0e0", strokeWidth: 1 },
+            axisLabel: {padding: 25, fontSize: 8},
+            tickLabels: {padding: 5, angle: -45, textAnchor: 'end', fontSize: 5},
+            ticks: {stroke: "grey", size: 3}
+            }}
+          tickValues={futureLabels}
+          />
+        <VictoryAxis dependentAxis
+          label="Temperature (F)"
+          tickCount={10}
+          style={{
+            grid: { stroke: "#e0e0e0", strokeWidth: 1 },
+            axisLabel: {padding: 25, fontSize: 8},
+            tickLabels: {padding: 5, textAnchor: 'end', fontSize: 5},
+            ticks: {stroke: "grey", size: 3}
+            }}
+          />
+      </VictoryChart> 
+
+    </div>
+  )
+}
+
 // Tabs structure Array
 const tabs = [
   {
@@ -144,12 +246,16 @@ const tabs = [
     Component: CurrDataTab // Tab Body - JSX.Element
   },
   {
-    label: 'Historical Data',
+    label: 'Historic Data',
     Component: PastDataTab
   },
   {
-    label: 'Climate Graphs',
-    Component: ClimateGraphTab
+    label: 'Historic Climate Graphs',
+    Component: HistoricClimateGraphTab
+  },
+  {
+    label: 'Future Climate Graphs',
+    Component: FutureClimateGraphTab
   }
 ]
 
