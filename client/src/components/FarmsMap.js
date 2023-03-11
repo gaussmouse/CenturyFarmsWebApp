@@ -133,7 +133,8 @@ export default function FarmsMap () {
           closeButton: true,
           closeOnClick: true
         }).setHTML(
-          `<h3>${farm.properties.name}</h3><p>${farm.properties.address}</p>`
+          `<h3>${farm.properties.name}</h3><p>${farm.properties.address}</p><a href="/farms/${farm.properties.id}">
+          More Info</a>`
         );
         const marker = new mapboxgl.Marker({
           color: '#25921B',
