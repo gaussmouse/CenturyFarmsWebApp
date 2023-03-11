@@ -11,41 +11,52 @@ import { futurePrecipitation } from "../futurePrecipitationData";
 //import Graphs from "./Graphs";
 import ReactDOM from 'react-dom';
 import { VictoryBar, VictoryLegend, VictoryLine, VictoryChart, VictoryAxis, VictoryLabel } from 'victory';
+import { useParams } from "react-router-dom";
+
+let farmID = "";
+
+const FarmDetails = () => {
+  farmID = useParams();
+  farmID = farmID.id;
+}
 
 // Component Example
 const CurrDataTab = () => {
+  FarmDetails();
   return (
     <>
       <h3>Current Farm Data</h3>
-     <p>{FarmDescList()}</p>
-     <p>{CurrOwnerList()}</p>
-     <p>{CurrFarmList()}</p>
-     <p>{LocationList()}</p>
+     <p>{FarmDescList(farmID)}</p>
+     <p>{CurrOwnerList(farmID)}</p>
+     <p>{CurrFarmList(farmID)}</p>
+     <p>{LocationList(farmID)}</p>
     </>
   )
 }
 
 const PastDataTab = () => {
+  FarmDetails();
     return (
       <>
         <h3>Historical Farm Data</h3>
-        <p>{OriginalOwnerList()}</p>
-        <p>{FarmPastList()}</p>
+        <p>{OriginalOwnerList(farmID)}</p>
+        <p>{FarmPastList(farmID)}</p>
       </>
     )
   }
 
  const HistoricClimateGraphTab = () => {
+  FarmDetails();
   const labels = ["1920", "1921", "1922", "1923", "1924", "1925", "1926", "1927", "1928", "1929", "1930", "1931", "1932", "1933", "1934", "1935", "1936", "1937", 
   "1938", "1939", "1940", "1941", "1942", "1943", "1944", "1945", "1946", "1947", "1948", "1949", "1950", "1951", "1952", "1953", "1954", "1955", 
   "1956", "1957", "1958", "1959", "1960", "1961", "1962", "1963", "1964", "1965", "1966", "1967", "1968", "1969", "1970", "1971", "1972", "1973",
   "1974", "1975", "1976", "1978", "1979", "1980", "1981", "1982", "1983", "1984", "1985", "1986", "1987", "1988", "1989", "1990", "1991", "1992",
   "1993", "1994", "1995", "1996", "1997", "1998", "1999", "2000", "2001", "2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009", "2010", 
   "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021"];
-  const celsiusMaxTemps = Object.values(historicMaxTemp[1]);
+  const celsiusMaxTemps = Object.values(historicMaxTemp[farmID]);
   const fahrenheitMaxTemps = celsiusMaxTemps.map(temp => (temp * 9/5) + 32);
 
-  const celsiusMinTemps = Object.values(historicMinTemp[1]);
+  const celsiusMinTemps = Object.values(historicMinTemp[farmID]);
   const fahrenheitMinTemps = celsiusMinTemps.map(temp => (temp * 9/5) + 32);
   return (
     <div>
@@ -77,7 +88,7 @@ const PastDataTab = () => {
             ticks: {stroke: "grey", size: 5}
             }}
           />
-        <VictoryBar width={50} style={{data: {fill: "#66ccff"}}} data={Object.values(hPrecipitation[1])} />
+        <VictoryBar width={50} style={{data: {fill: "#66ccff"}}} data={Object.values(hPrecipitation[farmID])} />
       </VictoryChart>
  
       <VictoryChart maxDomain={{ y: 75, x: 101}} minDomain={{ y: 25, x: 0}} height={150} width={340}>
@@ -140,12 +151,13 @@ const PastDataTab = () => {
 }
 
 const FutureClimateGraphTab = () => {
+  FarmDetails();
   const futureLabels = ["2022", "2023", "2024", "2025", "2026", "2027", "2028", "2029", "2030", "2031", "2032", "2033", "2034", "2035", "2036",
   "2037", "2038", "2039", "2040", "2041", "2042", "2043", "2044", "2045", "2046", "2047", "2048", "2049", "2050"];
-  const celsiusMaxTemps = Object.values(futureMaxTemp[1]);
+  const celsiusMaxTemps = Object.values(futureMaxTemp[farmID]);
   const fahrenheitMaxTemps = celsiusMaxTemps.map(temp => (temp * 9/5) + 32);
 
-  const celsiusMinTemps = Object.values(futureMinTemp[1]);
+  const celsiusMinTemps = Object.values(futureMinTemp[farmID]);
   const fahrenheitMinTemps = celsiusMinTemps.map(temp => (temp * 9/5) + 32);
   return (
     <div>
@@ -177,7 +189,7 @@ const FutureClimateGraphTab = () => {
             ticks: {stroke: "grey", size: 5}
             }}
           />
-        <VictoryBar width={50} style={{data: {fill: "#66ccff"}}} data={Object.values(futurePrecipitation[1])} />
+        <VictoryBar width={50} style={{data: {fill: "#66ccff"}}} data={Object.values(futurePrecipitation[farmID])} />
       </VictoryChart>
  
       <VictoryChart maxDomain={{ y: 75, x: 29}} minDomain={{ y: 25, x: 0}} height={150} width={340}>
@@ -319,14 +331,13 @@ const FarmPast = (props) => (
   </div>
 );
  
-function FarmDescList() {
+function FarmDescList(id) {
  const [records, setRecords] = useState([]);
  
  // This method fetches the records from the database.
  useEffect(() => {
-   async function getFarmDesc() {
-     const response = await fetch(`http://localhost:5000/farmdesc/farmPastID/1`);
-     //console.log(response);
+   async function getFarmDesc(id) {
+     const response = await fetch(`http://localhost:5000/farmdesc/farmPastID/` + id);
  
      if (!response.ok) {
        const message = `An error occurred: ${response.statusText}`;
@@ -338,7 +349,7 @@ function FarmDescList() {
      setRecords(records);
    }
  
-   getFarmDesc();
+   getFarmDesc(id);
  
    return;
  }, [records.length]);
@@ -364,13 +375,13 @@ function FarmDescList() {
  );
 }
 
-function CurrOwnerList() {
+function CurrOwnerList(id) {
     const [records, setRecords] = useState([]);
     
     // This method fetches the records from the database.
     useEffect(() => {
-      async function getCurrOwner() {
-       const response = await fetch(`http://localhost:5000/currentOwner/id/1`);
+      async function getCurrOwner(id) {
+       const response = await fetch(`http://localhost:5000/currentOwner/id/` + id);
    
        if (!response.ok) {
          const message = `An error occurred: ${response.statusText}`;
@@ -379,11 +390,10 @@ function CurrOwnerList() {
        }
    
        const records = await response.json();
-       console.log(records);
        setRecords(records);
      }
    
-     getCurrOwner()
+     getCurrOwner(id)
     
       return;
     }, [records.length]);
@@ -407,13 +417,13 @@ function CurrOwnerList() {
     );
    }
 
-   function CurrFarmList() {
+   function CurrFarmList(id) {
     const [records, setRecords] = useState([]);
     
     // This method fetches the records from the database.
     useEffect(() => {
-      async function getCurrFarm() {
-       const response = await fetch(`http://localhost:5000/currentFarm/id/1`);
+      async function getCurrFarm(id) {
+       const response = await fetch(`http://localhost:5000/currentFarm/id/` + id);
    
        if (!response.ok) {
          const message = `An error occurred: ${response.statusText}`;
@@ -427,15 +437,13 @@ function CurrOwnerList() {
        setRecords(records);
      }
      
-     //console.log(records.gensOnFarm);
-     getCurrFarm()
+     getCurrFarm(id)
     
       return;
     }, [records.length]);
    
     function currFarmList() {
        return records.map((record) => {
-        console.log(record.cropID);
          return (
            <CurrFarm
              record={record}
@@ -453,13 +461,13 @@ function CurrOwnerList() {
     );
    }   
 
-   function LocationList() {
+   function LocationList(id) {
     const [records, setRecords] = useState([]);
     
     // This method fetches the records from the database.
     useEffect(() => {
-      async function getCurrLocation() {
-       const response = await fetch(`http://localhost:5000/location/id/1`);
+      async function getCurrLocation(id) {
+       const response = await fetch(`http://localhost:5000/location/id/` + id);
    
        if (!response.ok) {
          const message = `An error occurred: ${response.statusText}`;
@@ -471,7 +479,7 @@ function CurrOwnerList() {
        setRecords(records);
      }
    
-     getCurrLocation()
+     getCurrLocation(id)
     
       return;
     }, [records.length]);
@@ -495,13 +503,13 @@ function CurrOwnerList() {
     );
    }
 
-   function OriginalOwnerList() {
+   function OriginalOwnerList(id) {
     const [records, setRecords] = useState([]);
     
     // This method fetches the records from the database.
     useEffect(() => {
-      async function getOriginalOwner() {
-        const response = await fetch(`http://localhost:5000/originalOwner/id/1`);
+      async function getOriginalOwner(id) {
+        const response = await fetch(`http://localhost:5000/originalOwner/id/` + id);
     
         if (!response.ok) {
           const message = `An error occurred: ${response.statusText}`;
@@ -513,7 +521,7 @@ function CurrOwnerList() {
         setRecords(records);
       }
     
-      getOriginalOwner();
+      getOriginalOwner(id);
     
       return;
     }, [records.length]);
@@ -539,14 +547,13 @@ function CurrOwnerList() {
     );
    }
 
-   function FarmPastList() {
+   function FarmPastList(id) {
     const [records, setRecords] = useState([]);
     
     // This method fetches the records from the database.
     useEffect(() => {
-      async function getFarmPast() {
-        const response = await fetch(`http://localhost:5000/pastFarm/id/1`);
-        //console.log(response);
+      async function getFarmPast(id) {
+        const response = await fetch(`http://localhost:5000/pastFarm/id/` + id);
     
         if (!response.ok) {
           const message = `An error occurred: ${response.statusText}`;
@@ -560,7 +567,7 @@ function CurrOwnerList() {
         setRecords(records);
       }
     
-      getFarmPast();
+      getFarmPast(id);
     
       return;
     }, [records.length]);
@@ -587,6 +594,9 @@ function CurrOwnerList() {
    }
 
    async function getCropNames(cropIdList){
+    if (cropIdList === ""){
+      return "No crops";
+    }
       let cropNames = cropIdList.split(';');
    
       for (let i = 0; i < cropNames.length; i++){
@@ -602,6 +612,9 @@ function CurrOwnerList() {
    }
 
    async function getLivestockNames(livestockIdList){
+    if (livestockIdList === ""){
+      return "No livestock";
+    }
     let livestockNames = livestockIdList.split(';');
  
     for (let i = 0; i < livestockNames.length; i++){
@@ -615,12 +628,3 @@ function CurrOwnerList() {
 
     return livestockString;
  }
-
-  //  const styles = StyleSheet.create({
-  //   graphsContainer:{
-  //     height: 'auto',
-  //   },
-  //   graphsCard:{
-  //     marginTop:10,
-  //   }
-  // });
