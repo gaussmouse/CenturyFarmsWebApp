@@ -15,13 +15,12 @@ import FarmsMap from "./components/FarmsMap";
 
 // Application component routing
 // Home page is a map with an overlaid search bar
-// TODO: routing to individual farms
-// TODO: redo inheritance of "navigation" variable into Wrapper, FarmsPage
+// Completed: routing to individual farms
 const App = () => {
   return(
     <Routes>
         <Route path="/" element={<FarmsMap />}/> 
-        <Route path="/farms" element={<FarmPage />}/>
+        <Route path="/farms/:id" element={<FarmPage />}/>
     </Routes>
   )
 }
