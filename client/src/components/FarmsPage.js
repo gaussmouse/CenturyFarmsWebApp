@@ -197,7 +197,7 @@ const FutureClimateGraphTab = () => {
   return (
     <div>
       <VictoryChart
-       maxDomain={{ y: 1500, x: 29}}
+       maxDomain={{ y: 1700, x: 29}}
        minDomain={{ y: 950}}
        height={150} 
        width={340}
