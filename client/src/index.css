@@ -92,7 +92,7 @@ a {
 }
 
 a:hover {
-  color: #ff0;
+  color: #37d929;
 }
 
 /* 
@@ -121,10 +121,17 @@ a:hover {
 .listings .item .title small { font-weight: 400; }
 
 .listings .item.active .title,
-.listings .item .title:hover { color: #8cc63f; }
+.listings .item .title:hover { color: #37d929; }
 
 .listings .item.active {
   background-color: rgba(101, 153, 205, 0.9);
+}
+
+.title {
+  background: none!important;
+  border: none;
+  padding: 0!important;
+  cursor: pointer;
 }
 
 ::-webkit-scrollbar {
