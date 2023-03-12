@@ -8,10 +8,9 @@ import { historicMinTemp } from "../historicMinTemp";
 import { futureMaxTemp } from "../futureMaxTempData";
 import { futureMinTemp } from "../futureMinTempData";
 import { futurePrecipitation } from "../futurePrecipitationData";
-//import Graphs from "./Graphs";
 import ReactDOM from 'react-dom';
 import { VictoryBar, VictoryLegend, VictoryLine, VictoryChart, VictoryAxis, VictoryLabel } from 'victory';
-import { useParams, useNavigate, Link } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 let farmID = "";
 
@@ -62,7 +61,6 @@ const PastDataTab = () => {
 
   const celsiusMinTemps = Object.values(historicMinTemp[farmID-1]);
   const fahrenheitMinTemps = celsiusMinTemps.map(temp => (temp * 9/5) + 32);
-  console.log(Object.values(hPrecipitation[farmID-1])[0]);
   return (
     <div>
       <VictoryChart 
@@ -190,7 +188,6 @@ const FutureClimateGraphTab = () => {
   //2043, 2044, 2045, 2046, 2047, 2048, 2049, 2050];
   const celsiusMaxTemps = Object.values(futureMaxTemp[farmID-1]);
   const fahrenheitMaxTemps = celsiusMaxTemps.map(temp => (temp * 9/5) + 32);
-  console.log(Object.values(futurePrecipitation[farmID-1]));
 
   const celsiusMinTemps = Object.values(futureMinTemp[farmID-1]);
   const fahrenheitMinTemps = celsiusMinTemps.map(temp => (temp * 9/5) + 32);
@@ -230,7 +227,7 @@ const FutureClimateGraphTab = () => {
           />
         <VictoryAxis dependentAxis
           label="Precipitation (mm)"
-          tickCount={15}
+          tickCount={10}
           offsetX={48}
           style={{
             grid: { stroke: "#e0e0e0", strokeWidth: 1 },
@@ -330,11 +327,11 @@ const tabs = [
   },
   {
     label: 'Future Climate Graphs',
-    Component: FutureClimateGraphTab
+    Component: FutureClimateGraphTab,
   },
   {
     label: "Back to Map",
-    Component: backTab
+    Component: backTab,
   }
 ]
 
