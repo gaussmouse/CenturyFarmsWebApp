@@ -9,14 +9,13 @@ export default function FarmsMap () {
   const [lng, setLng] = useState(-122.96);
   const [lat, setLat] = useState(44.71);
   const [zoom, setZoom] = useState(8);
-
   const [farms, setFarms] = useState([])
-  //const listings = useRef(null);
+  const [searchInput, setSearchInput] = useState("");
+ 
   // -----------------------------------------------------------------------------
   /*
   // TODO: attempt at incorporating existing structures
   var searchedFarms = []
-  const [selectedFarm, setSelectedFarm] = useState({})
   const [climateData, setClimateData] = useState({
     "year":[0],
     "yday":[0],
@@ -142,8 +141,16 @@ export default function FarmsMap () {
           .setLngLat(farm.geometry.coordinates)
           .setPopup(popup)
           .addTo(map.current);
+
+           // Add a click event listener to each marker
+        marker.getElement().addEventListener('click', () => {
+          // Pan to the marker
+          map.current.flyTo({
+            center: marker.getLngLat(),
+            zoom: 15,
+          });
+        });
       });
-      
       /*
       // from mapbox store locator tutorial (https://docs.mapbox.com/help/tutorials/building-a-store-locator/)
       map.current.on('click', (event) => {
@@ -174,8 +181,6 @@ export default function FarmsMap () {
         listing.classList.add('active');
       });
       */
-
-      buildLocationList(farmData); // build out side bar from farm locations
     });
   }   
 
@@ -202,47 +207,6 @@ export default function FarmsMap () {
       closeButton.style.display = 'none';
     }
   }
-
-  /*
-  * Builds the list of locations for sidebar
-  * Code adapted from (https://docs.mapbox.com/help/tutorials/building-a-store-locator/)
-  */
-  const buildLocationList = (farmData) => {
-    for (const farm of farmData) {
-      /* Add a new listing section to the sidebar. */
-      const listings = document.getElementById('listings');
-      const listing = listings.appendChild(document.createElement('div'));
-      /* Assign a unique `id` to the listing. */
-      listing.id = `listing-${farm.properties.id}`;
-      /* Assign the `item` class to each listing for styling. */
-      listing.className = 'item';
-  
-      /* Add the link to the individual listing created above. */
-      const link = listing.appendChild(document.createElement('a'));
-      link.href = '#';
-      link.className = 'title';
-      link.id = `link-${farm.properties.id}`;
-      link.innerHTML = `${farm.properties.name}`;
-  
-      /* Add details to the individual listing. */
-      const details = listing.appendChild(document.createElement('div'));
-      details.innerHTML = `${farm.properties.address}`;
-      
-      link.addEventListener('click', function () {
-        for (const farm of farmData) {
-          if (this.id === `link-${farm.properties.id}`) {
-            flyToFarm(farm);
-            //createPopUp(farm);
-          }
-        }
-        const activeItem = document.getElementsByClassName('active');
-        if (activeItem[0]) {
-          activeItem[0].classList.remove('active');
-        }
-        this.parentNode.classList.add('active');
-      });
-    }
-  }
   
   /*
   * Sets new longitude, latitude, zoom on move
@@ -260,61 +224,37 @@ export default function FarmsMap () {
   * Reorients map to focus on selected farm
   * Code adapted from (https://docs.mapbox.com/help/tutorials/building-a-store-locator/)
   */
-  const flyToFarm = (currentFeature) => {
+  const flyToFarm = (CurrentFeature) => {
     map.current.flyTo({
-      center: currentFeature.geometry.coordinates,
+      center: CurrentFeature.geometry.coordinates,
       zoom: 15
     });
-  }
-  
-  /*
-  * Creates popup for markers - this can be reworked to be integrated
-  *   into the creation of markers
-  * Code adapted from (https://docs.mapbox.com/help/tutorials/building-a-store-locator/)
-  */
- /*
-  const createPopUp = (currentFeature) => {
-    const popUps = document.getElementsByClassName('mapboxgl-popup');
-    // Check if there is already a popup on the map and if so, remove it 
-    if (popUps[0]) popUps[0].remove();
-  
-    const popup = new mapboxgl.Popup({ closeOnClick: false })
-      .setLngLat(currentFeature.geometry.coordinates)
-      .setHTML(`<h3>${currentFeature.properties.name}</h3><h4>${currentFeature.properties.address}</h4>`)
-      .addTo(map.current);
-  }
-  */
-
-  //----------------------API Query----------------------
-  /**
-   * Requests data from daymet API 
-   * obtains climate data from 1980 to most recent year available (up to 2021 as of May, 2022)
-   * Documentation: https://daymet.ornl.gov/web_services
-   * Specifically, we are querying Single Pixel Data. Not their Gridded Subsets
-   */
-  /*
-  const getClimateData = async (lat, lon) => {
-    try {
-      const response = await fetch(`https://daymet.ornl.gov/single-pixel/api/data?lat=${lat}&lon=${lon}&vars=tmax,tmin,prcp&format=json`);
-      const json = await response.json();
-      setClimateData(json.data);
-      return json.data;
-    } catch (error) {
-      console.error(error)
-    }
-  }
-  */
+  };
 
  /* Longitude: {lng} | Latitude: {lat} | Zoom: {zoom} */
 
   return (
     <div>
-      <div id="locationSidebar" className="sidebar">
-       <button id="closeLocationSidebar" className="closebtn" onClick={showLocationSidebar}>×</button>   
+      <div id="locationSidebar" className="sidebar"> 
+        <button id="closeLocationSidebar" className="closebtn" onClick={showLocationSidebar}>×</button>
+        <div id="locationSearch" className="search">
+          <input type="text" id="farmSearch" onChange={event => setSearchInput(event.target.value)} placeholder="Search farms.." title="Search by name"/> 
+        </div>   
         <div className='heading'>
           <h1>Farm locations</h1>
         </div>
-        <div id='listings' className='listings'></div>
+        <div id='listings' className='listings'>
+            {farms.filter(farm => {
+              if (searchInput === '' || farm.properties.name.toLowerCase().includes(searchInput.toLowerCase())) {
+                return farm;
+              } 
+            }).map((farm) => (
+              <div key={farm.properties.id} className="item">
+                <button id={"link-" + farm.properties.id} className="title" onClick={() => {flyToFarm(farm)}}>{farm.properties.name}</button>
+                <div className="details">{farm.properties.address}</div>
+              </div>
+            ))}
+        </div>
       </div> 
       <div id="main">
         <button id="openLocationSidebar" className="openbtn" onClick={showLocationSidebar}>☰ Farm Locations</button>
