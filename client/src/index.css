@@ -18,19 +18,56 @@ body {
   right: 0;
 }
 
-.sidebar {
+/*
+* Sidebar button styles
+*/
+#locationSidebar {
   background-color: rgba(35, 55, 75, 0.9);
   color: #fff;
-  padding: 6px 12px;
+  padding: 24px 12px 12px 12px;
   font-family: monospace;
+  height: 100%;
+  width: 400px;
+  position: fixed;
   z-index: 1;
+  top: 0;
+  left: -400px; /* default closed, 0 when open */
+  overflow-x: hidden;
+  transition: left 0.5s ease;
+}
+
+#closeLocationSidebar {
   position: absolute;
   top: 0;
-  bottom: 0;
-  left: 0;
-  margin: 12px;
-  overflow: hidden;
-  border-radius: 4px;
+  right: 35px;
+  font-size: 36px;
+  margin-left: 50px;
+}
+
+#openLocationSidebar {
+  font-size: 20px;
+  cursor: pointer;
+  background-color: #111;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  position: absolute;
+  z-index: 9999; /* button at top of layers */
+}
+
+#openLocationSidebar:hover {
+  background-color: #444;
+}
+
+#main {
+  transition: margin-left .5s;
+  padding: 16px;
+}
+
+/* On smaller screens, where width is less than 450px, change the style of the sidenav (less padding and a smaller font size) */
+@media screen and (max-width: 450px) {
+  #locationSidebar {padding-top: 15px;}
+  .sidebar a {font-size: 18px;}
 }
 
 .heading {
@@ -50,7 +87,7 @@ h1 {
 }
 
 a {
-  color: #fff;
+  color: #25921B;
   text-decoration: none;
 }
 
@@ -87,7 +124,7 @@ a:hover {
 .listings .item .title:hover { color: #8cc63f; }
 
 .listings .item.active {
-  background-color: #f8f8f8;
+  background-color: rgba(101, 153, 205, 0.9);
 }
 
 ::-webkit-scrollbar {
@@ -107,7 +144,7 @@ a:hover {
 }
 
 /* 
-* Marker tweaks 
+* Marker Styles
 */
 .mapboxgl-popup-close-button {
   display: none;
@@ -129,10 +166,13 @@ a:hover {
   margin-top: -15px;
 }
 
-.mapboxgl-popup-content h4 {
+.mapboxgl-popup-content p, a {
   margin: 0;
-  padding: 10px;
-  font-weight: 400;
+  padding: 6px;
+}
+
+.mapboxgl-popup-content a {
+  float: right;
 }
 
 .mapboxgl-popup-content div {
