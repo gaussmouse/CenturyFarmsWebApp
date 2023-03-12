@@ -86,7 +86,7 @@ export default function FarmsMap () {
   };
 
   /*
-  * Show farm locations on map
+  * Shows farm locations on map
   */
   const showFarmLocations = (farmData) => {
     map.current.on('load', () => {
@@ -180,7 +180,31 @@ export default function FarmsMap () {
   }   
 
   /*
-  * Show farm locations on map
+  * Sets styles of sidebar, map, and open/close buttons when
+  *   called inside onClick from the open/close buttons
+  */
+  function showLocationSidebar() {
+    var sidebar = document.getElementById('locationSidebar');
+    var map = document.getElementById('main');
+    var openButton = document.getElementById('openLocationSidebar');
+    var closeButton = document.getElementById('closeLocationSidebar');
+  
+    // Toggle sidebar visibility
+    if (sidebar.style.left === '-400px' || sidebar.style.left === '') {
+      sidebar.style.left = '0';
+      map.style.marginLeft = '400px';
+      openButton.style.display = 'none';
+      closeButton.style.display = 'block';
+    } else {
+      sidebar.style.left = '-400px';
+      map.style.marginLeft = '0';
+      openButton.style.display = 'block';
+      closeButton.style.display = 'none';
+    }
+  }
+
+  /*
+  * Builds the list of locations for sidebar
   * Code adapted from (https://docs.mapbox.com/help/tutorials/building-a-store-locator/)
   */
   const buildLocationList = (farmData) => {
@@ -281,19 +305,21 @@ export default function FarmsMap () {
   }
   */
 
+ /* Longitude: {lng} | Latitude: {lat} | Zoom: {zoom} */
+
   return (
     <div>
-      <div className="sidebar">
-      Longitude: {lng} | Latitude: {lat} | Zoom: {zoom}
+      <div id="locationSidebar" className="sidebar">
+       <button id="closeLocationSidebar" className="closebtn" onClick={showLocationSidebar}>×</button>   
         <div className='heading'>
           <h1>Farm locations</h1>
         </div>
         <div id='listings' className='listings'></div>
+      </div> 
+      <div id="main">
+        <button id="openLocationSidebar" className="openbtn" onClick={showLocationSidebar}>☰ Farm Locations</button>
+        <div ref={mapContainer} className="map-container" />
       </div>
-      <div ref={mapContainer} className="map-container" />
-      <a href="/farms">
-         Click Here to Redirect to Farms page
-    </a>
     </div>
     
   );
