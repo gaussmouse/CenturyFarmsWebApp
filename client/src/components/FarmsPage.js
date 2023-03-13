@@ -2,18 +2,18 @@ import React, { useEffect, useState } from "react";
 import 'react-tabs/style/react-tabs.css';
 import { Tabs } from 'react-simple-tabs-component';
 import 'react-simple-tabs-component/dist/index.css';
+import ReactDOM from 'react-dom';
+import { VictoryBar, VictoryLegend, VictoryLine, VictoryChart, VictoryAxis, VictoryLabel } from 'victory';
+import { useParams } from "react-router-dom";
 import { hPrecipitation } from "../historicPrecipitationData";
 import { historicMaxTemp } from "../historicMaxTempData";
 import { historicMinTemp } from "../historicMinTemp";
 import { futureMaxTemp } from "../futureMaxTempData";
 import { futureMinTemp } from "../futureMinTempData";
 import { futurePrecipitation } from "../futurePrecipitationData";
-import ReactDOM from 'react-dom';
-import { VictoryBar, VictoryLegend, VictoryLine, VictoryChart, VictoryAxis, VictoryLabel } from 'victory';
-import { useParams } from "react-router-dom";
+
 
 let farmID = "";
-
 
 const FarmDetails = () => {
   farmID = useParams();
@@ -28,7 +28,8 @@ const CurrDataTab = () => {
   FarmDetails();
   return (
     <>
-      <h3>Current Farm Data</h3>
+      <h3 style={{ textAlign: 'center' }}>Current Farm Data</h3>
+      <p>{SinglePictureList(farmID)}</p>
      <p>{FarmDescList(farmID)}</p>
      <p>{CurrOwnerList(farmID)}</p>
      <p>{CurrFarmList(farmID)}</p>
@@ -41,14 +42,25 @@ const PastDataTab = () => {
   FarmDetails();
     return (
       <>
-        <h3>Historical Farm Data</h3>
+        <h3 style={{ textAlign: 'center' }}>Historical Farm Data</h3>
+        <p>{SinglePictureList(farmID)}</p>
         <p>{OriginalOwnerList(farmID)}</p>
         <p>{FarmPastList(farmID)}</p>
       </>
     )
   }
 
- const HistoricClimateGraphTab = () => {
+const PictureTab = () => {
+  FarmDetails();
+  return (
+    <>
+      <h3 style={{ textAlign: 'center' }}> Farm Pictures</h3>
+      <p>{PictureList(farmID)}</p>
+    </>
+  )
+}
+
+const HistoricClimateGraphTab = () => {
   FarmDetails();
   const labels = ["1920", "1921", "1922", "1923", "1924", "1925", "1926", "1927", "1928", "1929", "1930", "1931", "1932", "1933", "1934", "1935", "1936", "1937", 
   "1938", "1939", "1940", "1941", "1942", "1943", "1944", "1945", "1946", "1947", "1948", "1949", "1950", "1951", "1952", "1953", "1954", "1955", 
@@ -63,6 +75,7 @@ const PastDataTab = () => {
   const fahrenheitMinTemps = celsiusMinTemps.map(temp => (temp * 9/5) + 32);
   return (
     <div>
+      <p>{SinglePictureList(farmID)}</p>
       <VictoryChart 
         maxDomain={{ y: 2300, x: 101}} 
         minDomain={{ y: 500 }}
@@ -193,6 +206,7 @@ const FutureClimateGraphTab = () => {
   const fahrenheitMinTemps = celsiusMinTemps.map(temp => (temp * 9/5) + 32);
   return (
     <div>
+      <p>{SinglePictureList(farmID)}</p>
       <VictoryChart
        maxDomain={{ y: 1700, x: 29}}
        minDomain={{ y: 950}}
@@ -330,6 +344,10 @@ const tabs = [
     Component: FutureClimateGraphTab,
   },
   {
+    label: 'Farm Pictures',
+    Component: PictureTab
+  },
+  {
     label: "Back to Map",
     Component: backTab,
   }
@@ -394,6 +412,22 @@ const FarmPast = (props) => (
       <p><b>Livestock:</b> {props.record.livestockID}</p>
   </div>
 );
+
+const FarmPicture = (props) => (
+  <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column' }}>
+      {props.record.pictures.map((url) => (
+        <img src={url} alt="pic" 
+        style={{ display: 'block', minWidth: '200px', maxHeight: '400px' }}/>
+      ))}
+    </div>
+)
+
+const FarmSinglePicture = (props) => (
+  <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column' }}>
+    <img src={props.record.pictures[0]} alt="pic" 
+        style={{ display: 'block', minWidth: '200px', maxHeight: '400px' }}/>
+  </div>
+)
  
 function FarmDescList(id) {
  const [records, setRecords] = useState([]);
@@ -657,6 +691,106 @@ function CurrOwnerList(id) {
     );
    }
 
+   function PictureList(id) {
+    const [records, setRecords] = useState([]);
+    
+    // This method fetches the records from the database.
+    useEffect(() => {
+      async function getFarmPictures(id) {
+        const response = await fetch(`http://localhost:5000/farmdesc/farmCurrentID/` + id);
+    
+        if (!response.ok) {
+          const message = `An error occurred: ${response.statusText}`;
+          window.alert(message);
+          return;
+        }
+    
+         const records = await response.json();
+        const pictures = records[0].pictures;
+        const picList = pictures.split(";");
+        records[0].pictures = picList;
+        console.log(records);
+        setRecords(records);
+      }
+    
+      getFarmPictures(id);
+      //console.log(getFarmPictures(id));
+    
+      return;
+    }, [records.length]);
+    console.log(records);
+    
+    // This method will map out the records on the table
+    function farmPictureList() {
+      return records.map((record) => {
+        return (
+          <FarmPicture
+            record={record}
+            key={record._id}
+          />
+        );
+      });
+    
+    }
+    
+    // This following section will display the table with the records of individuals.
+    return (
+      <div>
+       <p> {farmPictureList()} </p>
+      </div>
+    );
+   }
+
+   function SinglePictureList(id) {
+    const [records, setRecords] = useState([]);
+    
+    // This method fetches the records from the database.
+    useEffect(() => {
+      async function getFarmPictures(id) {
+        const response = await fetch(`http://localhost:5000/farmdesc/farmCurrentID/` + id);
+    
+        if (!response.ok) {
+          const message = `An error occurred: ${response.statusText}`;
+          window.alert(message);
+          return;
+        }
+    
+         const records = await response.json();
+        const pictures = records[0].pictures;
+        const picList = pictures.split(";");
+        records[0].pictures = picList;
+        //console.log(records[0]);
+        setRecords(records);
+      }
+    
+      getFarmPictures(id);
+      //console.log(getFarmPictures(id));
+    
+      return;
+    }, [records.length]);
+    console.log(records);
+    
+    // This method will map out the records on the table
+    function farmPictureList() {
+      return records.map((record) => {
+        return (
+          <FarmSinglePicture
+            record={record}
+            key={record._id}
+          />
+        );
+      });
+    
+    }
+    
+    // This following section will display the table with the records of individuals.
+    return (
+      <div>
+       <p> {farmPictureList()} </p>
+      </div>
+    );
+   }
+
    async function getCropNames(cropIdList){
     if (cropIdList === ""){
       return "No crops";
@@ -691,4 +825,22 @@ function CurrOwnerList(id) {
     var livestockString = livestockNames.join(", ");
 
     return livestockString;
+ }
+
+ async function GetFutureMaxTemp(id){
+    const response = await fetch(`http://localhost:5000/fmaxt/id/` + id);
+    const records = await response.json();
+    return records;
+ }
+
+ async function GetFutureMinTemp(id){
+    const response = await fetch(`http://localhost:5000/fmint/id/` + id);
+    const records = await response.json();
+    return records;
+ }
+
+ async function GetFuturePercipitation(id){
+    const response = await fetch(`http://localhost:5000/fpercipitation/id/` + id);
+    const records = await response.json();
+    return records;
  }
