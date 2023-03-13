@@ -30,10 +30,10 @@ const CurrDataTab = () => {
     <>
       <h3 style={{ textAlign: 'center' }}>Current Farm Data</h3>
       <p>{SinglePictureList(farmID)}</p>
-     <p>{FarmDescList(farmID)}</p>
-     <p>{CurrOwnerList(farmID)}</p>
-     <p>{CurrFarmList(farmID)}</p>
-     <p>{LocationList(farmID)}</p>
+      <p>{FarmDescList(farmID)}</p>
+      <p>{CurrOwnerList(farmID)}</p>
+      <p>{CurrFarmList(farmID)}</p>
+      <p>{LocationList(farmID)}</p>
     </>
   )
 }
@@ -416,7 +416,7 @@ const FarmPast = (props) => (
 const FarmPicture = (props) => (
   <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column' }}>
       {props.record.pictures.map((url) => (
-        <img src={url} alt="pic" 
+        <img key={url} src={url} alt="pic" 
         style={{ display: 'block', minWidth: '200px', maxHeight: '400px' }}/>
       ))}
     </div>
