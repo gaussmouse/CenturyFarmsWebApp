@@ -414,36 +414,19 @@ const FarmPast = (props) => (
 );
 
 const FarmPicture = (props) => (
-  // <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column' }}>
-  //     {props.record.pictures.map((url) => (
-  //       <img src={url} alt="pic" 
-  //       style={{ display: 'block', minWidth: '200px', maxHeight: '400px' }}/>
-  //     ))}
-  //   </div>
-    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column' }}>
-    {props.Pictures && props.Pictures.length > 0 ? (
-      props.Pictures.map((url, index) => (
-        <img key={index} src={url} alt="pic" style={{ display: 'block', minWidth: '200px', maxHeight: '400px' }} />
-      ))
-    ) : (
-      <p>No pictures available.</p>
-    )}
-  </div>
+  <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column' }}>
+      {props.record.pictures.map((url) => (
+        <img src={url} alt="pic" 
+        style={{ display: 'block', minWidth: '200px', maxHeight: '400px' }}/>
+      ))}
+    </div>
 )
 
 const FarmSinglePicture = (props) => (
-  // <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column' }}>
-    // <img src={props.record.pictures[0]} alt="pic" 
-    //     style={{ display: 'block', minWidth: '200px', maxHeight: '400px' }}/>
-  // </div>
   <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column' }}>
-  {props.Pictures && props.Pictures.length > 0 ? (
     <img src={props.record.pictures[0]} alt="pic" 
         style={{ display: 'block', minWidth: '200px', maxHeight: '400px' }}/>
-  ) : (
-    null
-  )}
-</div>
+  </div>
 )
  
 function FarmDescList(id) {
