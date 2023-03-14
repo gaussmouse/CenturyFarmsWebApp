@@ -435,7 +435,7 @@ function FarmDescList(id) {
  // This method fetches the records from the database.
  useEffect(() => {
    async function getFarmDesc(id) {
-     const response = await fetch(`http://localhost:5000/farmdesc/farmPastID/` + id);
+     const response = await fetch(`/farmdesc/farmPastID/` + id);
  
      if (!response.ok) {
        const message = `An error occurred: ${response.statusText}`;
@@ -450,7 +450,7 @@ function FarmDescList(id) {
    getFarmDesc(id);
  
    return;
- }, [records.length]);
+ }, [records.length, id]);
 
  
  // This method will map out the records on the table
@@ -479,7 +479,7 @@ function CurrOwnerList(id) {
     // This method fetches the records from the database.
     useEffect(() => {
       async function getCurrOwner(id) {
-       const response = await fetch(`http://localhost:5000/currentOwner/id/` + id);
+       const response = await fetch(`/currentOwner/id/` + id);
    
        if (!response.ok) {
          const message = `An error occurred: ${response.statusText}`;
@@ -494,7 +494,7 @@ function CurrOwnerList(id) {
      getCurrOwner(id)
     
       return;
-    }, [records.length]);
+    }, [records.length, id]);
    
     function currOwnerList() {
        return records.map((record) => {
@@ -521,7 +521,7 @@ function CurrOwnerList(id) {
     // This method fetches the records from the database.
     useEffect(() => {
       async function getCurrFarm(id) {
-       const response = await fetch(`http://localhost:5000/currentFarm/id/` + id);
+       const response = await fetch(`/currentFarm/id/` + id);
    
        if (!response.ok) {
          const message = `An error occurred: ${response.statusText}`;
@@ -538,7 +538,7 @@ function CurrOwnerList(id) {
      getCurrFarm(id)
     
       return;
-    }, [records.length]);
+    }, [records.length, id]);
    
     function currFarmList() {
        return records.map((record) => {
@@ -565,7 +565,7 @@ function CurrOwnerList(id) {
     // This method fetches the records from the database.
     useEffect(() => {
       async function getCurrLocation(id) {
-       const response = await fetch(`http://localhost:5000/location/id/` + id);
+       const response = await fetch(`/location/id/` + id);
    
        if (!response.ok) {
          const message = `An error occurred: ${response.statusText}`;
@@ -580,7 +580,7 @@ function CurrOwnerList(id) {
      getCurrLocation(id)
     
       return;
-    }, [records.length]);
+    }, [records.length, id]);
    
     function locationList() {
        return records.map((record) => {
@@ -607,7 +607,7 @@ function CurrOwnerList(id) {
     // This method fetches the records from the database.
     useEffect(() => {
       async function getOriginalOwner(id) {
-        const response = await fetch(`http://localhost:5000/originalOwner/id/` + id);
+        const response = await fetch(`/originalOwner/id/` + id);
     
         if (!response.ok) {
           const message = `An error occurred: ${response.statusText}`;
@@ -622,7 +622,7 @@ function CurrOwnerList(id) {
       getOriginalOwner(id);
     
       return;
-    }, [records.length]);
+    }, [records.length, id]);
    
     
     // This method will map out the records on the table
@@ -651,7 +651,7 @@ function CurrOwnerList(id) {
     // This method fetches the records from the database.
     useEffect(() => {
       async function getFarmPast(id) {
-        const response = await fetch(`http://localhost:5000/pastFarm/id/` + id);
+        const response = await fetch(`/pastFarm/id/` + id);
     
         if (!response.ok) {
           const message = `An error occurred: ${response.statusText}`;
@@ -668,7 +668,7 @@ function CurrOwnerList(id) {
       getFarmPast(id);
     
       return;
-    }, [records.length]);
+    }, [records.length, id]);
    
     
     // This method will map out the records on the table
@@ -697,7 +697,7 @@ function CurrOwnerList(id) {
     // This method fetches the records from the database.
     useEffect(() => {
       async function getFarmPictures(id) {
-        const response = await fetch(`http://localhost:5000/farmdesc/farmCurrentID/` + id);
+        const response = await fetch(`/farmdesc/farmCurrentID/` + id);
     
         if (!response.ok) {
           const message = `An error occurred: ${response.statusText}`;
@@ -716,7 +716,7 @@ function CurrOwnerList(id) {
       //console.log(getFarmPictures(id));
     
       return;
-    }, [records.length]);
+    }, [records.length, id]);
     
     // This method will map out the records on the table
     function farmPictureList() {
@@ -745,7 +745,7 @@ function CurrOwnerList(id) {
     // This method fetches the records from the database.
     useEffect(() => {
       async function getFarmPictures(id) {
-        const response = await fetch(`http://localhost:5000/farmdesc/farmCurrentID/` + id);
+        const response = await fetch(`/farmdesc/farmCurrentID/` + id);
     
         if (!response.ok) {
           const message = `An error occurred: ${response.statusText}`;
@@ -765,7 +765,7 @@ function CurrOwnerList(id) {
       //console.log(getFarmPictures(id));
     
       return;
-    }, [records.length]);
+    }, [records.length, id]);
     
     // This method will map out the records on the table
     function farmPictureList() {
@@ -796,7 +796,7 @@ function CurrOwnerList(id) {
    
       for (let i = 0; i < cropNames.length; i++){
         let nameID = cropNames[i];
-        const response = await fetch(`http://localhost:5000/crop/id/` + nameID);
+        const response = await fetch(`/crop/id/` + nameID);
         const records = await response.json();
         cropNames[i] = records[0].name;
       }
@@ -814,7 +814,7 @@ function CurrOwnerList(id) {
  
     for (let i = 0; i < livestockNames.length; i++){
       let livestockID = livestockNames[i];
-      const response = await fetch(`http://localhost:5000/livestock/id/` + livestockID);
+      const response = await fetch(`/livestock/id/` + livestockID);
       const records = await response.json();
       livestockNames[i] = records[0].name;
     }
@@ -825,19 +825,19 @@ function CurrOwnerList(id) {
  }
 
  async function GetFutureMaxTemp(id){
-    const response = await fetch(`http://localhost:5000/fmaxt/id/` + id);
+    const response = await fetch(`/fmaxt/id/` + id);
     const records = await response.json();
     return records;
  }
 
  async function GetFutureMinTemp(id){
-    const response = await fetch(`http://localhost:5000/fmint/id/` + id);
+    const response = await fetch(`/fmint/id/` + id);
     const records = await response.json();
     return records;
  }
 
  async function GetFuturePercipitation(id){
-    const response = await fetch(`http://localhost:5000/fpercipitation/id/` + id);
+    const response = await fetch(`/fpercipitation/id/` + id);
     const records = await response.json();
     return records;
  }
