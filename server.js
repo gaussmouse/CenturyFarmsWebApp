@@ -23,6 +23,8 @@ app.options('*', cors());
 const connection_string = process.env.ATLAS_URI;
 //const mapbox_token = process.env.REACT_APP_MAPBOX_ACCESS_KEY;
 
+// middleware and routes
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(morgan('tiny'));
 app.use(`/crop`, cropRouter);
@@ -54,6 +56,17 @@ mongoose.connect(connection_string, {
 //    const mapboxPrivateToken = response.json();
 //    res.json({mapboxPrivateToken});
 //})
+
+// Accessing the path module
+const path = require("path");
+
+// Step 1:
+app.use(express.static(path.resolve(__dirname, "./client/build")));
+// Step 2:
+app.get("*", function (request, response) {
+  response.sendFile(path.resolve(__dirname, "./client/build", "index.html"));
+});
+
 const port = process.env.PORT || 5000;
 app.listen(port, ()=>{
     console.log(`Server is running on port ${port}`);
