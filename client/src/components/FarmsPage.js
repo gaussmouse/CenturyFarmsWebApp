@@ -29,11 +29,11 @@ const CurrDataTab = () => {
   return (
     <>
       <h3 style={{ textAlign: 'center' }}>Current Farm Data</h3>
-      <p>{SinglePictureList(farmID)}</p>
-      <p>{FarmDescList(farmID)}</p>
-      <p>{CurrOwnerList(farmID)}</p>
-      <p>{CurrFarmList(farmID)}</p>
-      <p>{LocationList(farmID)}</p>
+      <div>{SinglePictureList(farmID)}</div>
+      <div>{FarmDescList(farmID)}</div>
+      <div>{CurrOwnerList(farmID)}</div>
+      <div>{CurrFarmList(farmID)}</div>
+      <div>{LocationList(farmID)}</div>
     </>
   )
 }
@@ -43,9 +43,9 @@ const PastDataTab = () => {
     return (
       <>
         <h3 style={{ textAlign: 'center' }}>Historical Farm Data</h3>
-        <p>{SinglePictureList(farmID)}</p>
-        <p>{OriginalOwnerList(farmID)}</p>
-        <p>{FarmPastList(farmID)}</p>
+        <div>{SinglePictureList(farmID)}</div>
+        <div>{OriginalOwnerList(farmID)}</div>
+        <div>{FarmPastList(farmID)}</div>
       </>
     )
   }
@@ -55,7 +55,7 @@ const PictureTab = () => {
   return (
     <>
       <h3 style={{ textAlign: 'center' }}> Farm Pictures</h3>
-      <p>{PictureList(farmID)}</p>
+      <div>{PictureList(farmID)}</div>
     </>
   )
 }
@@ -75,7 +75,7 @@ const HistoricClimateGraphTab = () => {
   const fahrenheitMinTemps = celsiusMinTemps.map(temp => (temp * 9/5) + 32);
   return (
     <div>
-      <p>{SinglePictureList(farmID)}</p>
+      <div>{SinglePictureList(farmID)}</div>
       <VictoryChart 
         maxDomain={{ y: 2300, x: 101}} 
         minDomain={{ y: 500 }}
@@ -206,7 +206,7 @@ const FutureClimateGraphTab = () => {
   const fahrenheitMinTemps = celsiusMinTemps.map(temp => (temp * 9/5) + 32);
   return (
     <div>
-      <p>{SinglePictureList(farmID)}</p>
+      <div>{SinglePictureList(farmID)}</div>
       <VictoryChart
        maxDomain={{ y: 1700, x: 29}}
        minDomain={{ y: 950}}
@@ -435,7 +435,7 @@ function FarmDescList(id) {
  // This method fetches the records from the database.
  useEffect(() => {
    async function getFarmDesc(id) {
-     const response = await fetch(`/farmdesc/farmPastID/` + id);
+     const response = await fetch(`http://localhost:5000/farmdesc/farmPastID/` + id);
  
      if (!response.ok) {
        const message = `An error occurred: ${response.statusText}`;
@@ -450,7 +450,7 @@ function FarmDescList(id) {
    getFarmDesc(id);
  
    return;
- }, [records.length, id]);
+ }, [records.length]);
 
  
  // This method will map out the records on the table
@@ -479,7 +479,7 @@ function CurrOwnerList(id) {
     // This method fetches the records from the database.
     useEffect(() => {
       async function getCurrOwner(id) {
-       const response = await fetch(`/currentOwner/id/` + id);
+       const response = await fetch(`http://localhost:5000/currentOwner/id/` + id);
    
        if (!response.ok) {
          const message = `An error occurred: ${response.statusText}`;
@@ -494,7 +494,7 @@ function CurrOwnerList(id) {
      getCurrOwner(id)
     
       return;
-    }, [records.length, id]);
+    }, [records.length]);
    
     function currOwnerList() {
        return records.map((record) => {
@@ -521,7 +521,7 @@ function CurrOwnerList(id) {
     // This method fetches the records from the database.
     useEffect(() => {
       async function getCurrFarm(id) {
-       const response = await fetch(`/currentFarm/id/` + id);
+       const response = await fetch(`http://localhost:5000/currentFarm/id/` + id);
    
        if (!response.ok) {
          const message = `An error occurred: ${response.statusText}`;
@@ -538,7 +538,7 @@ function CurrOwnerList(id) {
      getCurrFarm(id)
     
       return;
-    }, [records.length, id]);
+    }, [records.length]);
    
     function currFarmList() {
        return records.map((record) => {
@@ -565,7 +565,7 @@ function CurrOwnerList(id) {
     // This method fetches the records from the database.
     useEffect(() => {
       async function getCurrLocation(id) {
-       const response = await fetch(`/location/id/` + id);
+       const response = await fetch(`http://localhost:5000/location/id/` + id);
    
        if (!response.ok) {
          const message = `An error occurred: ${response.statusText}`;
@@ -580,7 +580,7 @@ function CurrOwnerList(id) {
      getCurrLocation(id)
     
       return;
-    }, [records.length, id]);
+    }, [records.length]);
    
     function locationList() {
        return records.map((record) => {
@@ -607,7 +607,7 @@ function CurrOwnerList(id) {
     // This method fetches the records from the database.
     useEffect(() => {
       async function getOriginalOwner(id) {
-        const response = await fetch(`/originalOwner/id/` + id);
+        const response = await fetch(`http://localhost:5000/originalOwner/id/` + id);
     
         if (!response.ok) {
           const message = `An error occurred: ${response.statusText}`;
@@ -622,7 +622,7 @@ function CurrOwnerList(id) {
       getOriginalOwner(id);
     
       return;
-    }, [records.length, id]);
+    }, [records.length]);
    
     
     // This method will map out the records on the table
@@ -651,7 +651,7 @@ function CurrOwnerList(id) {
     // This method fetches the records from the database.
     useEffect(() => {
       async function getFarmPast(id) {
-        const response = await fetch(`/pastFarm/id/` + id);
+        const response = await fetch(`http://localhost:5000/pastFarm/id/` + id);
     
         if (!response.ok) {
           const message = `An error occurred: ${response.statusText}`;
@@ -668,7 +668,7 @@ function CurrOwnerList(id) {
       getFarmPast(id);
     
       return;
-    }, [records.length, id]);
+    }, [records.length]);
    
     
     // This method will map out the records on the table
@@ -697,7 +697,7 @@ function CurrOwnerList(id) {
     // This method fetches the records from the database.
     useEffect(() => {
       async function getFarmPictures(id) {
-        const response = await fetch(`/farmdesc/farmCurrentID/` + id);
+        const response = await fetch(`http://localhost:5000/farmdesc/farmCurrentID/` + id);
     
         if (!response.ok) {
           const message = `An error occurred: ${response.statusText}`;
@@ -705,11 +705,10 @@ function CurrOwnerList(id) {
           return;
         }
     
-        const records = await response.json();
+         const records = await response.json();
         const pictures = records[0].pictures;
         const picList = pictures.split(";");
         records[0].pictures = picList;
-        //console.log(records);
         setRecords(records);
       }
     
@@ -717,8 +716,7 @@ function CurrOwnerList(id) {
       //console.log(getFarmPictures(id));
     
       return;
-    }, [records.length, id]);
-    //console.log(records);
+    }, [records.length]);
     
     // This method will map out the records on the table
     function farmPictureList() {
@@ -747,7 +745,7 @@ function CurrOwnerList(id) {
     // This method fetches the records from the database.
     useEffect(() => {
       async function getFarmPictures(id) {
-        const response = await fetch(`/farmdesc/farmCurrentID/` + id);
+        const response = await fetch(`http://localhost:5000/farmdesc/farmCurrentID/` + id);
     
         if (!response.ok) {
           const message = `An error occurred: ${response.statusText}`;
@@ -767,8 +765,7 @@ function CurrOwnerList(id) {
       //console.log(getFarmPictures(id));
     
       return;
-    }, [records.length, id]);
-    //console.log(records);
+    }, [records.length]);
     
     // This method will map out the records on the table
     function farmPictureList() {
@@ -799,7 +796,7 @@ function CurrOwnerList(id) {
    
       for (let i = 0; i < cropNames.length; i++){
         let nameID = cropNames[i];
-        const response = await fetch(`/crop/id/` + nameID);
+        const response = await fetch(`http://localhost:5000/crop/id/` + nameID);
         const records = await response.json();
         cropNames[i] = records[0].name;
       }
@@ -817,7 +814,7 @@ function CurrOwnerList(id) {
  
     for (let i = 0; i < livestockNames.length; i++){
       let livestockID = livestockNames[i];
-      const response = await fetch(`/livestock/id/` + livestockID);
+      const response = await fetch(`http://localhost:5000/livestock/id/` + livestockID);
       const records = await response.json();
       livestockNames[i] = records[0].name;
     }
@@ -828,19 +825,19 @@ function CurrOwnerList(id) {
  }
 
  async function GetFutureMaxTemp(id){
-    const response = await fetch(`/fmaxt/id/` + id);
+    const response = await fetch(`http://localhost:5000/fmaxt/id/` + id);
     const records = await response.json();
     return records;
  }
 
  async function GetFutureMinTemp(id){
-    const response = await fetch(`/fmint/id/` + id);
+    const response = await fetch(`http://localhost:5000/fmint/id/` + id);
     const records = await response.json();
     return records;
  }
 
  async function GetFuturePercipitation(id){
-    const response = await fetch(`/fpercipitation/id/` + id);
+    const response = await fetch(`http://localhost:5000/fpercipitation/id/` + id);
     const records = await response.json();
     return records;
  }
