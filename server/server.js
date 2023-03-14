@@ -34,6 +34,9 @@ app.use(`/pastFarm`, pastFarmRouter);
 app.use(`/originalOwner`, originalOwnerRouter);
 app.use(`/location`, locationRouter);
 
+mongoose.set(
+    'strictQuery', false
+);
 mongoose.connect(connection_string, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
