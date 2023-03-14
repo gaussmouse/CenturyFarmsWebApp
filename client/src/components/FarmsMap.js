@@ -1,6 +1,8 @@
 import React, {useRef, useState, useEffect} from 'react';
+//import Checkbox from './Checkbox';
 import mapboxgl from '!mapbox-gl'; // eslint-disable-line import/no-webpack-loader-syntax
 
+// public access key - rotated periodically
 mapboxgl.accessToken = "add token here"; // not sure if this format works, token previously pasted directly in
 
 export default function FarmsMap () {
@@ -9,13 +11,12 @@ export default function FarmsMap () {
   const [lng, setLng] = useState(-122.96);
   const [lat, setLat] = useState(44.71);
   const [zoom, setZoom] = useState(8);
-  const [farms, setFarms] = useState([])
+  const [farms, setFarms] = useState([]);
+  const [searchedFarms, setSearchedFarms] = useState([]);
   const [searchInput, setSearchInput] = useState("");
  
   // -----------------------------------------------------------------------------
   /*
-  // TODO: attempt at incorporating existing structures
-  var searchedFarms = []
   const [climateData, setClimateData] = useState({
     "year":[0],
     "yday":[0],
@@ -45,18 +46,49 @@ export default function FarmsMap () {
         zoom: zoom
       });
       const farmData = await getFarmLocations();
-      setFarms(farmData); 
-      showFarmLocations(farmData);
+      setFarms(farmData);
+      mapFarmLocations(farmData);
     }
     initializeMap();
+    map.current.addControl(new mapboxgl.NavigationControl(), 'top-right');
   }, [lng, lat, zoom]);
+
+  /*
+    * Sets new longitude, latitude, zoom on move
+    */
+  useEffect(() => {
+    if (!map.current) return; // wait for map to initialize
+    map.current.on('move', () => {
+      setLng(map.current.getCenter().lng.toFixed(4));
+      setLat(map.current.getCenter().lat.toFixed(4));
+      setZoom(map.current.getZoom().toFixed(2));
+    });
+  });
+
+  /*
+  seEffect(() => {
+    if (searchInput !== "" && farms) {
+      const searchedFarms = farms.filter((farm) => {
+        if (searchInput === '' || farm.properties.name.toLowerCase().includes(searchInput.toLowerCase())) {
+          return farm;
+        }
+      });
+      setSearchedFarms(searchedFarms);
+      mapFarmLocations(searchedFarms);
+    }
+    else {
+      //setFarms(farmData);
+      mapFarmLocations(farms);
+    } 
+  }, [searchInput, farms]);
+  */
 
   /*
   * Gets farm locations to populate map with location markers
   */
   const getFarmLocations = async () => {
-    const response = await fetch(`http://localhost:5000/location/`);
-    console.log(response);
+    const response = await fetch(`/location/`);
+    //console.log(response);
     
     if (!response.ok) {
       const message = `An error occurred: ${response.statusText}`;
@@ -65,7 +97,7 @@ export default function FarmsMap () {
     }
 
     const records = await response.json();
-    console.log(records);
+    //console.log(records);
     let farmPins = records.map(farm => (
       {
         type: 'Feature',
@@ -87,45 +119,8 @@ export default function FarmsMap () {
   /*
   * Shows farm locations on map
   */
-  const showFarmLocations = (farmData) => {
+  const mapFarmLocations = (farmData) => {
     map.current.on('load', () => {
-      /*
-      // Add a layer to use the image to represent the data.
-      // Add an image to use as a custom marker
-      map.current.loadImage(
-        'https://docs.mapbox.com/mapbox-gl-js/assets/custom_marker.png',
-        (error, image) => {
-        if (error) throw error;
-        map.current.addImage('custom-marker', image);
-        // Add a GeoJSON source
-          map.current.addSource('points', {
-            type: 'geojson',
-            data: {
-              type: 'FeatureCollection',
-              features: farmData
-            }
-          });
-        
-        map.current.addLayer({
-          id: 'points',
-          type: 'symbol',
-          minzoom: 0,
-          source: 'points',
-          layout: {
-            'icon-image': 'custom-marker',
-            // get the farm name from the source's "name" property
-            'text-field': ['get', 'name'],
-            'text-font': [
-            'Open Sans Semibold',
-            'Arial Unicode MS Bold'
-            ],
-            'text-offset': [0, 0.9],
-            'text-anchor': 'top'
-          },
-        });
-      });
-      */
-
       // Add a popup for each marker
       farmData.forEach((farm) => {
         const popup = new mapboxgl.Popup({
@@ -151,38 +146,19 @@ export default function FarmsMap () {
           });
         });
       });
-      /*
-      // from mapbox store locator tutorial (https://docs.mapbox.com/help/tutorials/building-a-store-locator/)
-      map.current.on('click', (event) => {
-        // Determine if a feature in the "locations" layer exists at that point. 
-        const features = map.queryRenderedFeatures(event.point, {
-          layers: ['points']
-        });
-  
-        // If it does not exist, return
-        if (!features.length) return;
-  
-        const clickedPoint = features[0];
-  
-        // Fly to the point
-        flyToFarm(clickedPoint);
-  
-        // Close all other popups and display popup for clicked farm
-        createPopUp(clickedPoint);
-  
-        // Highlight listing in sidebar (and remove highlight for all other listings)
-        const activeItem = document.getElementsByClassName('active');
-        if (activeItem[0]) {
-          activeItem[0].classList.remove('active');
-        }
-        const listing = document.getElementById(
-          `listing-${clickedPoint.properties.id}`
-        );
-        listing.classList.add('active');
-      });
-      */
     });
   }   
+
+  /*
+    * Reorients map to focus on selected farm
+    * Code adapted from (https://docs.mapbox.com/help/tutorials/building-a-store-locator/)
+    */
+  const flyToFarm = (CurrentFeature) => {
+    map.current.flyTo({
+      center: CurrentFeature.geometry.coordinates,
+      zoom: 15
+    });
+  };
 
   /*
   * Sets styles of sidebar, map, and open/close buttons when
@@ -207,29 +183,6 @@ export default function FarmsMap () {
       closeButton.style.display = 'none';
     }
   }
-  
-  /*
-  * Sets new longitude, latitude, zoom on move
-  */
-  useEffect(() => {
-    if (!map.current) return; // wait for map to initialize
-    map.current.on('move', () => {
-      setLng(map.current.getCenter().lng.toFixed(4));
-      setLat(map.current.getCenter().lat.toFixed(4));
-      setZoom(map.current.getZoom().toFixed(2));
-    });
-  });
-    
-  /*
-  * Reorients map to focus on selected farm
-  * Code adapted from (https://docs.mapbox.com/help/tutorials/building-a-store-locator/)
-  */
-  const flyToFarm = (CurrentFeature) => {
-    map.current.flyTo({
-      center: CurrentFeature.geometry.coordinates,
-      zoom: 15
-    });
-  };
 
  /* Longitude: {lng} | Latitude: {lat} | Zoom: {zoom} */
 
@@ -248,7 +201,8 @@ export default function FarmsMap () {
               if (searchInput === '' || farm.properties.name.toLowerCase().includes(searchInput.toLowerCase())) {
                 return farm;
               } 
-            }).map((farm) => (
+            }).sort((a, b) => a.properties.name.localeCompare(b.properties.name)) // Sort farms alphabetically
+            .map((farm) => (             
               <div key={farm.properties.id} className="item">
                 <button id={"link-" + farm.properties.id} className="title" onClick={() => {flyToFarm(farm)}}>{farm.properties.name}</button>
                 <div className="details">{farm.properties.address}</div>
