@@ -1,19 +1,17 @@
-import * as dotenv from 'dotenv'; 
-dotenv.config({ path: "./config.env" });
-
-import express from 'express';
-import bodyParser from 'body-parser';
-import mongoose from 'mongoose';
-import cropRouter from './routers/cropRouter.js';
-import livestockRouter from './routers/livestockRouter.js';
-import farmDescriptionRouter from './routers/farmDescriptionRouter.js';
-import currentOwnerRouter from './routers/currentOwnerRouter.js';
-import currentFarmRouter from './routers/farmCurrentRouter.js';
-import pastFarmRouter from './routers/farmPastRouter.js';
-import originalOwnerRouter from './routers/originalOwnerRouter.js';
-import locationRouter from './routers/locationRouter.js';
-import morgan from 'morgan';
-import cors from 'cors';
+const express = require('express');
+const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
+const cropRouter = require('./routers/cropRouter.js');
+const livestockRouter = require('./routers/livestockRouter.js');
+const farmDescriptionRouter = require('./routers/farmDescriptionRouter.js');
+const currentOwnerRouter = require('./routers/currentOwnerRouter.js');
+const currentFarmRouter = require('./routers/farmCurrentRouter.js');
+const pastFarmRouter = require('./routers/farmPastRouter.js');
+const originalOwnerRouter = require('./routers/originalOwnerRouter.js');
+const locationRouter = require('./routers/locationRouter.js');
+const morgan = 'morgan';
+const cors = 'cors';
+require.dotenv.config({ path: "./config.env" });
 
 const app = express();
 
@@ -58,7 +56,7 @@ mongoose.connect(connection_string, {
 //})
 
 // Accessing the path module
-import path from 'path';
+const path = require('path');
 
 // Step 1:
 app.use(express.static(path.resolve(__dirname, "./client/build")));
