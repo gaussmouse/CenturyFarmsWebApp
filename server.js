@@ -58,7 +58,7 @@ mongoose.connect(connection_string, {
 //})
 
 // Accessing the path module
-const path = require("path");
+import path from 'path';
 
 // Step 1:
 app.use(express.static(path.resolve(__dirname, "./client/build")));
