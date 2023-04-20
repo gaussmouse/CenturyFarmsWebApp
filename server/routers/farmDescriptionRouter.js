@@ -66,4 +66,10 @@ router.get(`/award/:name`, async (req, res) => {
     res.send(farmMatches);
 })
 
+//Get all farms that have been interviewed 
+router.get(`/interviewedFarms`, async (req, res) => {
+    let farm = await FarmDescription.find().where('interviewed').equals("yes");
+    res.send(farm);
+})
+
 export default router;
