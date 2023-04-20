@@ -53,13 +53,6 @@ router.get(`/name/:name`, async (req, res) => {
     res.send(farmMatches);
 })
 
-//Get farm description by award year
-router.get(`/year/:year`, async (req, res) =>{
-    let yearInt = parseInt(req.params.year);
-    let farms = await FarmDescription.find().where('yearOfAward').equals(yearInt);
-    res.send(farms);
-})
-
 //Get farm description by award type
 router.get(`/award/:name`, async (req, res) => {
     let words = req.params.name.split(" ");

@@ -22,18 +22,6 @@ router.get(`/currAcreage/:acreage`, async (req, res) => {
     res.send(acreage);
 })
 
-//Get current farm info by acreage farmed today
-router.get(`/currAcreageFarmed/:acreage`, async (req, res) => {
-    let acreage = await CurrentFarm.find().where('acreageFarmedToday').equals(req.params.acreage);
-    res.send(acreage);
-})
-
-//Get current farm info by generations living on farm
-router.get(`/gensOnFarm/:gens`, async (req, res) => {
-    let farmList = await CurrentFarm.find().where('gensOnFarm').equals(req.params.gens);
-    res.send(farmList);
-})
-
 //Get current farm info by crop id
 router.get(`/currCrops/:cropid`, async (req, res) => {
     let farmList = await CurrentFarm.find();

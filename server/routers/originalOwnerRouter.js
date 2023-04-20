@@ -38,13 +38,4 @@ router.get(`/origin/:origin`, async (req, res) => {
         res.send(farmMatches);
 })
 
-//Get original owner by ethnic origin
-router.get(`/ethnicOrigin/:origin`, async (req, res) => {
-    let words = req.params.origin.toLowerCase();
-
-    const currOwnerList = await OriginalOwner.find();
-    const farmMatches = currOwnerList.filter(element => element.ethnicOrigin.toLowerCase().includes(words));
-    res.send(farmMatches);
-})
-
 export default router;

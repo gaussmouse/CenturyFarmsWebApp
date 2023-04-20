@@ -37,22 +37,4 @@ router.get(`/address/:address`, async (req, res) => {
         res.send(farmMatches);
 })
 
-//Get location by gps location
-router.get(`/gpsLocation/:gps`, async (req, res) => {
-    let words = req.params.gps.toLowerCase();
-
-    const locationList = await Location.find();
-    const farmMatches = locationList.filter(element => element.gpsLocation.toLowerCase().includes(words));
-    res.send(farmMatches);
-})
-
-//Get location by legal description
-router.get(`/legalDesc/:legal`, async (req, res) => {
-    let words = req.params.legal.toLowerCase();
-
-    const locationList = await Location.find();
-    const farmMatches = locationList.filter(element => element.legalDescription.toLowerCase().includes(words));
-    res.send(farmMatches);
-})
-
 export default router;

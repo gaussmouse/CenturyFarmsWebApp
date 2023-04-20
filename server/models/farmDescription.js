@@ -10,7 +10,8 @@ const farmDescriptionSchema = mongoose.Schema({
     locationID: Number,
     name: String,
     awardType: String,
-    yearOfAward: Number
+    pictures: String,
+    interviewed: String
 })
 
 const FarmDescription = mongoose.model('FarmDescription', farmDescriptionSchema);
