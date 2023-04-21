@@ -31,6 +31,9 @@ app.use(morgan('tiny'));
 import('./routers/cropRouter.js').then((cropRouter) => {
     app.use(`/crop`, cropRouter.default);
 });
+import('./routers/cropTypeRouter.js').then((cropTypeRouter) => {
+    app.use(`/croptype`, cropTypeRouter.default);
+});
 import('./routers/farmDescriptionRouter.js').then((farmDescriptionRouter) => {
     app.use(`/farmdesc`, farmDescriptionRouter.default);
 });
@@ -82,7 +85,7 @@ const path = require('path');
 app.use(express.static(path.resolve(__dirname, "./client/build")));
 // Step 2:
 app.get("*", function (request, response) {
-  response.sendFile(path.resolve(__dirname, "./client/build", "index.js"));
+  response.sendFile(path.resolve(__dirname, "./client/build", "index.html"));
 });
 */
 
