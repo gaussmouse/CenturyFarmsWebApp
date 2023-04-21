@@ -1,5 +1,4 @@
 import React, {useRef, useState, useEffect} from 'react';
-//import Checkbox from './Checkbox';
 import mapboxgl from '!mapbox-gl'; // eslint-disable-line import/no-webpack-loader-syntax
 
 // public access key - rotated periodically
@@ -14,6 +13,9 @@ export default function FarmsMap () {
   const [farms, setFarms] = useState([]);
   const [searchedFarms, setSearchedFarms] = useState([]);
   const [searchInput, setSearchInput] = useState("");
+  const [cropTypes, setCropTypes] = useState([]);
+  const [livestockTypes, setLivestockTypes] = useState([]);
+  const [filterClicked, setFilterClicked] = useState(false);
  
   // -----------------------------------------------------------------------------
   /*
@@ -45,9 +47,16 @@ export default function FarmsMap () {
         center: [lng, lat],
         zoom: zoom
       });
-      const farmData = await getFarmLocations();
+      const farmData = await getFarmLocations();       
       setFarms(farmData);
       mapFarmLocations(farmData);
+
+      const cropData = await getCropTypes();
+      setCropTypes(cropData);
+
+      //const livestockData = await getLivestockTypes();
+      //setLivestockTypes(livestockData);
+      
     }
     initializeMap();
     map.current.addControl(new mapboxgl.NavigationControl(), 'top-right');
@@ -117,6 +126,50 @@ export default function FarmsMap () {
   };
 
   /*
+  * Gets crop categories for farm search filter
+  */
+  const getCropTypes = async () => {
+    const response = await fetch(`/croptype/`);
+
+    if (!response.ok) {
+      const message = `An error occurred: ${response.statusText}`;
+      window.alert(message);
+      return;
+    }
+
+    const records = await response.json();
+    let cropTypes = records.map(cropType => (
+      {
+        id: cropType.cropTypeID,
+        type: cropType.type
+      }
+    ));
+    return cropTypes;
+  }
+
+  /*
+  * Gets livestock categories for farm search filter
+  */
+  const getLivestockTypes = async () => {
+    const response = await fetch(`/livestocktype/`);
+
+    if (!response.ok) {
+      const message = `An error occurred: ${response.statusText}`;
+      window.alert(message);
+      return;
+    }
+
+    const records = await response.json();
+    let livestockTypes = records.map(livestockType => (
+      {
+        id: livestockType.livestockTypeID,
+        type: livestockType.type
+      }
+    ));
+    return livestockTypes;
+  }
+
+  /*
   * Shows farm locations on map
   */
   const mapFarmLocations = (farmData) => {
@@ -154,6 +207,7 @@ export default function FarmsMap () {
     * Code adapted from (https://docs.mapbox.com/help/tutorials/building-a-store-locator/)
     */
   const flyToFarm = (CurrentFeature) => {
+    toggleLocationSidebar();
     map.current.flyTo({
       center: CurrentFeature.geometry.coordinates,
       zoom: 15
@@ -164,7 +218,7 @@ export default function FarmsMap () {
   * Sets styles of sidebar, map, and open/close buttons when
   *   called inside onClick from the open/close buttons
   */
-  function showLocationSidebar() {
+  function toggleLocationSidebar() {
     var sidebar = document.getElementById('locationSidebar');
     var map = document.getElementById('main');
     var openButton = document.getElementById('openLocationSidebar');
@@ -184,34 +238,110 @@ export default function FarmsMap () {
     }
   }
 
+  // CHECKBOX INTEGRATION WORK-IN-PROGRESS -----------------------------------------
+  const checkboxes = document.querySelectorAll('.checkbox');
+  let filteredFarms = farms; // initialize filteredFarms to include all farms
+  
+  /*
+  * Handles search filters by creating modified list of farms based on checked filters
+  */
+  function handleFilter(event) {
+    // filter farms based on selected checkboxes
+    const filters = Array.from(checkboxes).filter((checkbox) => checkbox.checked).map((checkbox) => checkbox.value);
+    filteredFarms = farms.filter((farm) => filters.includes(farm.type));
+    
+    mapFarmLocations(filteredFarms); // re-render farms list based on new filter settings
+  }
+  
+  checkboxes.forEach((checkbox) => checkbox.addEventListener('change', handleFilter));
+  // CHECKBOX INTEGRATION WORK-IN-PROGRESS ------------------------------------------
+  
+
  /* Longitude: {lng} | Latitude: {lat} | Zoom: {zoom} */
 
   return (
     <div>
       <div id="locationSidebar" className="sidebar"> 
-        <button id="closeLocationSidebar" className="closebtn" onClick={showLocationSidebar}>×</button>
+        <button 
+          id="closeLocationSidebar" 
+          className="closebtn" 
+          onClick={toggleLocationSidebar}>
+            ×
+          </button>
         <div id="locationSearch" className="search">
-          <input type="text" id="farmSearch" onChange={event => setSearchInput(event.target.value)} placeholder="Search farms.." title="Search by name"/> 
-        </div>   
+          <input 
+            type="text" 
+            id="farmSearch" 
+            onChange={event => setSearchInput(event.target.value)} 
+            placeholder="Search farms.." 
+            title="Search by name"
+          /> 
+        </div> 
+        <button 
+          id="filterSearch" 
+          onClick={() => setFilterClicked(!filterClicked)}>
+          Filter
+        </button>
+        <div 
+          className="filter-menu" 
+          style={{ display: filterClicked ? 'block' : 'none' }}>
+          <label htmlFor="crop-type-filter">Crop Type:</label>
+          {
+            // TODO: add nesting for both filter categories
+            // get list of crop categories and print
+            cropTypes.map((cropType) => (
+              <div className="crop-type-filter" key={cropType.id}>
+                <label>
+                  <input 
+                    type="checkbox" 
+                    name={cropType.type} 
+                    value={cropType.type} 
+                  />
+                  {cropType.type}
+                </label>
+              </div>
+            ))
+
+            // get list of livestock categories and print
+          }
+        </div>
         <div className='heading'>
           <h1>Farm locations</h1>
         </div>
         <div id='listings' className='listings'>
-            {farms.filter(farm => {
-              if (searchInput === '' || farm.properties.name.toLowerCase().includes(searchInput.toLowerCase())) {
-                return farm;
-              } 
-            }).sort((a, b) => a.properties.name.localeCompare(b.properties.name)) // Sort farms alphabetically
-            .map((farm) => (             
-              <div key={farm.properties.id} className="item">
-                <button id={"link-" + farm.properties.id} className="title" onClick={() => {flyToFarm(farm)}}>{farm.properties.name}</button>
-                <div className="details">{farm.properties.address}</div>
-              </div>
-            ))}
+          {farms.filter(farm => {
+            // if one or more search filter is selected, filter farms based on selection(s)
+            /*
+            if () {
+
+             }
+            */
+            if (searchInput === '' || 
+              farm.properties.name.toLowerCase().includes(searchInput.toLowerCase())) {
+              return farm;
+            } 
+          })
+          .sort((a, b) => a.properties.name.localeCompare(b.properties.name)) // Sort farms alphabetically
+          .map((farm) => (             
+            <div key={farm.properties.id} className="item">
+              <button 
+                id={"link-" + farm.properties.id} 
+                className="title" 
+                onClick={() => {flyToFarm(farm)}}>
+                 {farm.properties.name}
+              </button>
+              <div className="details">{farm.properties.address}</div>
+            </div>
+          ))}
         </div>
       </div> 
       <div id="main">
-        <button id="openLocationSidebar" className="openbtn" onClick={showLocationSidebar}>☰ Farm Locations</button>
+        <button 
+          id="openLocationSidebar" 
+          className="openbtn" 
+          onClick={toggleLocationSidebar}>
+            ☰ Farm Locations
+        </button>
         <div ref={mapContainer} className="map-container" />
       </div>
     </div>
