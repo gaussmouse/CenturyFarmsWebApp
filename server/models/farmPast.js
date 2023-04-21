@@ -3,9 +3,9 @@
 import mongoose from 'mongoose';
 
 const farmPastSchema = mongoose.Schema({
-    farmPastID: Number,
-    yearPropertyAcquisition: Number,
-    originalAcreage: Number,
+    farmPastID: String,
+    yearPropertyAcquisition: String,
+    originalAcreage: String,
     cropID: String,
     livestockID: String
 })
