@@ -10,6 +10,66 @@ import FutureClimateGraphs from "./FutureClimateGraphs";
 let farmID = "";
 var farmPicList = [];
 
+// const fetch = require('node-fetch');
+
+// // Make API request
+// const url = "https://www.ncdc.noaa.gov/cdo-web/api/v2/data";
+// const params = {
+//   datasetid: "GHCND",
+//   datatypeid: "TMAX,TMIN,PRCP",
+//   units: "metric",
+//   startdate: "2010-01-01",
+//   enddate: "2020-12-31",
+//   extent: "40.7128,-74.0060,40.7128,-74.0060"
+// };
+// const headers = { "token": "<your API token here>" };
+// const queryString = Object.keys(params)
+//   .map(key => encodeURIComponent(key) + '=' + encodeURIComponent(params[key]))
+//   .join('&');
+// const fullUrl = url + '?' + queryString;
+// fetch(fullUrl, { headers })
+//   .then(response => response.json())
+//   .then(data => {
+//     // Parse data and calculate yearly averages
+//     const yearlyAverages = {};
+//     for (const record of data.results) {
+//       const year = record.date.substring(0, 4);
+//       const tmax = record.value.TMAX;
+//       const tmin = record.value.TMIN;
+//       const prcp = record.value.PRCP;
+//       if (tmax && tmin && prcp) {
+//         yearlyAverages[year] = yearlyAverages[year] || { tmax: 0, tmin: 0, prcp: 0, count: 0 };
+//         yearlyAverages[year].tmax += tmax;
+//         yearlyAverages[year].tmin += tmin;
+//         yearlyAverages[year].prcp += prcp;
+//         yearlyAverages[year].count += 1;
+//       }
+//     }
+//     for (const year in yearlyAverages) {
+//       const count = yearlyAverages[year].count;
+//       const tmaxAvg = yearlyAverages[year].tmax / count;
+//       const tminAvg = yearlyAverages[year].tmin / count;
+//       const prcpAvg = yearlyAverages[year].prcp / count;
+//       console.log(`Year: ${year}, TMAX average: ${tmaxAvg.toFixed(2)}, TMIN average: ${tminAvg.toFixed(2)}, PRCP average: ${prcpAvg.toFixed(2)}`);
+//     }
+//   })
+//   .catch(error => {
+//     console.error(error);
+//   });
+
+// const startDate = "1920-01-01";
+// const endDate = "2050-12-31";
+// const cat = "TEMP";
+// const extent = "47.5204,-122.2047"
+
+// fetch(`https://www.ncdc.noaa.gov/cdo-web/api/v2/data?datasetid=GHCND&datatypeid=TMAX,TMIN,PRCP&units=metric&startdate=2022-01-01&enddate=2022-01-31&extent=40.7128,-74.0060,40.7128,-74.0060&limit=1000`, {
+//   headers: {
+//     "token": "KJaDDzJRVHKRtccTRbPRNsEQBZbILqKS"
+//   }
+// })
+//   .then(response => response.json())
+//   .then(data => console.log(data));
+
 const FarmDetails = () => {
   farmID = useParams();
   farmID = farmID.id;
@@ -81,9 +141,9 @@ function FarmData() {
   }, []);
 
   return (
-    <div>
+    <div style={{ display: "flex", justifyContent: "center" }}>
       <FarmSinglePicture />
-      <div style={{ textAlign: "center" }}>
+      <div style={{ textAlign: "left", paddingLeft: "20px" }}>
         {currentData.map((data, index) => {
           const [label, value] = data.split(": ");
           return (
@@ -97,110 +157,69 @@ function FarmData() {
   );
 }
 
-function CurrentFarmData() {
+function CurrentPastFarmData() {
   const [currentData, setCurrentData] = useState([]);
 
   useEffect(() => {
     async function fetchData() {
       const currFarmResponse = await fetch(`/currentFarm/id/` + farmID);
       const currOwnerResponse = await fetch(`/currentOwner/id/` + farmID);
-
-      const currentOwnerRecords = await currOwnerResponse.json();
-      const currentFarmRecords = await currFarmResponse.json();
-
-      const newData = [];
-
-      const cropList = await getCropNames(currentFarmRecords[0].cropID);
-      const livestockList = await getLivestockNames(
-        currentFarmRecords[0].livestockID
-      );
-
-      if (currentOwnerRecords[0].name) {
-        newData.push(`Current Owner: ${currentOwnerRecords[0].name}`);
-      } else {
-        newData.push(`Current Owner: Current owner not found`);
-      }
-
-      if (currentOwnerRecords[0].relationshipToOriginalOwners) {
-        newData.push(
-          `Relationship to Original Owner: ${currentOwnerRecords[0].relationshipToOriginalOwners}`
-        );
-      } else {
-        newData.push(`Relationship to Original Owner: Relationship not found`);
-      }
-
-      if (currentFarmRecords[0].currentAcreage) {
-        newData.push(
-          `Current Acreage: ${currentFarmRecords[0].currentAcreage}`
-        );
-      } else {
-        newData.push(`Current Acreage: Current acreage not found`);
-      }
-
-      newData.push(`Crops: ${cropList}`);
-      newData.push(`Livestock: ${livestockList}`);
-
-      console.log(newData);
-      setCurrentData(newData);
-    }
-
-    fetchData();
-  }, []);
-
-  return (
-    <div style={{ textAlign: "center" }}>
-      {currentData.map((data, index) => {
-        const [label, value] = data.split(": ");
-        return (
-          <p key={index}>
-            <b>{label}:</b> {value}
-          </p>
-        );
-      })}
-    </div>
-  );
-}
-
-function PastFarmData() {
-  const [currentData, setCurrentData] = useState([]);
-
-  useEffect(() => {
-    async function fetchData() {
       const pastFarmResponse = await fetch(`/pastFarm/id/` + farmID);
       const originalOwnerResponse = await fetch(`/originalOwner/id/` + farmID);
 
+      const currentOwnerRecords = await currOwnerResponse.json();
+      const currentFarmRecords = await currFarmResponse.json();
       const originalOwnerRecords = await originalOwnerResponse.json();
       const pastFarmRecords = await pastFarmResponse.json();
 
       const newData = [];
 
-      const cropList = await getCropNames(pastFarmRecords[0].cropID);
-      const livestockList = await getLivestockNames(
-        pastFarmRecords[0].livestockID
+      const currentCropList = await getCropNames(currentFarmRecords[0].cropID);
+      const currentLivestockList = await getLivestockNames(
+        currentFarmRecords[0].livestockID
       );
 
+      const pastCropList = await getCropNames(pastFarmRecords[0].cropID);
+      const pastLivestockList = await getLivestockNames(
+        pastFarmRecords[0].livestockID
+      );
+      
+      let owner = "Current owner not found";
+      let pastOwner = "Original owner not found";
+      let relationship = "Relationship not found";
+      let origin = "Origin not found";
+      let originalAcreage = "Original acreage not found";
+      let currentAcreage = "Current acreage not found";
+      
+      if (currentOwnerRecords[0].name) {
+        owner = currentOwnerRecords[0].name;
+      }
       if (originalOwnerRecords[0].name) {
-        newData.push(`Original Owner: ${originalOwnerRecords[0].name}`);
-      } else {
-        newData.push(`No original owner found`);
+        pastOwner = originalOwnerRecords[0].name;
       }
-
+      if (currentOwnerRecords[0].relationshipToOriginalOwners) {
+        relationship = currentOwnerRecords[0].relationshipToOriginalOwners;
+      }
       if (originalOwnerRecords[0].origin) {
-        newData.push(`Origin: ${originalOwnerRecords[0].origin}`);
-      } else {
-        newData.push(`Origin: Origin of original owner not found`);
+        origin = originalOwnerRecords[0].origin;
       }
-
+      if (currentOwnerRecords[0].currentAcreage) {
+        currentAcreage = currentOwnerRecords[0].currentAcreage;
+      }
       if (pastFarmRecords[0].originalAcreage) {
-        newData.push(`Original Acreage: ${pastFarmRecords[0].originalAcreage}`);
-      } else {
-        newData.push(`Original Acreage: Original acreage not found`);
+        originalAcreage = pastFarmRecords[0].originalAcreage;
       }
+      
+      newData.push({label: "Owner", currentValue: owner, pastValue: pastOwner,
+                    label2: "Relationship to Original Owners:", relationship: relationship, 
+                    label3: "Origin:", origin: origin,
+      });
 
-      newData.push(`Crops: ${cropList}`);
-      newData.push(`Livestock: ${livestockList}`);
+      newData.push({ label: "Acreage", currentValue: currentAcreage, pastValue: originalAcreage });
 
-      console.log(newData);
+      newData.push({ label: "Crops", currentValue: currentCropList, pastValue: pastCropList });
+      newData.push({ label: "Livestock", currentValue: currentLivestockList, pastValue: pastLivestockList });
+
       setCurrentData(newData);
     }
 
@@ -208,15 +227,27 @@ function PastFarmData() {
   }, []);
 
   return (
-    <div style={{ textAlign: "center" }}>
-      {currentData.map((data, index) => {
-        const [label, value] = data.split(": ");
-        return (
-          <p key={index}>
-            <b>{label}:</b> {value}
-          </p>
-        );
-      })}
+    <div style={{ textAlign: "center", marginBottom: "20px" }}>
+      <table style={{ border: "1px solid black", margin: "0 auto"}}>
+        <thead>
+          <tr>
+          <th style={{ border: "1px solid black", padding: "10px", textAlign: "center" }}></th>
+          <th style={{ border: "1px solid black", padding: "10px", textAlign: "center" }}>Current</th>
+          <th style={{ border: "1px solid black", padding: "10px", textAlign: "center" }}>Original</th>
+          </tr>
+        </thead>
+        <tbody>
+          {currentData.map((data, index) => {
+            return (
+              <tr key={index}>
+                <td style={{ border: "1px solid black", padding: "10px", textAlign: "center" }}><b>{data.label}</b></td>
+                <td style={{ border: "1px solid black", padding: "10px", textAlign: "center" }}>{data.currentValue} <br /> <b>{data.label2}</b> {data.relationship}</td>
+                <td style={{ border: "1px solid black", padding: "10px", textAlign: "center" }}>{data.pastValue} <br /> <b>{data.label3}</b> {data.origin}</td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
     </div>
   );
 }
@@ -238,12 +269,8 @@ function MyTabs() {
         <FarmData />
         <div style={{ display: "flex" }}>
           <div style={{ flex: 1 }}>
-            <h2 style={{ textAlign: "center" }}>Current Farm Information</h2>
-            <CurrentFarmData />
-          </div>
-          <div style={{ flex: 1 }}>
-            <h2 style={{ textAlign: "center" }}>Historic Farm Information</h2>
-            <PastFarmData />
+            <h2 style={{ textAlign: "center" }}>Current and Past Farm Information</h2>
+            <CurrentPastFarmData />
           </div>
         </div>
       </TabPanel>
@@ -305,7 +332,22 @@ const FarmPicture = () => {
 
 const FarmSinglePicture = () => {
   if (farmPicList.length < 1) {
-    return null; // don't render anything if farmPicList is empty
+    return (
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          flexDirection: "column",
+        }}
+      >
+        <img
+          src="https://lh3.googleusercontent.com/pw/AJFCJaVfD7cohOKrZFEQNQIf-wCtqvtmjB-zIFycNX2xcbXScwF5PiiGgxCE_84s9Diz9-IhbjqEUfkTxDpIFrAVyxnTiuiTsH2r256joAi45LuYKcdTTt0Q20TtpFh9EkUVQX2YLFuE8E1XPje7mCFBr1QF1STMaXgyd1paxTjTHFcf3gQ4a-bn8ZldcL-LHXefaOo6Fumz8134wNSQwZPBm58p8LNFPjO055FuL0SGaeCP0_ptRbEzdkq4rKho1a0yufG5FNvUyoomIh8zjsy3I-GwiRpdP0VAaU7nzKsV3SIAJq0vahQdwP-YOKwcR8RZw-GBV6JcpTRKBImLUyc0jlfN1ieQJ6Y8bfGyBNgs82mtV5nFxdmT9nI0P4yL8tsQ0J5c55Yo6pabTS3iyVdxlFfz63I-TH2S8NpljX0RoWtjaLXSezxULMHlAhXCOeFP6NjAlYPh9JWVgMjdp5G0bAA-GLhq7pUchMgX-gIHPvacJqOUOp-jmkxsLS2VMnmb4WG8TQWX3pi398SSZaTWZtPuwVqFE7waQewILixXNCjB5hB1s9rR7X8suUD3A313gtFyVk1CoxneJjWroLslDk3x0jTOeH1BVWq79-mGEGmxim4pSMlIa_pYzzT-Sl07TCZFw6dQosvWVXpY-BKyH8t9TlMK6g4z9DtzW2c88J7Ex0weTjsyD7ClGXelMQR8KNw3WFKYc1Gz1HYeManPksj_Bbfn1Xv2-AaJ3u3EjD3O9ZfedXNwa72G0rS35MCd1qndBeyb9B1ZYEKkDtTwHDqH2e0ASFl5X2QuDLmuGIHoiQ_2uMcT6IaZ6j18o2cyCQB4vtwCaxt1qNsaGOQAMkrOMeVFUecMLjD9P6Nl8gZnddtwg9XsvjedG7Kueyyo8cOLiNwD9issxs4dZ_pTwMRq8DGqcMop1ZPHjmxiOPSkK4ucayv3=w400-h400-s-no?authuser=0"
+          alt="pic"
+          style={{ display: "block", minWidth: "250px", maxHeight: "250px" }}
+        />
+      </div>
+    );
   }
 
   return (
@@ -320,7 +362,7 @@ const FarmSinglePicture = () => {
       <img
         src={farmPicList[0]}
         alt="pic"
-        style={{ display: "block", minWidth: "200px", maxHeight: "400px" }}
+        style={{ display: "block", minWidth: "250px", maxHeight: "250px" }}
       />
     </div>
   );
