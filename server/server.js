@@ -12,7 +12,8 @@ import currentFarmRouter from './routers/farmCurrentRouter.js';
 import pastFarmRouter from './routers/farmPastRouter.js';
 import originalOwnerRouter from './routers/originalOwnerRouter.js';
 import locationRouter from './routers/locationRouter.js';
-import cropTypeRouter from './routers/cropTypeRouter.js'
+import cropTypeRouter from './routers/cropTypeRouter.js';
+import livestockTypeRouter from './routers/livestockTypeRouter.js';
 import morgan from 'morgan';
 import cors from 'cors';
 
@@ -35,6 +36,7 @@ app.use(`/pastFarm`, pastFarmRouter);
 app.use(`/originalOwner`, originalOwnerRouter);
 app.use(`/location`, locationRouter);
 app.use(`/cropType`, cropTypeRouter);
+app.use('/livestockType', livestockTypeRouter);
 
 mongoose.set(
     'strictQuery', false

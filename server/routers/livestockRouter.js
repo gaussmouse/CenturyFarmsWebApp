@@ -27,4 +27,11 @@ router.get(`/name/:name`, async (req, res) => {
     res.send(livestock);
 })
 
+//Get all farms by livestock id
+router.get(`/type/:typeid`, async (req, res) => {
+    let farmList = await Livestock.find();
+    const farmMatches = farmList.filter(element => element.type.split(";").includes(req.params.livestockTypeID));
+    res.send(farmMatches);
+})
+
 export default router;
