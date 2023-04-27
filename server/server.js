@@ -14,6 +14,14 @@ import originalOwnerRouter from './routers/originalOwnerRouter.js';
 import locationRouter from './routers/locationRouter.js';
 import cropTypeRouter from './routers/cropTypeRouter.js';
 import livestockTypeRouter from './routers/livestockTypeRouter.js';
+import futureMaxTemps from './routers/futureMaxTempRouter.js';
+import futureMinTemps from './routers/futureMinTempRouter.js';
+import futureMeanTemps from './routers/futureMeanTempRouter.js';
+import futurePercipitation from './routers/futurePercipitationRouter.js';
+import historicMaxTemps from './routers/historicMaxTempRouter.js';
+import historicMinTemps from './routers/historicMinTempRouter.js';
+import historicMeanTemps from './routers/historicMeanTempRouter.js';
+import historicPercipitation from './routers/historicPercipitationRouter.js';
 import morgan from 'morgan';
 import cors from 'cors';
 
@@ -37,6 +45,14 @@ app.use(`/originalOwner`, originalOwnerRouter);
 app.use(`/location`, locationRouter);
 app.use(`/cropType`, cropTypeRouter);
 app.use('/livestockType', livestockTypeRouter);
+app.use(`/hMaxT`, historicMaxTemps);
+app.use(`/hMinT`, historicMinTemps);
+app.use(`/hMeanT`, historicMeanTemps);
+app.use(`/hPercipitation`, historicPercipitation);
+app.use(`/fMaxT`, futureMaxTemps);
+app.use(`/fMinT`, futureMinTemps);
+app.use(`/fMeanT`, futureMeanTemps);
+app.use(`/fPercipitation`, futurePercipitation);
 
 mongoose.set(
     'strictQuery', false
