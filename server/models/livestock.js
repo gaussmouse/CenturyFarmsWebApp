@@ -3,7 +3,7 @@
 import mongoose from 'mongoose';
 
 const livestockSchema = mongoose.Schema({
-    livestockID: Number,
+    id: Number,
     name: String,
     livestockTypeID: Number
 })

@@ -12,7 +12,7 @@ router.get(`/`, async (req, res) => {
 
 //Get livestock by livestockpID
 router.get(`/id/:id`, async (req, res) => {
-    let livestock = await Livestock.find().where('livestockID').equals(req.params.id);
+    let livestock = await Livestock.find().where('id').equals(req.params.id);
     res.send(livestock);
 })
 
