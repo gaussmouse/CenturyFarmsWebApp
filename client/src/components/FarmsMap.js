@@ -1,21 +1,33 @@
 import React, {useRef, useState, useEffect} from 'react';
 import mapboxgl from '!mapbox-gl'; // eslint-disable-line import/no-webpack-loader-syntax
+import Filter from "../components/sidebar/Filter";
+import SearchBar from "../components/sidebar/SearchBar";
+
+// Plugins
+import ClickAwayListener from '@mui/base/ClickAwayListener';
+
+// Styleshees
+import "./stylesheets/inputs/multi-select.css"
 
 // public access key - rotated periodically
-mapboxgl.accessToken = "add token here"; // not sure if this format works, token previously pasted directly in
+mapboxgl.accessToken = "add token here"; 
 
 export default function FarmsMap () {
+  // map
   const mapContainer = useRef(null);
   const map = useRef(null);
   const [lng, setLng] = useState(-122.96);
   const [lat, setLat] = useState(44.71);
   const [zoom, setZoom] = useState(8);
   const [farms, setFarms] = useState([]);
-  const [searchedFarms, setSearchedFarms] = useState([]);
-  const [searchInput, setSearchInput] = useState("");
-  const [cropTypes, setCropTypes] = useState([]);
-  const [livestockTypes, setLivestockTypes] = useState([]);
-  const [filterClicked, setFilterClicked] = useState(false);
+
+  // search
+  //const [searchedFarms, setSearchedFarms] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [currentFilters, setFilterQuery] = useState([]);
+  const [multiSelectExpanded, setMultiSelectExpanded] = useState(false);
+  const [cropFilters, setCropFilters] = useState([]);
+  const [livestockFilters, setLivestockFilters] = useState([]);
  
   // -----------------------------------------------------------------------------
   /*
@@ -50,17 +62,30 @@ export default function FarmsMap () {
       const farmData = await getFarmLocations();       
       setFarms(farmData);
       mapFarmLocations(farmData);
+      //const cropData = await getCropFilters();
+      //setCropFilters(cropData);
 
-      const cropData = await getCropTypes();
-      setCropTypes(cropData);
-
-      //const livestockData = await getLivestockTypes();
-      //setLivestockTypes(livestockData);
+      //const livestockData = await getLivestockFilters();
+      //setLivestockFilters(livestockData);
       
     }
     initializeMap();
     map.current.addControl(new mapboxgl.NavigationControl(), 'top-right');
   }, [lng, lat, zoom]);
+
+  /*
+  useEffect(() => {
+    const filters = encodeURIComponent(JSON.stringify(currentFilters));
+
+    fetch(`/location/` + searchQuery + `&filters=${filters}`)
+      .then(response => response.json())
+      .then(data => {
+        setFarms(data);
+        mapFarmLocations(data);
+      });
+
+  }, [searchQuery, currentFilters]);
+  */
 
   /*
     * Sets new longitude, latitude, zoom on move
@@ -73,24 +98,6 @@ export default function FarmsMap () {
       setZoom(map.current.getZoom().toFixed(2));
     });
   });
-
-  /*
-  seEffect(() => {
-    if (searchInput !== "" && farms) {
-      const searchedFarms = farms.filter((farm) => {
-        if (searchInput === '' || farm.properties.name.toLowerCase().includes(searchInput.toLowerCase())) {
-          return farm;
-        }
-      });
-      setSearchedFarms(searchedFarms);
-      mapFarmLocations(searchedFarms);
-    }
-    else {
-      //setFarms(farmData);
-      mapFarmLocations(farms);
-    } 
-  }, [searchInput, farms]);
-  */
 
   /*
   * Gets farm locations to populate map with location markers
@@ -126,50 +133,6 @@ export default function FarmsMap () {
   };
 
   /*
-  * Gets crop categories for farm search filter
-  */
-  const getCropTypes = async () => {
-    const response = await fetch(`/croptype/`);
-
-    if (!response.ok) {
-      const message = `An error occurred: ${response.statusText}`;
-      window.alert(message);
-      return;
-    }
-
-    const records = await response.json();
-    let cropTypes = records.map(cropType => (
-      {
-        id: cropType.cropTypeID,
-        type: cropType.type
-      }
-    ));
-    return cropTypes;
-  }
-
-  /*
-  * Gets livestock categories for farm search filter
-  */
-  const getLivestockTypes = async () => {
-    const response = await fetch(`/livestocktype/`);
-
-    if (!response.ok) {
-      const message = `An error occurred: ${response.statusText}`;
-      window.alert(message);
-      return;
-    }
-
-    const records = await response.json();
-    let livestockTypes = records.map(livestockType => (
-      {
-        id: livestockType.livestockTypeID,
-        type: livestockType.type
-      }
-    ));
-    return livestockTypes;
-  }
-
-  /*
   * Shows farm locations on map
   */
   const mapFarmLocations = (farmData) => {
@@ -203,9 +166,9 @@ export default function FarmsMap () {
   }   
 
   /*
-    * Reorients map to focus on selected farm
-    * Code adapted from (https://docs.mapbox.com/help/tutorials/building-a-store-locator/)
-    */
+  * Reorients map to focus on selected farm
+  * Code adapted from (https://docs.mapbox.com/help/tutorials/building-a-store-locator/)
+  */
   const flyToFarm = (CurrentFeature) => {
     toggleLocationSidebar();
     map.current.flyTo({
@@ -213,6 +176,14 @@ export default function FarmsMap () {
       zoom: 15
     });
   };
+
+  /*
+  * Resets multiselectexpanded state if user clicks away
+  * Code by Cam Bass (https://cambass.medium.com/building-a-category-filter-with-reactjs-mern-stack-193f46ff385)
+  */
+  const handleClickAway = () => {
+    setMultiSelectExpanded(false)
+  }
 
   /*
   * Sets styles of sidebar, map, and open/close buttons when
@@ -238,25 +209,6 @@ export default function FarmsMap () {
     }
   }
 
-  // CHECKBOX INTEGRATION WORK-IN-PROGRESS -----------------------------------------
-  const checkboxes = document.querySelectorAll('.checkbox');
-  let filteredFarms = farms; // initialize filteredFarms to include all farms
-  
-  /*
-  * Handles search filters by creating modified list of farms based on checked filters
-  */
-  function handleFilter(event) {
-    // filter farms based on selected checkboxes
-    const filters = Array.from(checkboxes).filter((checkbox) => checkbox.checked).map((checkbox) => checkbox.value);
-    filteredFarms = farms.filter((farm) => filters.includes(farm.type));
-    
-    mapFarmLocations(filteredFarms); // re-render farms list based on new filter settings
-  }
-  
-  checkboxes.forEach((checkbox) => checkbox.addEventListener('change', handleFilter));
-  // CHECKBOX INTEGRATION WORK-IN-PROGRESS ------------------------------------------
-  
-
  /* Longitude: {lng} | Latitude: {lat} | Zoom: {zoom} */
 
   return (
@@ -267,57 +219,28 @@ export default function FarmsMap () {
           className="closebtn" 
           onClick={toggleLocationSidebar}>
             ×
-          </button>
-        <div id="locationSearch" className="search">
-          <input 
-            type="text" 
-            id="farmSearch" 
-            onChange={event => setSearchInput(event.target.value)} 
-            placeholder="Search farms.." 
-            title="Search by name"
-          /> 
-        </div> 
-        <button 
-          id="filterSearch" 
-          onClick={() => setFilterClicked(!filterClicked)}>
-          Filter
         </button>
-        <div 
-          className="filter-menu" 
-          style={{ display: filterClicked ? 'block' : 'none' }}>
-          <label htmlFor="crop-type-filter">Crop Type:</label>
-          {
-            // TODO: add nesting for both filter categories
-            // get list of crop categories and print
-            cropTypes.map((cropType) => (
-              <div className="crop-type-filter" key={cropType.id}>
-                <label>
-                  <input 
-                    type="checkbox" 
-                    name={cropType.type} 
-                    value={cropType.type} 
-                  />
-                  {cropType.type}
-                </label>
-              </div>
-            ))
 
-            // get list of livestock categories and print
-          }
-        </div>
+        <SearchBar setQuery={setSearchQuery} />
+        
+        <ClickAwayListener onClickAway={handleClickAway}>
+          <div className='outer-filter-container'>
+            <Filter 
+              multiSelectExpanded={multiSelectExpanded}
+              setMultiSelectExpanded={setMultiSelectExpanded}
+              currentFilters={currentFilters} 
+              setFilterQuery={setFilterQuery}
+            />
+          </div>
+        </ClickAwayListener>
+
         <div className='heading'>
           <h1>Farm locations</h1>
         </div>
         <div id='listings' className='listings'>
           {farms.filter(farm => {
-            // if one or more search filter is selected, filter farms based on selection(s)
-            /*
-            if () {
-
-             }
-            */
-            if (searchInput === '' || 
-              farm.properties.name.toLowerCase().includes(searchInput.toLowerCase())) {
+            if (searchQuery === '' || 
+              farm.properties.name.toLowerCase().includes(searchQuery.toLowerCase())) {
               return farm;
             } 
           })
@@ -334,7 +257,8 @@ export default function FarmsMap () {
             </div>
           ))}
         </div>
-      </div> 
+      </div>
+
       <div id="main">
         <button 
           id="openLocationSidebar" 
