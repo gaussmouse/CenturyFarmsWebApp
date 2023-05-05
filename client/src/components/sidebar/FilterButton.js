@@ -8,7 +8,7 @@ import React from 'react'
 import Arrow from "../../images/arrow.svg"
 
 export default function FilterButton(props) {
-  const { multiSelectExpanded, setMultiSelectExpanded } = props
+  const { multiSelectExpanded, setMultiSelectExpanded, categoryName } = props
 
   return (
     <>
@@ -17,7 +17,7 @@ export default function FilterButton(props) {
         onClick={() => setMultiSelectExpanded(!multiSelectExpanded)}
         style={{ backgroundColor: multiSelectExpanded ? `#fff` : ``}}
       >
-        <span className='filter-title' >Filter by...</span>
+        <span className='filter-title' >Filter by {categoryName}</span>
         <img
           alt=""
           src={Arrow}

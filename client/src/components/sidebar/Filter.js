@@ -13,7 +13,10 @@ export default function Filter(props) {
     multiSelectExpanded, 
     setMultiSelectExpanded, 
     currentFilters, 
-    setFilterQuery 
+    setFilterQuery,
+    categoryName,
+    filterCategory,
+    setFilterCategory
   } = props
 
   return (
@@ -21,12 +24,15 @@ export default function Filter(props) {
       <FilterButton 
         setMultiSelectExpanded={setMultiSelectExpanded}
         multiSelectExpanded={multiSelectExpanded}
+        categoryName={categoryName}
       />
 
       {multiSelectExpanded && (
         <FilterDrowdown
-          currentFilters={currentFilters} 
+          currentFilters={currentFilters}
           filterQuery={setFilterQuery}
+          filterCategory={filterCategory}
+          categoryName={categoryName}
         />
       )}
 
