@@ -2,22 +2,15 @@
 
 import mongoose from 'mongoose';
 
-/*
-const livestockSchema = mongoose.Schema({
-    id: Number,
-    name: String,
-    livestockTypeID: Number
-})
-*/
 const livestockSchema = mongoose.Schema({
     id:{
         type: Number
     },
-    name: {
+    name:{
         type: String
     },
     livestockTypeID:{
-        type: mongoose.Schema.Types.ObjectId,
+        type: Number,
         ref: 'Livestock'
     }
 })

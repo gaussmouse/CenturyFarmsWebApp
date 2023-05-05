@@ -2,24 +2,12 @@
 
 import mongoose from 'mongoose';
 
-/*
 const cropSchema = mongoose.Schema({
     cropID: Number,
     name: String,
-    type: String
+    cropTypeID: String
 })
-*/
-const cropSchema = mongoose.Schema({
-    cropID: {
-        type: Number
-    },
-    name: {
-        type: String
-    },
-    type: {
-        type: String
-    }
-})
+
 
 const Crop = mongoose.model('Crop', cropSchema);
 
