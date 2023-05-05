@@ -435,9 +435,13 @@ export default function FarmsMap () {
         </div>
         <div id='listings' className='listings'>
           {farms.filter(farm => {
+            if (validFarms.length === 0 || (validFarms && validFarms.includes(farm.properties.id))) {
+              return true;
+            }
+            return false;
+          }).filter(farm => {
             if (searchQuery === '' || 
-              farm.properties.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-              validFarms.includes(farm.properties.id)) {
+              farm.properties.name.toLowerCase().includes(searchQuery.toLowerCase())) {
               return true;
             }
             return false; 
