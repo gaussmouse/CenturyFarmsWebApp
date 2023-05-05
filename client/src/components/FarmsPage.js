@@ -10,66 +10,6 @@ import FutureClimateGraphs from "./FutureClimateGraphs";
 let farmID = "";
 var farmPicList = [];
 
-// const fetch = require('node-fetch');
-
-// // Make API request
-// const url = "https://www.ncdc.noaa.gov/cdo-web/api/v2/data";
-// const params = {
-//   datasetid: "GHCND",
-//   datatypeid: "TMAX,TMIN,PRCP",
-//   units: "metric",
-//   startdate: "2010-01-01",
-//   enddate: "2020-12-31",
-//   extent: "40.7128,-74.0060,40.7128,-74.0060"
-// };
-// const headers = { "token": "<your API token here>" };
-// const queryString = Object.keys(params)
-//   .map(key => encodeURIComponent(key) + '=' + encodeURIComponent(params[key]))
-//   .join('&');
-// const fullUrl = url + '?' + queryString;
-// fetch(fullUrl, { headers })
-//   .then(response => response.json())
-//   .then(data => {
-//     // Parse data and calculate yearly averages
-//     const yearlyAverages = {};
-//     for (const record of data.results) {
-//       const year = record.date.substring(0, 4);
-//       const tmax = record.value.TMAX;
-//       const tmin = record.value.TMIN;
-//       const prcp = record.value.PRCP;
-//       if (tmax && tmin && prcp) {
-//         yearlyAverages[year] = yearlyAverages[year] || { tmax: 0, tmin: 0, prcp: 0, count: 0 };
-//         yearlyAverages[year].tmax += tmax;
-//         yearlyAverages[year].tmin += tmin;
-//         yearlyAverages[year].prcp += prcp;
-//         yearlyAverages[year].count += 1;
-//       }
-//     }
-//     for (const year in yearlyAverages) {
-//       const count = yearlyAverages[year].count;
-//       const tmaxAvg = yearlyAverages[year].tmax / count;
-//       const tminAvg = yearlyAverages[year].tmin / count;
-//       const prcpAvg = yearlyAverages[year].prcp / count;
-//       console.log(`Year: ${year}, TMAX average: ${tmaxAvg.toFixed(2)}, TMIN average: ${tminAvg.toFixed(2)}, PRCP average: ${prcpAvg.toFixed(2)}`);
-//     }
-//   })
-//   .catch(error => {
-//     console.error(error);
-//   });
-
-// const startDate = "1920-01-01";
-// const endDate = "2050-12-31";
-// const cat = "TEMP";
-// const extent = "47.5204,-122.2047"
-
-// fetch(`https://www.ncdc.noaa.gov/cdo-web/api/v2/data?datasetid=GHCND&datatypeid=TMAX,TMIN,PRCP&units=metric&startdate=2022-01-01&enddate=2022-01-31&extent=40.7128,-74.0060,40.7128,-74.0060&limit=1000`, {
-//   headers: {
-//     "token": "KJaDDzJRVHKRtccTRbPRNsEQBZbILqKS"
-//   }
-// })
-//   .then(response => response.json())
-//   .then(data => console.log(data));
-
 const FarmDetails = () => {
   farmID = useParams();
   farmID = farmID.id;
@@ -89,10 +29,7 @@ function FarmData() {
       const pastFarmRecords = await pastFarmResponse.json();
 
       const newData = [];
-      const coordinates = [];
-      coordinates.push(locationRecords[0].latitude);
-      coordinates.push(locationRecords[0].longitude);
-      const formattedCoords = `(${coordinates.join(", ")})`;
+      console.log(pastFarmRecords);
 
       if (farmDescRecords[0].name) {
         newData.push(`Farm name: ${farmDescRecords[0].name}`);
@@ -126,12 +63,6 @@ function FarmData() {
         newData.push(
           `Year of Property Acquisition: Year of property acquisition not found`
         );
-      }
-
-      if (locationRecords[0].latitude && locationRecords[0].longitude) {
-        newData.push(`GPS Coordinates: ${formattedCoords}`);
-      } else {
-        newData.push(`GPS Coordinates: GPS coordinates not found`);
       }
 
       setCurrentData(newData);
@@ -173,6 +104,8 @@ function CurrentPastFarmData() {
       const pastFarmRecords = await pastFarmResponse.json();
 
       const newData = [];
+      console.log(pastFarmRecords);
+      console.log(currentFarmRecords);
 
       const currentCropList = await getCropNames(currentFarmRecords[0].cropID);
       const currentLivestockList = await getLivestockNames(
@@ -407,6 +340,7 @@ async function getCropNames(cropIdList) {
     return "No crops";
   }
   let cropNames = cropIdList.split(";");
+  console.log(cropIdList);
 
   for (let i = 0; i < cropNames.length; i++) {
     let nameID = cropNames[i];
