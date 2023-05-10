@@ -15,6 +15,49 @@ const FarmDetails = () => {
   farmID = farmID.id;
 };
 
+function FarmSynposis() {
+  const [currentData, setCurrentData] = useState("");
+  const [showFull, setShowFull] = useState(false);
+  const limit = 700;
+
+  useEffect(() => {
+    async function fetchData() {
+      const farmDescResponse = await fetch(`/farmdesc/farmPastID/` + farmID);
+
+      const farmDescRecords = await farmDescResponse.json();
+
+      let synposis = farmDescRecords[0].synposis;
+
+      setCurrentData(synposis);
+    }
+
+    fetchData();
+  }, []);
+
+  const toggleShowFull = () => {
+    setShowFull(!showFull);
+  };
+
+  const renderData = () => {
+    if (currentData.length > limit) {
+      return (
+        <div style={{ textAlign: "left", marginLeft: "350px", marginRight: "350px", marginBottom: "30px", marginTop: "30px" }}>
+          {showFull ? currentData : `${currentData.substring(0, limit)}...`}
+          <button onClick={toggleShowFull}>{showFull ? "Read less" : "Read more"}</button>
+        </div>
+      );
+    } else {
+      return (
+        <div style={{ textAlign: "left", marginLeft: "350px", marginRight: "350px", marginBottom: "30px", marginTop: "30px" }}>
+          {currentData}
+        </div>
+      );
+    }
+  };
+
+  return renderData();
+}
+
 function FarmData() {
   const [currentData, setCurrentData] = useState([]);
 
@@ -29,7 +72,6 @@ function FarmData() {
       const pastFarmRecords = await pastFarmResponse.json();
 
       const newData = [];
-      console.log(pastFarmRecords);
 
       if (farmDescRecords[0].name) {
         newData.push(`Farm name: ${farmDescRecords[0].name}`);
@@ -104,8 +146,6 @@ function CurrentPastFarmData() {
       const pastFarmRecords = await pastFarmResponse.json();
 
       const newData = [];
-      console.log(pastFarmRecords);
-      console.log(currentFarmRecords);
 
       const currentCropList = await getCropNames(currentFarmRecords[0].cropID);
       const currentLivestockList = await getLivestockNames(
@@ -200,6 +240,7 @@ function MyTabs() {
       <TabPanel>
         <h2 style={{ textAlign: "center" }}>General Farm Information</h2>
         <FarmData />
+        <FarmSynposis />
         <div style={{ display: "flex" }}>
           <div style={{ flex: 1 }}>
             <h2 style={{ textAlign: "center" }}>Current and Past Farm Information</h2>
@@ -295,7 +336,7 @@ const FarmSinglePicture = () => {
       <img
         src={farmPicList[0]}
         alt="pic"
-        style={{ display: "block", minWidth: "250px", maxHeight: "250px" }}
+        style={{ display: "block", minWidth: "400px", maxHeight: "400px" }}
       />
     </div>
   );
@@ -340,7 +381,6 @@ async function getCropNames(cropIdList) {
     return "No crops";
   }
   let cropNames = cropIdList.split(";");
-  console.log(cropIdList);
 
   for (let i = 0; i < cropNames.length; i++) {
     let nameID = cropNames[i];
