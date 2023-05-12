@@ -2,6 +2,12 @@ import React, {useRef, useState, useEffect} from 'react';
 import mapboxgl from '!mapbox-gl'; // eslint-disable-line import/no-webpack-loader-syntax
 import Filter from "../components/sidebar/Filter";
 import SearchBar from "../components/sidebar/SearchBar";
+import ActiveFilters from  "../components/sidebar/ActiveFilters"
+import FarmListings from "../components/sidebar/FarmListings"
+import PopupTutorial from "../components/PopupTutorial"
+import { FaQuestionCircle } from 'react-icons/fa';
+import Modal from 'react-modal';
+//import { historicMaxTemp } from '../historicMaxTempData';
 
 // Plugins
 import ClickAwayListener from '@mui/base/ClickAwayListener';
@@ -22,7 +28,6 @@ export default function FarmsMap () {
   const [farms, setFarms] = useState([]);
 
   // search
-  //const [searchedFarms, setSearchedFarms] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [currentCropFilters, setCropFilterQuery] = useState([]);
   const [currentLivestockFilters, setLivestockFilterQuery] = useState([]);
@@ -31,35 +36,27 @@ export default function FarmsMap () {
   const [cropFilters, setCropFilters] = useState([]);
   const [livestockFilters, setLivestockFilters] = useState([]);
   const [crops, setCrops] = useState([]);
-  //const [validCrops, setValidCrops] = useState([]);
   const [livestock, setLivestock] = useState([]);
-  //const [validLivestock, setValidLivestock] = useState([]);
+
   const [currentFarmInfo, setCurrentFarmInfo] = useState([]);
   const [validFarms, setValidFarms] = useState([]);
- 
-  // -----------------------------------------------------------------------------
-  /*
-  const [climateData, setClimateData] = useState({
-    "year":[0],
-    "yday":[0],
-    "prcp (mm/day)":[0],
-    "tmax (deg c)":[0],
-    "tmin (deg c)":[0]
-  })
-  // 30 year averages for info window
-  const [prcpAvg, setPrcpAvg] = useState("loading...")
-  const [tempMaxAvg, setTempMaxAvg] = useState("loading...")
-  const [tempMinAvg, setTempMinAvg] = useState("loading...")
-  // 30 year average function
-  const avg = (array) => array.reduce((a, b) => a + b) / array.length
-  */
- // ------------------------------------------------------------------------------
+  const [interviewedFarms, setInterviewedFarms] = useState([]);
+
+  const [historicPrecipitationData, setHistoricPrecipitationData] = useState([]);
+  const [historicMaxTemps, sethistoricMaxTemps] = useState([]);
+  const [historicMinTemps, setHistoricMinTemps] = useState([]);
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  function openModal() {
+    setIsModalOpen(true);
+  }
 
   /*
   * Initializes map
   */
   useEffect(() => {
-    if (map.current) return; // initialize map only once
+    if (map.current) return; // Initialize map only once
     const initializeMap = async () => {
       map.current = new mapboxgl.Map({
         container: mapContainer.current,
@@ -67,37 +64,54 @@ export default function FarmsMap () {
         center: [lng, lat],
         zoom: zoom
       });
+
+      // Get climate data for each farm marker pop-up window
+      //const historicPrecipitationData = getHistoricPrecipitation();
+      //const historicMaxTemps = getHistoricPrecipitation();
+      //const historicMinTemps = getHistoricPrecipitation();
+      //setHistoricPrecipitationData(historicPrecipitationData);
+      //sethistoricMaxTemps(historicMaxTemps);
+      //setHistoricMinTemps(historicMinTemps);
+      
+      // Define interviewed farms for visual differentiation
+      const interviewedFarms = await getInterviewedFarms();
+      setInterviewedFarms(interviewedFarms);
+
+      // Define farms and create map markers
       const farmData = await getFarmLocations();  
       setFarms(farmData);  
-      mapFarmLocations(farmData);
+      mapFarmLocations(farmData, interviewedFarms);
 
+      // Define crop and livestock filters
       const cropFilters = await getCropFilters();
       const livestockFilters = await getLivestockFilters();
       setCropFilters(cropFilters);
       setLivestockFilters(livestockFilters);
       
+      // Define crops and livestock for farm filtering
       const crops = await getCrops();
       const livestock = await getLivestock();
       setCrops(crops);
       setLivestock(livestock);
 
+      // Define currentFarmInfo for farm filtering
       const currentFarmInfo = await getCurrentFarmInfo();
       setCurrentFarmInfo(currentFarmInfo);
+
     }
     initializeMap();
     map.current.addControl(new mapboxgl.NavigationControl(), 'top-right');
+
   }, [lng, lat, zoom]);
 
   
+  /*
+  * Set farms to display based on active crop/livestock filters
+  */
   useEffect(() => {
-    // If currentFilters not null, fetch livestock types & crop types w/IDs that match
-    if (currentCropFilters === null && currentLivestockFilters === null) return;
-    //console.log(currentCropFilters);
-    //console.log(currentLivestockFilters);
-    
     // Fetch crop & livestock IDs that have matching type IDs to the current filters
     const validCrops = crops.filter(crop => {
-      let cropTypeID = crop.typeID.split(";");
+      let cropTypeID = crop.typeID.split(";");  // crops may have multiple types delimited by ;
       for (let i = 0; i < cropTypeID.length; i++) {
         if (currentCropFilters.includes(cropTypeID[i])) {
           return true;
@@ -115,6 +129,7 @@ export default function FarmsMap () {
     }).map(animal => animal.ID);
     //console.log(validLivestock);
 
+    // Create list of valid farm IDs based on presence of valid crop/livestock
     const validFarms = currentFarmInfo.filter(currentFarm => {
        let currentCrops = currentFarm.cropID.split(";");
        let currentLivestock = currentFarm.livestockID.split(";");
@@ -132,21 +147,18 @@ export default function FarmsMap () {
       return false;
     }).map(currentFarm => currentFarm.ID);
     setValidFarms(validFarms);
-    console.log(validFarms);
+    //console.log(validFarms);
 
     // Check farmcurrent's crop & livestock IDs to match against valid crop/livestock IDs
     // Make filterd list of farm IDs
-
-
   }, [searchQuery, crops, livestock, currentFarmInfo,
     currentCropFilters, currentLivestockFilters]);
-
 
   /*
     * Sets new longitude, latitude, zoom on move
     */
   useEffect(() => {
-    if (!map.current) return; // wait for map to initialize
+    if (!map.current) return; // Wait for map to initialize
     map.current.on('move', () => {
       setLng(map.current.getCenter().lng.toFixed(4));
       setLat(map.current.getCenter().lat.toFixed(4));
@@ -188,12 +200,69 @@ export default function FarmsMap () {
   };
 
   /*
+  * Gets historic precipitation data for 100+ years
+  */
+  const getHistoricPrecipitation = async () => {
+    const response = await fetch(`/hPercipitation`);
+    //console.log(response);
+    
+    if (!response.ok) {
+      const message = `An error occurred: ${response.statusText}`;
+      window.alert(message);
+      return;
+    }
+
+    const records = await response.json();
+    //console.log(records);
+    let hPrecipitationData = records.map(hPrecipData => (
+      {
+        id: hPrecipData.farmID,
+        data: Object.values(hPrecipData).filter(val => typeof val === 'number')
+      }
+    ));
+    console.log(hPrecipitationData);
+    return hPrecipitationData;
+  };
+
+  /*
   * Shows farm locations on map
   */
-  const mapFarmLocations = (farmData) => {
+  const mapFarmLocations = (
+    farmData, 
+    interviewedFarms
+    ) => {
     map.current.on('load', () => {
       // Add a popup for each marker
       farmData.forEach((farm) => {
+        /*
+        // historicPrecipitationData is a Promise here, needs fixing
+        console.log(historicPrecipitationData);
+        historicPrecipitationData.forEach(hPrecipData => {
+          if (hPrecipData.id === farm.id) {
+            return true;
+          }
+          return false;
+        })
+        const hPrecipitationData = historicPrecipitationData.filter(hPrecipData => {
+          if (hPrecipData.id === farm.id) {
+            return true;
+          }
+          return false;
+        }).map(hPrecipData => hPrecipData.data);
+        const hMaxTemp = historicMaxTemps.filter(hMaxT => {
+          if (hMaxT.id === farm.id) {
+            return true;
+          }
+          return false;
+        }).map(hMaxT => hMaxT.data);
+        const hMinTemp = historicMinTemps.filter(hMinT => {
+          if (hMinT.id === farm.id) {
+            return true;
+          }
+          return false;
+        }).map(hMinT => hMinT.data);
+        */
+
         const popup = new mapboxgl.Popup({
           closeButton: true,
           closeOnClick: true
@@ -201,8 +270,11 @@ export default function FarmsMap () {
           `<h3>${farm.properties.name}</h3><p>${farm.properties.address}</p><a href="/farms/${farm.properties.id}">
           More Info</a>`
         );
+
+        const markerColor = interviewedFarms.includes(farm.properties.id) ? 'rgb(255, 208, 0)' : '#25921B';
+
         const marker = new mapboxgl.Marker({
-          color: '#25921B',
+          color: markerColor,
         })
           .setLngLat(farm.geometry.coordinates)
           .setPopup(popup)
@@ -221,8 +293,8 @@ export default function FarmsMap () {
   }   
 
   /*
-    * Gets crop categories for farm search filter
-    */
+  * Gets crop categories for farm search filter
+  */
   const getCropFilters = async () => {
     const response = await fetch(`/cropType/`);
 
@@ -240,7 +312,17 @@ export default function FarmsMap () {
       }
     ));
     
-    //console.log(cropFilters);
+    // Alphabetize list and place "Other" category at the end
+    cropFilters.sort((a, b) => {
+      if (a.label === 'Other crops' && b.label !== 'Other crops') {
+        return 1;
+      } else if (a.label !== 'Other crops' && b.label === 'Other crops') {
+        return -1;
+      } else {
+        return a.label.localeCompare(b.label);
+      }
+    });
+
     return cropFilters;
   }
 
@@ -263,6 +345,18 @@ export default function FarmsMap () {
         value: livestockType.livestockTypeID
       }
     ));
+
+    // Alphabetize list and place "Other" category at the end
+    livestockFilters.sort((a, b) => {
+      if (a.label === 'Other' && b.label !== 'Other') {
+        return 1;
+      } else if (a.label !== 'Other' && b.label === 'Other') {
+        return -1;
+      } else {
+        return a.label.localeCompare(b.label);
+      }
+    });
+
     return livestockFilters;
   }
 
@@ -317,7 +411,7 @@ export default function FarmsMap () {
   }
 
   /*
-  * Gets all livestock for farm filtering
+  * Gets current farm info to create valid farm ID list for farm filtering
   */
   const getCurrentFarmInfo = async () => {
     const response = await fetch(`/currentFarm/`);
@@ -337,9 +431,41 @@ export default function FarmsMap () {
       }
     ));
     
-    console.log(currentFarmInfo);
+    //console.log(currentFarmInfo);
     return currentFarmInfo;
   }
+
+  /*
+  * Gets interviewed farms info for visually differentiation
+  */
+  const getInterviewedFarms = async () => {
+    const response = await fetch(`/farmdesc/`);
+
+    if (!response.ok) {
+      const message = `An error occurred: ${response.statusText}`;
+      window.alert(message);
+      return;
+    }
+
+    const records = await response.json();
+    let farms = records.map(interviewedFarm => (
+      {
+        ID: interviewedFarm.farmCurrentID,
+        interviewed: interviewedFarm.interviewed
+      }
+    ));
+    
+    //console.log(farms);
+    const interviewedFarms = farms.filter(interviewedFarm => {
+      if (interviewedFarm.interviewed === "yes") {
+        return true;
+      }
+      return false;
+    }).map(interviewedFarm => interviewedFarm.ID);
+
+    //console.log(interviewedFarms);
+    return interviewedFarms;
+  }  
 
   /*
   * Reorients map to focus on selected farm
@@ -355,7 +481,7 @@ export default function FarmsMap () {
 
   /*
   * Resets multiselectexpanded state if user clicks away
-  * Code by Cam Bass (https://cambass.medium.com/building-a-category-filter-with-reactjs-mern-stack-193f46ff385)
+  * Code adapted by Cam Bass (https://cambass.medium.com/building-a-category-filter-with-reactjs-mern-stack-193f46ff385)
   */
   const handleClickAway = (filterType) => {
     if (filterType === "crop")
@@ -401,67 +527,61 @@ export default function FarmsMap () {
         </button>
 
         <SearchBar setQuery={setSearchQuery} />
-        
-        <ClickAwayListener onClickAway={() => {handleClickAway("crop")}}>
-          <div className='outer-filter-container'>
-            <Filter 
-              multiSelectExpanded={cropMultiSelectExpanded}
-              setMultiSelectExpanded={setCropMultiSelectExpanded}
-              currentFilters={currentCropFilters} 
-              setFilterQuery={setCropFilterQuery}
-              categoryName="Crop"
-              filterCategory={cropFilters}
-              setFilterCategory={setCropFilters}
-            />
-          </div>
-        </ClickAwayListener>
-
-        <ClickAwayListener onClickAway={() => {handleClickAway("livestock")}}>
-          <div className='outer-filter-container'>
-            <Filter 
-              multiSelectExpanded={livestockMultiSelectExpanded}
-              setMultiSelectExpanded={setLivestockMultiSelectExpanded}
-              currentFilters={currentLivestockFilters} 
-              setFilterQuery={setLivestockFilterQuery}
-              categoryName="Livestock"
-              filterCategory={livestockFilters}
-              setFilterCategory={setLivestockFilters}
-            />
-          </div>
-        </ClickAwayListener>
-
-        <div className='heading'>
-          <h1>Farm locations</h1>
-        </div>
-        <div id='listings' className='listings'>
-          {farms.filter(farm => {
-            if (validFarms.length === 0 || (validFarms && validFarms.includes(farm.properties.id))) {
-              return true;
-            }
-            return false;
-          }).filter(farm => {
-            if (searchQuery === '' || 
-              farm.properties.name.toLowerCase().includes(searchQuery.toLowerCase())) {
-              return true;
-            }
-            return false; 
-          })
-          .sort((a, b) => a.properties.name.localeCompare(b.properties.name)) // Sort farms alphabetically
-          .map((farm) => (             
-            <div key={farm.properties.id} className="item">
-              <button 
-                id={"link-" + farm.properties.id} 
-                className="title" 
-                onClick={() => {flyToFarm(farm)}}>
-                 {farm.properties.name}
-              </button>
-              <div className="details">{farm.properties.address}</div>
+        <div id='filter-wrapper'>
+          <ClickAwayListener onClickAway={() => {handleClickAway("crop")}}>
+            <div className='outer-filter-container'>
+              <Filter 
+                multiSelectExpanded={cropMultiSelectExpanded}
+                setMultiSelectExpanded={setCropMultiSelectExpanded}
+                currentFilters={currentCropFilters} 
+                setFilterQuery={setCropFilterQuery}
+                categoryName="Crop"
+                filterCategory={cropFilters}
+                setFilterCategory={setCropFilters}
+              />
             </div>
-          ))}
+          </ClickAwayListener>
+
+          <ClickAwayListener onClickAway={() => {handleClickAway("livestock")}}>
+            <div className='outer-filter-container'>
+              <Filter 
+                multiSelectExpanded={livestockMultiSelectExpanded}
+                setMultiSelectExpanded={setLivestockMultiSelectExpanded}
+                currentFilters={currentLivestockFilters} 
+                setFilterQuery={setLivestockFilterQuery}
+                categoryName="Livestock"
+                filterCategory={livestockFilters}
+                setFilterCategory={setLivestockFilters}
+              />
+            </div>
+          </ClickAwayListener>
         </div>
+
+        <ActiveFilters
+          activeFilters={currentCropFilters}
+          filterNames={cropFilters}
+          filterCategory="Crop"
+        />
+
+        <ActiveFilters
+          activeFilters={currentLivestockFilters}
+          filterNames={livestockFilters}
+          filterCategory="Livestock"
+        />
+
+        <FarmListings 
+          farms={farms}
+          validFarms={validFarms}
+          searchQuery={searchQuery}
+          interviewedFarms={interviewedFarms}
+          flyToFarm={flyToFarm}
+        />
       </div>
 
       <div id="main">
+      <button id="qbtn" className="question-mark-container" onClick={() => openModal()}>
+        ?
+      </button>
         <button 
           id="openLocationSidebar" 
           className="openbtn" 
@@ -469,6 +589,10 @@ export default function FarmsMap () {
             ☰ Farm Locations
         </button>
         <div ref={mapContainer} className="map-container" />
+        <PopupTutorial 
+          isModalOpen={isModalOpen}
+          setIsModalOpen={setIsModalOpen}
+        />
       </div>
     </div>
     
