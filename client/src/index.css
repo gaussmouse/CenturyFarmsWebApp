@@ -19,135 +19,32 @@ body {
 }
 
 /*
-* Sidebar styles
+* Hide map controls on mobile devices
 */
-#locationSidebar {
-  background-color: rgba(35, 55, 75, 0.9);
-  color: #fff;
-  padding: 24px 12px 12px 12px;
-  font-family: monospace;
-  height: 100%;
-  width: 400px;
-  position: fixed;
-  z-index: 1;
-  top: 0;
-  left: -400px; /* default closed, 0 when open */
-  overflow-x: hidden;
-  transition: left 0.5s ease;
+@media screen and (max-width: 600px) {
+  .mapboxgl-ctrl {
+    display: none;
+  }
 }
 
-#closeLocationSidebar {
-  position: absolute;
-  top: 0;
-  right: 35px;
-  font-size: 36px;
-  margin-left: 50px;
-}
-
-#openLocationSidebar {
-  font-size: 20px;
-  cursor: pointer;
-  background-color: #111;
+.question-mark-container {
   color: white;
-  padding: 10px 15px;
-  border: none;
+  background-color: red;
   position: absolute;
-  z-index: 9999; /* button at top of layers */
-}
-
-#openLocationSidebar:hover {
-  background-color: #444;
-}
-
-#main {
-  transition: margin-left .5s;
-  padding: 16px;
-}
-
-/* On smaller screens, where width is less than 450px, change the style of the sidenav (less padding and a smaller font size) */
-@media screen and (max-width: 450px) {
-  #locationSidebar {padding-top: 15px;}
-  .sidebar a {font-size: 18px;}
-}
-
-.heading {
-  border-bottom: 1px solid #eee;
-  text-align: center;
-  height: 60px;
-  line-height: 60px;
-  padding: 0 5px;
-}
-
-h1 {
-  font-size: 22px;
-  margin: 0;
-  font-weight: 400;
-  line-height: 20px;
-  padding: 20px 2px;
-}
-
-a {
-  color: #25921B;
-  text-decoration: none;
-}
-
-a:hover {
-  color: #37d929;
-}
-
-/* 
-* Listing Styles
-*/
-.listings {
-  height: 100%;
-  overflow: auto;
-  padding-bottom: 60px;
-}
-
-.listings .item {
-  border-bottom: 1px solid #eee;
-  padding: 10px;
-  text-decoration: none;
-}
-
-.listings .item:last-child { border-bottom: none; }
-
-.listings .item .title {
-  display: block;
-  color: #25921B;
-  font-weight: 700;
-}
-
-.listings .item .title small { font-weight: 400; }
-
-.listings .item.active .title,
-.listings .item .title:hover { color: #37d929; }
-
-.listings .item.active {
-  background-color: rgba(101, 153, 205, 0.9);
-}
-
-.title {
-  background: none!important;
-  border: none;
-  padding: 0!important;
+  width: 26px;
+  height: 26px;
+  top: 110px;
+  right: 12px;
+  z-index: 1;
   cursor: pointer;
 }
 
-::-webkit-scrollbar {
-  width: 3px;
-  height: 3px;
-  border-left: 0;
-  background: rgba(0, 0, 0, 0.1);
-}
-
-::-webkit-scrollbar-track {
-  background: none;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #25921B;
-  border-radius: 0;
+#tutorial-modal {
+  width: 50em;
+  height: 19em;
+  position: fixed;
+  margin-top: 5%;
+  margin-left: 20%;
 }
 
 /* 
