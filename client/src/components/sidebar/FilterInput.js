@@ -2,23 +2,24 @@
    Component adapted from CategoryInput Component by Cam Bass
    https://cambass.medium.com/building-a-category-filter-with-reactjs-mern-stack-193f46ff385
 */
-import React from 'react'
+import React, { useState } from 'react'
 
 export default function FilterInput(props) {
-  const { currentFilters, filterQuery, filter, index } = props
+  const { currentFilters, filterQuery, filter, index } = props;
+  const [checked, setChecked] = useState(currentFilters.includes(String(filter.value)));
 
   function handleChange(event) {
+    const value = event.target.value;
+    setChecked(event.target.checked);
     if (event.target.checked) {
-        filterQuery([...currentFilters, event.target.value])
+      
+        filterQuery([...currentFilters, value]);
+      
     } else {
-        filterQuery((prevState) =>
-        prevState.filter((prevItem) => prevItem !== event.target.value)
-      )
+      filterQuery(currentFilters.filter(item => item !== value));
     }
-  }
-
-  function checkedInput(value) {
-    return currentFilters.includes(value)
+    //console.log(value);
+    //console.log(currentFilters)
   }
 
   return (
@@ -29,7 +30,7 @@ export default function FilterInput(props) {
           key={index} 
           type="checkbox" 
           name="filter" 
-          checked={checkedInput(filter.value)}
+          checked={checked}
           value={filter.value}
           className="multi-select-input"
           onChange={handleChange} />
