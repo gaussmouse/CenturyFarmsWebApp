@@ -8,7 +8,7 @@ import React, { useState, useEffect } from 'react'
 import FilterInput from "./FilterInput"
 
 export default function FilterInputContainer(props) {
-  const { currentFilters, filterQuery, filterCategory, categoryName } = props
+  const { currentFilters, filterQuery, filterCategory, categoryName } = props;
 
 
   return (

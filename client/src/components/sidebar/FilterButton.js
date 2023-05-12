@@ -8,7 +8,7 @@ import React from 'react'
 import Arrow from "../../images/arrow.svg"
 
 export default function FilterButton(props) {
-  const { multiSelectExpanded, setMultiSelectExpanded, categoryName } = props
+  const { multiSelectExpanded, setMultiSelectExpanded, categoryName } = props;
 
   return (
     <>
