@@ -19,9 +19,9 @@
 #closeLocationSidebar {
   position: absolute;
   top: 0;
-  right: 35px;
-  font-size: 36px;
-  margin-left: 50px;
+  right: 0px;
+  font-size: 24px;
+  margin-left: 10px;
 }
 
 #openLocationSidebar {
@@ -51,19 +51,26 @@
 }
 
 .heading {
-  border-bottom: 1px solid #eee;
-  text-align: center;
-  height: 60px;
-  line-height: 60px;
-  padding: 0 5px;
+  height: 30px;
+  margin: 8px 2px 2px 2px;
+  display: flex;
+  justify-content: space-between;
+  font: 400 15px/22px 'Source Sans Pro', 'Helvetica Neue', sans-serif;
 }
 
-h1 {
+.heading h1 {
   font-size: 22px;
   margin: 0;
-  font-weight: 400;
-  line-height: 20px;
-  padding: 20px 2px;
+  font-weight: 500;
+  text-align: left;
+  padding: 2px;
+}
+
+.heading .interviewed-farm-label {
+  font-size: 14px;
+  text-align: right;
+  align-self: center;
+  color: rgb(255, 208, 0);
 }
 
 a {
@@ -80,12 +87,12 @@ a:hover {
 */
 .listings {
   height: 100%;
-  overflow: auto;
+  overflow: visible;
   padding-bottom: 60px;
 }
 
 .listings .item {
-  border-bottom: 1px solid #eee;
+  border-top: 1px solid #eee;
   padding: 10px;
   text-decoration: none;
 }
@@ -114,8 +121,15 @@ a:hover {
   cursor: pointer;
 }
 
+.listings .item .title.interviewed {
+  color: rgb(255, 208, 0);
+}
+
+.listings .item.active .title.interviewed,
+.listings .item .title.interviewed:hover { color: rgb(255, 118, 60); }
+
 ::-webkit-scrollbar {
-  width: 3px;
+  width: 6px;
   height: 3px;
   border-left: 0;
   background: rgba(0, 0, 0, 0.1);
@@ -130,91 +144,126 @@ a:hover {
   border-radius: 0;
 }
 
-/* 
-   Filter Styles adapted from multi-select.css by Cam Bass
-   https://cambass.medium.com/building-a-category-filter-with-reactjs-mern-stack-193f46ff385
+/*
+* Search Styles
 */
-  
-  .filter {
-    display: flex;
-    font-size: 14px;
-    padding: 15px 0 0 0;
-    position: relative;
-  }
-  
-  .filter-title {
-    color: black;
-    font-size: 14px;
-    padding: 0 10px 0 0;
-  }
-  
-  .outer-filter-container {
-    width: 180px;
-    padding: 15px 0 0 0;
-  }
-  
-  .filter-dropdown {
-    background: #f4f4f4;
-    display: flex;
-    justify-content: space-between;
-    padding: 8px 17px 8px 16px;
-    box-shadow: rgb(149 157 165 / 20%) 0px 8px 24px;
-    border-radius: 15px;
-    cursor: pointer;
-  }
+.search input[type=text] {
+  margin-top: 5px;
+  width: 320px;
+}
 
-  img {
-    width: 14px;
-    height: auto;
-  }
-  
-  .filter-dropdown:hover {
-    background-color: rgb(248, 249, 248);
-  }
-  
-  .filter-container {
-    width: 180px;
-    position: absolute;
-    margin-top: 10px;
-    background: #fff;
-    padding: 15px;
-    border-radius: 15px;
-    box-shadow: rgb(149 157 165 / 40%) 0px 8px 20px;
-    z-index: 100;
-  }
-  
-  .filter-container.multi-select:first-child {
-    padding-top: 10px;
-  }
-  
-  .filter-container-header {
-    color: rgb(131, 129, 129);
-    font-size: 16px;
-    border-bottom: 1px solid rgb(198, 198, 198);
-  }
-  
-  .multi-select {
-    font-size: 16px;
-    padding: 10px 0 0px 0;
-    display: flex;
-    flex-direction: row-reverse;
-    justify-content: flex-end;
-  }
-  
-  .multi-select:first-of-type {
-    padding-top: 10px;
-  }
-  
-  .multi-select label {
-    color: black;
-    margin-top: 1px;
-    margin-left: 8px;
-  }
-  
-  .multi-select-input {
-    accent-color: #7ecdd3;
-    height: 18px; 
-    width: 18px; 
-    margin-top: 4px;
-    cursor: pointer;
-  }
+/* 
+*  Filter Styles adapted from multi-select.css by Cam Bass
+*  https://cambass.medium.com/building-a-category-filter-with-reactjs-mern-stack-193f46ff385
+*/
+#filter-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: stretch;
+  padding: 15px 0 0 0;
+  width: 370px;
+}
+
+.filter {
+  display: flex;
+  font-size: 14px;
+  padding: 15px 0 0 0;
+  position: relative;
+}
+
+.filter-title {
+  color: rgb(66, 66, 66);
+  font-size: 14px;
+  font-weight: light;
+  padding: 0 10px 0 0;
+}
+
+.outer-filter-container {
+  width: 180px;
+}
+
+.filter-dropdown {
+  height: 55px;
+  background: #ffffff;
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 17px 8px 16px;
+  box-shadow: rgb(100, 100, 100 / 20%) 0px 8px 24px;
+  border: 2px solid rgb(99, 99, 99);
+  border-radius: 15px;
+  cursor: pointer;
+}
+
+img {
+  width: 14px;
+  height: auto;
+}
+
+.filter-title {
+  align-self: center;
+  font-size: 15px;
+}
+
+.filter-container {
+  width: 180px;
+  position: absolute;
+  margin-top: 8px;
+  background: #fff;
+  padding: 15px;
+  border-radius: 15px;
+  box-shadow: rgb(100, 100, 100 / 40%) 0px 8px 20px;
+  z-index: 100;
+}
+
+.filter-container.multi-select:first-child {
+  padding-top: 10px;
+}
+
+.filter-container-header {
+  color: rgb(131, 129, 129);
+  font-size: 16px;
+  border-bottom: 1px solid rgb(198, 198, 198);
+}
+
+.multi-select {
+  font-size: 16px;
+  padding: 10px 0 0px 0;
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: flex-end;
+}
+
+.multi-select:first-of-type {
+  padding-top: 10px;
+}
+
+.multi-select label {
+  color: rgb(66, 66, 66);
+  margin-top: 1px;
+  margin-left: 8px;
+}
+
+.multi-select-input {
+  accent-color: #7ecdd3;
+  height: 18px; 
+  width: 18px; 
+  margin-top: 4px;
+  cursor: pointer;
+}
+
+/*
+* Active Filter labeling styles
+*/
+.active-filters {
+  display: inline-block;
+}
+
+.active-filter {
+  display: inline-block;
+  margin-left: 5px; /* add some margin between the label and the filter names */
+}
+
+.active-filter-label {
+  padding-top: 0.2em;
+  text-decoration-line: underline;
+}
