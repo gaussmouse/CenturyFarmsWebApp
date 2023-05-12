@@ -12,7 +12,7 @@ export default function SearchBar(props) {
     <input 
       type="text" 
       onChange={handleChange} 
-      placeholder="Search farms.." 
+      placeholder="Search century farms by name..." 
       title="Search by name"
     /> 
     </div>
