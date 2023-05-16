@@ -1,31 +1,41 @@
+import { useEffect, useState } from "react";
 import { VictoryBar, VictoryLegend, VictoryLine, VictoryChart, VictoryAxis, VictoryLabel } from 'victory';
-import { futureMaxTemp } from "../futureMaxTempData";
-import { futureMinTemp } from "../futureMinTempData";
-import { futurePrecipitation } from "../futurePrecipitationData";
 import { useParams } from "react-router-dom";
 
-let farmID = "";
-
-const FarmDetails = () => {
-  farmID = useParams();
-  farmID = farmID.id;
-}
-
 const FutureClimateGraphs = () => {
-    FarmDetails();
-    const futureLabels = ["2022", "2023", "2024", "2025", "2026", "2027", "2028", "2029", "2030", "2031", "2032", "2033", "2034", "2035", "2036",
-    "2037", "2038", "2039", "2040", "2041", "2042", "2043", "2044", "2045", "2046", "2047", "2048", "2049", "2050"];
-    //const fLabels = [2022, 2023, 2024, 2025, 2026, 2027, 2028, 2029, 2030, 2031, 2032, 2033, 2034, 2035, 2036, 2037, 2038, 2039, 2040, 2041, 2042,
-    //2043, 2044, 2045, 2046, 2047, 2048, 2049, 2050];
-    const celsiusMaxTemps = Object.values(futureMaxTemp[farmID-1]);
-    const fahrenheitMaxTemps = celsiusMaxTemps.map(temp => (temp * 9/5) + 32);
-  
-    const celsiusMinTemps = Object.values(futureMinTemp[farmID-1]);
-    const fahrenheitMinTemps = celsiusMinTemps.map(temp => (temp * 9/5) + 32);
-    return (
-      <div>
+  const { id } = useParams();
+  const [futureMaxTemp, setFutureMaxTemp] = useState(null);
+  const [futureMinTemp, setFutureMinTemp] = useState(null);
+  const [futurePrecipitation, setFuturePrecipitation] = useState(null);
+
+  useEffect(() => {
+    async function fetchData() {
+      const maxTemp = await GetFutureMaxTemp(id);
+      const minTemp = await GetFutureMinTemp(id);
+      const precipitation = await GetFuturePercipitation(id);
+      setFutureMaxTemp(maxTemp);
+      setFutureMinTemp(minTemp);
+      setFuturePrecipitation(precipitation);
+    }
+    fetchData();
+  }, []);
+
+  if (!futureMaxTemp || !futureMinTemp || !futurePrecipitation) {
+    return null;
+  }
+
+  const futureLabels = ["2023", "2024", "2025", "2026", "2027", "2028", "2029", "2030", "2031", "2032", "2033", "2034", "2035", "2036",
+  "2037", "2038", "2039", "2040", "2041", "2042", "2043", "2044", "2045", "2046", "2047", "2048", "2049", "2050"];
+  const celsiusMaxTemps = Object.values(futureMaxTemp);
+  const fahrenheitMaxTemps = celsiusMaxTemps.map(temp => (temp * 9/5) + 32);
+
+  const celsiusMinTemps = Object.values(futureMinTemp);
+  const fahrenheitMinTemps = celsiusMinTemps.map(temp => (temp * 9/5) + 32);
+
+  return (
+    <div>
         <VictoryChart
-         maxDomain={{ y: 1700, x: 29}}
+         maxDomain={{ y: 1700, x: 28}}
          minDomain={{ y: 950}}
          height={150} 
          width={340}
@@ -67,11 +77,11 @@ const FutureClimateGraphs = () => {
               ticks: {stroke: "grey", size: 5}
               }}
             />
-          <VictoryBar width={50} style={{data: {fill: "#66ccff"}}} data={[Object.values(futurePrecipitation[farmID-1])[0], ...Object.values(futurePrecipitation[farmID-1])]} />
+          <VictoryBar width={50} style={{data: {fill: "#66ccff"}}} data={[Object.values(futurePrecipitation)[0], ...Object.values(futurePrecipitation)]} />
         </VictoryChart>
    
         <VictoryChart 
-          maxDomain={{ y: 75, x: 29}} 
+          maxDomain={{ y: 75, x: 28}} 
           minDomain={{ y: 35, x: 0}} 
           height={150} 
           width={340}
@@ -139,7 +149,25 @@ const FutureClimateGraphs = () => {
         </VictoryChart> 
   
       </div>
-    )
-  }
+  );
+}
+
+async function GetFutureMaxTemp(id){
+  const response = await fetch(`/fmaxt/id/` + id);
+  const records = await response.json();
+  return records[0];
+}
+
+async function GetFutureMinTemp(id){
+  const response = await fetch(`/fmint/id/` + id);
+  const records = await response.json();
+  return records[0];
+}
+
+async function GetFuturePercipitation(id){
+  const response = await fetch(`/fpercipitation/id/` + id);
+  const records = await response.json();
+  return records[0];
+}
 
 export default FutureClimateGraphs;
