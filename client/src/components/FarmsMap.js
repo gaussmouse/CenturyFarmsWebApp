@@ -80,7 +80,35 @@ export default function FarmsMap () {
       // Define farms and create map markers
       const farmData = await getFarmLocations();  
       setFarms(farmData);  
-      mapFarmLocations(farmData, interviewedFarms);
+      //mapFarmLocations(farmData, interviewedFarms);
+      // Add a popup for each marker
+      farmData.forEach((farm) => {
+        const popup = new mapboxgl.Popup({
+          closeButton: true,
+          closeOnClick: true
+        }).setHTML(
+          `<h3>${farm.properties.name}</h3><p>${farm.properties.address}</p><a href="/farms/${farm.properties.id}">
+          More Info</a>`
+        );
+
+        const markerColor = interviewedFarms.includes(farm.properties.id) ? 'rgb(255, 208, 0)' : '#25921B';
+
+        const marker = new mapboxgl.Marker({
+          color: markerColor,
+        })
+          .setLngLat(farm.geometry.coordinates)
+          .setPopup(popup)
+          .addTo(map.current);
+
+           // Add a click event listener to each marker
+        marker.getElement().addEventListener('click', () => {
+          // Pan to the marker
+          map.current.flyTo({
+            center: marker.getLngLat(),
+            zoom: 15,
+          });
+        });
+      });
 
       // Define crop and livestock filters
       const cropFilters = await getCropFilters();
