@@ -156,19 +156,19 @@ const HistoricClimateGraphs = () => {
 }
 
 async function GetHistoricMaxTemp(id){
-  const response = await fetch(`/hmaxt/id/` + id);
+  const response = await fetch(`https://century-farms.herokuapp.com/hmaxt/id/` + id);
   const records = await response.json();
   return records[0];
 }
 
 async function GetHistoricMinTemp(id){
-  const response = await fetch(`/hmint/id/` + id);
+  const response = await fetch(`https://century-farms.herokuapp.com/hmint/id/` + id);
   const records = await response.json();
   return records[0];
 }
 
 async function GetHistoricPercipitation(id){
-  const response = await fetch(`/hpercipitation/id/` + id);
+  const response = await fetch(`https://century-farms.herokuapp.com/hpercipitation/id/` + id);
   const records = await response.json();
   return records[0];
 }

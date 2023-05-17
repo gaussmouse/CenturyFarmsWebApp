@@ -170,7 +170,7 @@ export default function FarmsMap () {
   * Gets farm locations to populate map with location markers
   */
   const getFarmLocations = async () => {
-    const response = await fetch(`/location/`);
+    const response = await fetch(`https://century-farms.herokuapp.com/location/`);
     //console.log(response);
     
     if (!response.ok) {
@@ -203,7 +203,7 @@ export default function FarmsMap () {
   * Gets historic precipitation data for 100+ years
   */
   const getHistoricPrecipitation = async () => {
-    const response = await fetch(`/hPercipitation`);
+    const response = await fetch(`https://century-farms.herokuapp.com/hPercipitation`);
     //console.log(response);
     
     if (!response.ok) {
@@ -296,7 +296,7 @@ export default function FarmsMap () {
   * Gets crop categories for farm search filter
   */
   const getCropFilters = async () => {
-    const response = await fetch(`/cropType/`);
+    const response = await fetch(`https://century-farms.herokuapp.com/cropType/`);
 
     if (!response.ok) {
       const message = `An error occurred: ${response.statusText}`;
@@ -330,7 +330,7 @@ export default function FarmsMap () {
   * Gets livestock categories for farm search filter
   */
   const getLivestockFilters = async () => {
-    const response = await fetch(`/livestockType/`);
+    const response = await fetch(`https://century-farms.herokuapp.com/livestockType/`);
 
     if (!response.ok) {
       const message = `An error occurred: ${response.statusText}`;
@@ -364,7 +364,7 @@ export default function FarmsMap () {
   * Gets all crops for farm filtering
   */
   const getCrops = async () => {
-    const response = await fetch(`/crop/`);
+    const response = await fetch(`https://century-farms.herokuapp.com/crop/`);
 
     if (!response.ok) {
       const message = `An error occurred: ${response.statusText}`;
@@ -389,7 +389,7 @@ export default function FarmsMap () {
   * Gets all livestock for farm filtering
   */
   const getLivestock = async () => {
-    const response = await fetch(`/livestock/`);
+    const response = await fetch(`https://century-farms.herokuapp.com/livestock/`);
 
     if (!response.ok) {
       const message = `An error occurred: ${response.statusText}`;
@@ -414,7 +414,7 @@ export default function FarmsMap () {
   * Gets current farm info to create valid farm ID list for farm filtering
   */
   const getCurrentFarmInfo = async () => {
-    const response = await fetch(`/currentFarm/`);
+    const response = await fetch(`https://century-farms.herokuapp.com/currentFarm/`);
 
     if (!response.ok) {
       const message = `An error occurred: ${response.statusText}`;
@@ -439,7 +439,7 @@ export default function FarmsMap () {
   * Gets interviewed farms info for visually differentiation
   */
   const getInterviewedFarms = async () => {
-    const response = await fetch(`/farmdesc/`);
+    const response = await fetch(`https://century-farms.herokuapp.com/farmdesc/`);
 
     if (!response.ok) {
       const message = `An error occurred: ${response.statusText}`;

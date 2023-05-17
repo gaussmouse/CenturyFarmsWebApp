@@ -22,7 +22,7 @@ function FarmSynposis() {
 
   useEffect(() => {
     async function fetchData() {
-      const farmDescResponse = await fetch(`/farmdesc/farmPastID/` + farmID);
+      const farmDescResponse = await fetch(`https://century-farms.herokuapp.com/farmdesc/farmPastID/` + farmID);
 
       const farmDescRecords = await farmDescResponse.json();
 
@@ -63,9 +63,9 @@ function FarmData() {
 
   useEffect(() => {
     async function fetchData() {
-      const farmDescResponse = await fetch(`/farmdesc/farmPastID/` + farmID);
-      const locationResponse = await fetch(`/location/id/` + farmID);
-      const pastFarmResponse = await fetch(`/pastFarm/id/` + farmID);
+      const farmDescResponse = await fetch(`https://century-farms.herokuapp.com/farmdesc/farmPastID/` + farmID);
+      const locationResponse = await fetch(`https://century-farms.herokuapp.com/location/id/` + farmID);
+      const pastFarmResponse = await fetch(`https://century-farms.herokuapp.com/pastFarm/id/` + farmID);
 
       const farmDescRecords = await farmDescResponse.json();
       const locationRecords = await locationResponse.json();
@@ -135,10 +135,10 @@ function CurrentPastFarmData() {
 
   useEffect(() => {
     async function fetchData() {
-      const currFarmResponse = await fetch(`/currentFarm/id/` + farmID);
-      const currOwnerResponse = await fetch(`/currentOwner/id/` + farmID);
-      const pastFarmResponse = await fetch(`/pastFarm/id/` + farmID);
-      const originalOwnerResponse = await fetch(`/originalOwner/id/` + farmID);
+      const currFarmResponse = await fetch(`https://century-farms.herokuapp.com/currentFarm/id/` + farmID);
+      const currOwnerResponse = await fetch(`https://century-farms.herokuapp.com/currentOwner/id/` + farmID);
+      const pastFarmResponse = await fetch(`https://century-farms.herokuapp.com/pastFarm/id/` + farmID);
+      const originalOwnerResponse = await fetch(`https://century-farms.herokuapp.com/originalOwner/id/` + farmID);
 
       const currentOwnerRecords = await currOwnerResponse.json();
       const currentFarmRecords = await currFarmResponse.json();
@@ -347,7 +347,7 @@ function PictureList() {
 
   useEffect(() => {
     async function getFarmPictures() {
-      const response = await fetch(`/farmdesc/farmCurrentID/` + farmID);
+      const response = await fetch(`https://century-farms.herokuapp.com/farmdesc/farmCurrentID/` + farmID);
 
       if (!response.ok) {
         const message = `An error occurred: ${response.statusText}`;
@@ -384,7 +384,7 @@ async function getCropNames(cropIdList) {
 
   for (let i = 0; i < cropNames.length; i++) {
     let nameID = cropNames[i];
-    const response = await fetch(`/crop/id/` + nameID);
+    const response = await fetch(`https://century-farms.herokuapp.com/crop/id/` + nameID);
     const records = await response.json();
     cropNames[i] = records[0].name;
   }
@@ -402,7 +402,7 @@ async function getLivestockNames(livestockIdList) {
 
   for (let i = 0; i < livestockNames.length; i++) {
     let livestockID = livestockNames[i];
-    const response = await fetch(`/livestock/id/` + livestockID);
+    const response = await fetch(`https://century-farms.herokuapp.com/livestock/id/` + livestockID);
     const records = await response.json();
     livestockNames[i] = records[0].name;
   }
@@ -411,21 +411,3 @@ async function getLivestockNames(livestockIdList) {
 
   return livestockString;
 }
-
-//  async function GetFutureMaxTemp(id){
-//     const response = await fetch(`/fmaxt/id/` + id);
-//     const records = await response.json();
-//     return records;
-//  }
-
-//  async function GetFutureMinTemp(id){
-//     const response = await fetch(`/fmint/id/` + id);
-//     const records = await response.json();
-//     return records;
-//  }
-
-//  async function GetFuturePercipitation(id){
-//     const response = await fetch(`/fpercipitation/id/` + id);
-//     const records = await response.json();
-//     return records;
-//  }
