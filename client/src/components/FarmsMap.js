@@ -170,7 +170,7 @@ export default function FarmsMap () {
   * Gets farm locations to populate map with location markers
   */
   const getFarmLocations = async () => {
-    const response = await fetch(`/location/`);
+    const response = await fetch(`https://century-farms.herokuapp.com/location/`);
     //console.log(response);
     
     if (!response.ok) {
