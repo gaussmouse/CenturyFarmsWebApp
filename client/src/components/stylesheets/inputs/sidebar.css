@@ -9,7 +9,7 @@
   height: 100%;
   width: 400px;
   position: fixed;
-  z-index: 1;
+  z-index: 9999;
   top: 0;
   left: -400px; /* default closed, 0 when open */
   overflow-x: hidden;
@@ -25,6 +25,7 @@
 }
 
 #openLocationSidebar {
+  top: 73px;
   font-size: 20px;
   cursor: pointer;
   background-color: #111;
@@ -32,7 +33,7 @@
   padding: 10px 15px;
   border: none;
   position: absolute;
-  z-index: 9999; /* button at top of layers */
+  z-index: 20; /* button at top of layers */
 }
 
 #openLocationSidebar:hover {
@@ -45,9 +46,10 @@
 }
 
 /* On smaller screens, where width is less than 450px, change the style of the sidenav (less padding and a smaller font size) */
-@media screen and (max-width: 450px) {
-  #locationSidebar {padding-top: 15px;}
-  .sidebar a {font-size: 18px;}
+@media screen and (max-width: 6000px) {
+  #locationSidebar { padding-top: 15px; }
+  .sidebar a { font-size: 18px}
+  #openLocationSidebar { font-size: 16px; }
 }
 
 .heading {
