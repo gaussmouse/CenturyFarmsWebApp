@@ -1,16 +1,9 @@
 import React, {useRef, useState, useEffect} from 'react';
 import mapboxgl from '!mapbox-gl'; // eslint-disable-line import/no-webpack-loader-syntax
-import Filter from "../components/sidebar/Filter";
-import SearchBar from "../components/sidebar/SearchBar";
-import ActiveFilters from  "../components/sidebar/ActiveFilters"
-import FarmListings from "../components/sidebar/FarmListings"
-import PopupTutorial from "../components/PopupTutorial"
-import { FaQuestionCircle } from 'react-icons/fa';
-import Modal from 'react-modal';
+import PopupTutorial from "../components/PopupTutorial";
+import Header from "../components/header/Header";
+import SidebarDrawer from "../components/sidebar/SidebarDrawer";
 //import { historicMaxTemp } from '../historicMaxTempData';
-
-// Plugins
-import ClickAwayListener from '@mui/base/ClickAwayListener';
 
 // Stylesheets
 import "./stylesheets/inputs/sidebar.css"
@@ -42,15 +35,12 @@ export default function FarmsMap () {
   const [validFarms, setValidFarms] = useState([]);
   const [interviewedFarms, setInterviewedFarms] = useState([]);
 
-  const [historicPrecipitationData, setHistoricPrecipitationData] = useState([]);
-  const [historicMaxTemps, sethistoricMaxTemps] = useState([]);
-  const [historicMinTemps, setHistoricMinTemps] = useState([]);
+  //const [historicPrecipitationData, setHistoricPrecipitationData] = useState([]);
+  //const [historicMaxTemps, sethistoricMaxTemps] = useState([]);
+  //const [historicMinTemps, setHistoricMinTemps] = useState([]);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
-
-  function openModal() {
-    setIsModalOpen(true);
-  }
+  //const [showSidebar, setShowSidebar] = useState(false);
 
   /*
   * Initializes map
@@ -66,12 +56,14 @@ export default function FarmsMap () {
       });
 
       // Get climate data for each farm marker pop-up window
-      //const historicPrecipitationData = getHistoricPrecipitation();
-      //const historicMaxTemps = getHistoricPrecipitation();
-      //const historicMinTemps = getHistoricPrecipitation();
-      //setHistoricPrecipitationData(historicPrecipitationData);
-      //sethistoricMaxTemps(historicMaxTemps);
-      //setHistoricMinTemps(historicMinTemps);
+      /*
+      const historicPrecipitationData = getHistoricPrecipitation();
+      const historicMaxTemps = getHistoricPrecipitation();
+      const historicMinTemps = getHistoricPrecipitation();
+      setHistoricPrecipitationData(historicPrecipitationData);
+      sethistoricMaxTemps(historicMaxTemps);
+      setHistoricMinTemps(historicMinTemps);
+      */
       
       // Define interviewed farms for visual differentiation
       const interviewedFarms = await getInterviewedFarms();
@@ -253,74 +245,6 @@ export default function FarmsMap () {
   };
 
   /*
-  * Shows farm locations on map
-  */
-  const mapFarmLocations = (
-    farmData, 
-    interviewedFarms
-    ) => {
-    map.current.on('load', () => {
-      // Add a popup for each marker
-      farmData.forEach((farm) => {
-        /*
-        // historicPrecipitationData is a Promise here, needs fixing
-        console.log(historicPrecipitationData);
-        historicPrecipitationData.forEach(hPrecipData => {
-          if (hPrecipData.id === farm.id) {
-            return true;
-          }
-          return false;
-        })
-        const hPrecipitationData = historicPrecipitationData.filter(hPrecipData => {
-          if (hPrecipData.id === farm.id) {
-            return true;
-          }
-          return false;
-        }).map(hPrecipData => hPrecipData.data);
-        const hMaxTemp = historicMaxTemps.filter(hMaxT => {
-          if (hMaxT.id === farm.id) {
-            return true;
-          }
-          return false;
-        }).map(hMaxT => hMaxT.data);
-        const hMinTemp = historicMinTemps.filter(hMinT => {
-          if (hMinT.id === farm.id) {
-            return true;
-          }
-          return false;
-        }).map(hMinT => hMinT.data);
-        */
-
-        const popup = new mapboxgl.Popup({
-          closeButton: true,
-          closeOnClick: true
-        }).setHTML(
-          `<h3>${farm.properties.name}</h3><p>${farm.properties.address}</p><a href="/farms/${farm.properties.id}">
-          More Info</a>`
-        );
-
-        const markerColor = interviewedFarms.includes(farm.properties.id) ? 'rgb(255, 208, 0)' : '#25921B';
-
-        const marker = new mapboxgl.Marker({
-          color: markerColor,
-        })
-          .setLngLat(farm.geometry.coordinates)
-          .setPopup(popup)
-          .addTo(map.current);
-
-           // Add a click event listener to each marker
-        marker.getElement().addEventListener('click', () => {
-          // Pan to the marker
-          map.current.flyTo({
-            center: marker.getLngLat(),
-            zoom: 15,
-          });
-        });
-      });
-    });
-  }   
-
-  /*
   * Gets crop categories for farm search filter
   */
   const getCropFilters = async () => {
@@ -499,25 +423,14 @@ export default function FarmsMap () {
   * Reorients map to focus on selected farm
   * Code adapted from (https://docs.mapbox.com/help/tutorials/building-a-store-locator/)
   */
-  const flyToFarm = (CurrentFeature) => {
-    toggleLocationSidebar();
-    map.current.flyTo({
-      center: CurrentFeature.geometry.coordinates,
-      zoom: 15
-    });
-  };
-
-  /*
-  * Resets multiselectexpanded state if user clicks away
-  * Code adapted by Cam Bass (https://cambass.medium.com/building-a-category-filter-with-reactjs-mern-stack-193f46ff385)
-  */
-  const handleClickAway = (filterType) => {
-    if (filterType === "crop")
-      setCropMultiSelectExpanded(false)
-    else if (filterType === "livestock")
-      setLivestockMultiSelectExpanded(false)
-  }
-
+     const flyToFarm = (CurrentFeature) => {
+      toggleLocationSidebar();
+      map.current.flyTo({
+        center: CurrentFeature.geometry.coordinates,
+        zoom: 15
+      });
+    };
+  
   /*
   * Sets styles of sidebar, map, and open/close buttons when
   *   called inside onClick from the open/close buttons
@@ -542,79 +455,48 @@ export default function FarmsMap () {
     }
   }
 
+  function openModal() {
+    setIsModalOpen(true);
+  }
+
  /* Longitude: {lng} | Latitude: {lat} | Zoom: {zoom} */
 
   return (
     <div>
-      <div id="locationSidebar" className="sidebar"> 
-        <button 
-          id="closeLocationSidebar" 
-          className="closebtn" 
-          onClick={toggleLocationSidebar}>
-            ×
-        </button>
-
-        <SearchBar setQuery={setSearchQuery} />
-        <div id='filter-wrapper'>
-          <ClickAwayListener onClickAway={() => {handleClickAway("crop")}}>
-            <div className='outer-filter-container'>
-              <Filter 
-                multiSelectExpanded={cropMultiSelectExpanded}
-                setMultiSelectExpanded={setCropMultiSelectExpanded}
-                currentFilters={currentCropFilters} 
-                setFilterQuery={setCropFilterQuery}
-                categoryName="Crop"
-                filterCategory={cropFilters}
-                setFilterCategory={setCropFilters}
-              />
-            </div>
-          </ClickAwayListener>
-
-          <ClickAwayListener onClickAway={() => {handleClickAway("livestock")}}>
-            <div className='outer-filter-container'>
-              <Filter 
-                multiSelectExpanded={livestockMultiSelectExpanded}
-                setMultiSelectExpanded={setLivestockMultiSelectExpanded}
-                currentFilters={currentLivestockFilters} 
-                setFilterQuery={setLivestockFilterQuery}
-                categoryName="Livestock"
-                filterCategory={livestockFilters}
-                setFilterCategory={setLivestockFilters}
-              />
-            </div>
-          </ClickAwayListener>
-        </div>
-
-        <ActiveFilters
-          activeFilters={currentCropFilters}
-          filterNames={cropFilters}
-          filterCategory="Crop"
-        />
-
-        <ActiveFilters
-          activeFilters={currentLivestockFilters}
-          filterNames={livestockFilters}
-          filterCategory="Livestock"
-        />
-
-        <FarmListings 
-          farms={farms}
-          validFarms={validFarms}
-          searchQuery={searchQuery}
-          interviewedFarms={interviewedFarms}
-          flyToFarm={flyToFarm}
-        />
-      </div>
+      <SidebarDrawer 
+         toggleLocationSidebar={toggleLocationSidebar}
+         setSearchQuery={setSearchQuery}
+         cropMultiSelectExpanded={cropMultiSelectExpanded}
+         setCropMultiSelectExpanded={setCropMultiSelectExpanded}
+         currentCropFilters={currentCropFilters}
+         setCropFilterQuery={setCropFilterQuery}
+         cropFilters={cropFilters}
+         setCropFilters={setCropFilters}
+         livestockMultiSelectExpanded={livestockMultiSelectExpanded}
+         setLivestockMultiSelectExpanded={setLivestockMultiSelectExpanded}
+         currentLivestockFilters={currentLivestockFilters}
+         setLivestockFilterQuery={setLivestockFilterQuery}
+         livestockFilters={livestockFilters}
+         setLivestockFilters={setLivestockFilters}
+         farms={farms}
+         validFarms={validFarms}
+         searchQuery={searchQuery}
+         interviewedFarms={interviewedFarms}
+         flyToFarm={flyToFarm}
+      />
 
       <div id="main">
-      <button id="qbtn" className="question-mark-container" onClick={() => openModal()}>
-        ?
-      </button>
+      <Header 
+        toggleLocationSidebar={toggleLocationSidebar}
+      />
+        <button id="qbtn" className="question-mark-container" onClick={() => openModal()}>
+          ?
+        </button>
         <button 
           id="openLocationSidebar" 
           className="openbtn" 
           onClick={toggleLocationSidebar}>
-            ☰ Farm Locations
+            Farm Locations
         </button>
         <div ref={mapContainer} className="map-container" />
         <PopupTutorial 
