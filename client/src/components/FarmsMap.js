@@ -84,7 +84,6 @@ export default function FarmsMap () {
         );
 
         const markerColor = interviewedFarms.includes(farm.properties.id) ? 'rgb(255, 208, 0)' : '#25921B';
-
         const marker = new mapboxgl.Marker({
           color: markerColor,
         })
@@ -92,13 +91,28 @@ export default function FarmsMap () {
           .setPopup(popup)
           .addTo(map.current);
 
-           // Add a click event listener to each marker
+          // Add a click event listener to each marker
         marker.getElement().addEventListener('click', () => {
           // Pan to the marker
           map.current.flyTo({
             center: marker.getLngLat(),
             zoom: 15,
           });
+        });
+
+        popup.on('open', () => {
+          const popupContent = popup.getElement();
+          if (popupContent) {
+            const h3Element = popupContent.querySelector('h3');
+            if (h3Element) {
+              if (markerColor === 'rgb(255, 208, 0)') {
+                h3Element.style.color = markerColor;
+              }
+              else {
+                h3Element.style.color = 'rgb(46, 198, 32)';
+              }
+            }
+          }
         });
       });
 
