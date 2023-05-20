@@ -39,21 +39,34 @@ function FarmSynposis() {
   };
 
   const renderData = () => {
+    const containerStyle = {
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      margin: "30px auto",
+      maxWidth: "700px",
+      padding: "0 20px",
+      textAlign: "left",
+    };
+  
+    const buttonStyle = {
+      marginTop: "10px",
+    };
+  
     if (currentData.length > limit) {
       return (
-        <div style={{ textAlign: "left", marginLeft: "350px", marginRight: "350px", marginBottom: "30px", marginTop: "30px" }}>
+        <div style={containerStyle}>
           {showFull ? currentData : `${currentData.substring(0, limit)}...`}
-          <button onClick={toggleShowFull}>{showFull ? "Read less" : "Read more"}</button>
+          <button style={buttonStyle} onClick={toggleShowFull}>
+            {showFull ? "Read less" : "Read more"}
+          </button>
         </div>
       );
     } else {
-      return (
-        <div style={{ textAlign: "left", marginLeft: "350px", marginRight: "350px", marginBottom: "30px", marginTop: "30px" }}>
-          {currentData}
-        </div>
-      );
+      return <div style={containerStyle}>{currentData}</div>;
     }
   };
+  
 
   return renderData();
 }
