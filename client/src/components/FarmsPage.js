@@ -15,7 +15,7 @@ const FarmDetails = () => {
   farmID = farmID.id;
 };
 
-function FarmSynposis() {
+function FarmSynopsis() {
   const [currentData, setCurrentData] = useState("");
   const [showFull, setShowFull] = useState(false);
   const limit = 700;
@@ -86,12 +86,6 @@ function FarmData() {
 
       const newData = [];
 
-      if (farmDescRecords[0].name) {
-        newData.push(`Farm name: ${farmDescRecords[0].name}`);
-      } else {
-        newData.push(`Farm name: Farm name not found`);
-      }
-
       if (locationRecords[0].address) {
         newData.push(`Address: ${locationRecords[0].address}`);
       } else {
@@ -129,6 +123,7 @@ function FarmData() {
   return (
     <div style={{ display: "flex", justifyContent: "center" }}>
       <FarmSinglePicture />
+
       <div style={{ textAlign: "left", paddingLeft: "20px" }}>
         {currentData.map((data, index) => {
           const [label, value] = data.split(": ");
@@ -139,7 +134,40 @@ function FarmData() {
           );
         })}
       </div>
+
+      <style>
+        {`
+          @media (max-width: 768px) {
+            /* Apply styles for screens up to 768px width (mobile screens) */
+            div {
+              flex-direction: column;
+              align-items: flex-start;
+            }
+          }
+        `}
+      </style>
     </div>
+  );
+}
+
+function Header() {
+  const [currentData, setCurrentData] = useState([]);
+
+  useEffect(() => {
+    async function fetchData() {
+      const farmDescResponse = await fetch(`https://century-farms.herokuapp.com/farmdesc/farmPastID/` + farmID);
+      const farmDescRecords = await farmDescResponse.json();
+      const farmName = farmDescRecords[0].name;
+      setCurrentData(farmName);
+    }
+
+    fetchData();
+  }, []);
+
+  return (
+      <div>
+        <h1 style={{ textAlign: "center" }}>{currentData}</h1>
+      </div>
   );
 }
 
@@ -239,34 +267,57 @@ function CurrentPastFarmData() {
 }
 
 function MyTabs() {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 767);
+    };
+
+    window.addEventListener("resize", handleResize);
+    handleResize(); // Call the function initially
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
   return (
     <Tabs>
       <FarmDetails />
       <PictureList />
-      <TabList>
-        <Tab>Farm Data</Tab>
-        <Tab>Historic Climate Graphs</Tab>
-        <Tab>Future Climate Graphs</Tab>
-        <Tab>Farm Pictures</Tab>
-        <Tab>Back to Map</Tab>
-      </TabList>
+
+      {isMobile ? (
+        <MobileTabDropdown defaultTab="farm-data" />
+      ) : (
+        <TabList>
+          <Tab>Farm Data</Tab>
+          <Tab>Historic Climate Graphs</Tab>
+          <Tab>Future Climate Graphs</Tab>
+          <Tab>Farm Pictures</Tab>
+          <Tab>Back to Map</Tab>
+        </TabList>
+      )}
+
       <TabPanel>
-        <h2 style={{ textAlign: "center" }}>General Farm Information</h2>
-        <FarmData />
-        <FarmSynposis />
-        <div style={{ display: "flex" }}>
-          <div style={{ flex: 1 }}>
-            <h2 style={{ textAlign: "center" }}>Current and Past Farm Information</h2>
-            <CurrentPastFarmData />
-          </div>
-        </div>
+        {!isMobile && (
+          <>
+            <h2 style={{ textAlign: "center" }}>General Farm Information</h2>
+            <FarmData />
+            <FarmSynopsis />
+            <div style={{ display: "flex" }}>
+              <div style={{ flex: 1 }}>
+                <h2 style={{ textAlign: "center" }}>Current and Past Farm Information</h2>
+                <CurrentPastFarmData />
+              </div>
+            </div>
+          </>
+        )}
       </TabPanel>
       <TabPanel>
-        <FarmSinglePicture />
         <HistoricClimateGraphs />
       </TabPanel>
       <TabPanel>
-        <FarmSinglePicture />
         <FutureClimateGraphs />
       </TabPanel>
       <TabPanel>
@@ -279,9 +330,65 @@ function MyTabs() {
   );
 }
 
+const MobileTabDropdown = ({ defaultTab }) => {
+  const [selectedTab, setSelectedTab] = useState(defaultTab);
+
+  const handleTabChange = (e) => {
+    setSelectedTab(e.target.value);
+  };
+
+  const renderSelectedTab = () => {
+    switch (selectedTab) {
+      case "farm-data":
+        return (
+          <>
+            <FarmData />
+            <FarmSynopsis />
+            <CurrentPastFarmData />
+          </>
+        );
+      case "historic-climate-graphs":
+        return (
+          <>
+            <FarmSinglePicture />
+            <HistoricClimateGraphs />
+          </>
+        );
+      case "future-climate-graphs":
+        return (
+          <>
+            <FarmSinglePicture />
+            <FutureClimateGraphs />
+          </>
+        );
+      case "farm-pictures":
+        return <FarmPicture />;
+      case "back-to-map":
+        return <BackTab />;
+      default:
+        return null;
+    }
+  };
+
+  return (
+    <div>
+      <select value={selectedTab} onChange={handleTabChange}>
+        <option value="farm-data">Farm Data</option>
+        <option value="historic-climate-graphs">Historic Climate Graphs</option>
+        <option value="future-climate-graphs">Future Climate Graphs</option>
+        <option value="farm-pictures">Farm Pictures</option>
+        <option value="back-to-map">Back to Map</option>
+      </select>
+
+      {selectedTab && renderSelectedTab()}
+    </div>
+  );
+}
+
 export default function App() {
   return (
     <div>
+      <Header />
       <MyTabs />
     </div>
   );
