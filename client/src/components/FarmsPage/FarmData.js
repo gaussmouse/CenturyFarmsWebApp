@@ -3,6 +3,9 @@ import { useParams } from "react-router-dom";
 import NavBar from "./FarmsPageNav";
 import FarmSinglePicture from "./SinglePicture";
 
+// Stylesheets
+import "../stylesheets/farm-data.css"
+
 const FarmDetails = () => {
     const { id } = useParams();
     return id;
@@ -116,10 +119,10 @@ function FarmSynopsis() {
     }, []);
   
     return (
-      <div style={{ display: "flex", justifyContent: "center" }}>
+      <div className="outer-container">
         <FarmSinglePicture />
   
-        <div style={{ textAlign: "left", paddingLeft: "20px" }}>
+        <div className="data-container">
           {currentData.map((data, index) => {
             const [label, value] = data.split(": ");
             return (
@@ -129,18 +132,6 @@ function FarmSynopsis() {
             );
           })}
         </div>
-  
-        <style>
-          {`
-            @media (max-width: 768px) {
-              /* Apply styles for screens up to 768px width (mobile screens) */
-              div {
-                flex-direction: column;
-                align-items: flex-start;
-              }
-            }
-          `}
-        </style>
       </div>
     );
   }
@@ -279,7 +270,7 @@ async function getCropNames(cropIdList) {
 
   export default function FarmData() {
     return (
-      <>
+      <div>
         <NavBar />
         <div style={{ paddingTop: '80px' }}>
           <h2 style={{ textAlign: 'center' }}>General Farm Information</h2>
@@ -292,6 +283,6 @@ async function getCropNames(cropIdList) {
             </div>
           </div>
         </div>
-      </>
+      </div>
     );
   }

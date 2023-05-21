@@ -1,0 +1,22 @@
+.outer-container {
+    display: flex;
+    justify-content: center;
+  }
+  
+  .data-container {
+    text-align: left;
+    padding-left: 20px;
+  }
+  
+  @media (max-width: 768px) {
+    /* Apply styles for screens up to 768px width (mobile screens) */
+    .outer-container {
+      flex-direction: column;
+      align-items: center;
+    }
+    .data-container {
+        text-align: left;
+        padding-left: 20px;
+      }
+  }
+  
