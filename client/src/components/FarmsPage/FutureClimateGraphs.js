@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { VictoryBar, VictoryLegend, VictoryLine, VictoryChart, VictoryAxis, VictoryLabel } from 'victory';
 import { useParams } from "react-router-dom";
 import NavBar from "./FarmsPageNav";
+import "../stylesheets/farm-data.css"
 
 const FutureClimateGraphs = () => {
   const { id } = useParams();
@@ -36,6 +37,7 @@ const FutureClimateGraphs = () => {
   return (
     <div>
         <NavBar />
+        <div className="mobile-padding">
         <VictoryChart
          maxDomain={{ y: 1700, x: 28}}
          minDomain={{ y: 950}}
@@ -81,6 +83,7 @@ const FutureClimateGraphs = () => {
             />
           <VictoryBar width={50} style={{data: {fill: "#66ccff"}}} data={[Object.values(futurePrecipitation)[0], ...Object.values(futurePrecipitation)]} />
         </VictoryChart>
+        </div>
    
         <VictoryChart 
           maxDomain={{ y: 75, x: 28}} 

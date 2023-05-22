@@ -40,6 +40,7 @@ const HistoricClimateGraphs = () => {
   return (
     <div>
     <NavBar />
+    <div style={{ paddingTop: '50px' }}>
     <VictoryChart 
       maxDomain={{ y: 2300, x: 102}} 
       minDomain={{ y: 500 }}
@@ -85,6 +86,7 @@ const HistoricClimateGraphs = () => {
         />
       <VictoryBar width={50} style={{data: {fill: "#66ccff"}}} data={[Object.values(historicPrecipitation)[0], ...Object.values(historicPrecipitation)]} />
     </VictoryChart>
+    </div>
 
     <VictoryChart 
       maxDomain={{ y: 75, x: 102}} 

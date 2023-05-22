@@ -93,13 +93,15 @@ function FarmData() {
               <FarmData farmID={props.farmID} />
             </MDBNavbarBrand>
             <MDBNavbarToggler
-              type="button"
-              data-target="#navbarToggleExternalContent"
-              aria-controls="navbarToggleExternalContent"
-              aria-expanded="false"
-              aria-label="Toggle navigation"
-              onClick={() => setShowNav(!showNav)}
-            />
+            type='button'
+            data-target='#navbarToggleExternalContent'
+            aria-controls='navbarToggleExternalContent'
+            aria-expanded='false'
+            aria-label='Toggle navigation'
+            onClick={() => setShowNav(!showNav)}
+          >
+            <MDBIcon icon='bars' fas />
+          </MDBNavbarToggler>
             <MDBCollapse navbar show={showNav}>
               <MDBNavbarNav>
                 <MDBNavbarLink active={currentPage === url} aria-current="page" href={url}>

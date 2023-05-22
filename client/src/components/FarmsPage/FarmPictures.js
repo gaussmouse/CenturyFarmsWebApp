@@ -31,7 +31,7 @@ const FarmDetails = () => {
             key={url}
             src={url}
             alt="pic"
-            style={{ display: "block", minWidth: "200px", maxHeight: "400px" }}
+            style={{ display: "block", minWidth: "500px", maxHeight: "900px" }}
           />
         ))}
       </div>
