@@ -12,7 +12,12 @@ const FarmDetails = () => {
   const FarmPictures = () => {
     PictureList();
     if (farmPicList.length < 1) {
-      return <h1 style={{ textAlign: "center" }}>This farm has no pictures</h1>; // don't render anything if farmPicList is empty
+      return (
+      <div>
+        <NavBar />
+        <h1 style={{ textAlign: "center", paddingTop: '70px' }}>This farm has no pictures</h1>
+      </div>
+      )
     }
   
     return (
@@ -31,7 +36,7 @@ const FarmDetails = () => {
             key={url}
             src={url}
             alt="pic"
-            style={{ display: "block", minWidth: "500px", maxHeight: "900px" }}
+            style={{ display: "block", minWidth: "500px", maxHeight: "800px" }}
           />
         ))}
       </div>
