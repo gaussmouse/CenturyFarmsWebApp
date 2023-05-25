@@ -21,6 +21,9 @@
     .mobile-padding {
       padding-top: 35px;
     }
+    img.mobile {
+      max-width: 800px;
+    }
   }
 
   
