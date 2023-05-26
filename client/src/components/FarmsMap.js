@@ -1,12 +1,10 @@
 import React, {useRef, useState, useEffect} from 'react';
 import mapboxgl from '!mapbox-gl'; // eslint-disable-line import/no-webpack-loader-syntax
 import PopupTutorial from "../components/PopupTutorial";
+import PopupAbout from "../components/PopupAbout";
 import Header from "../components/header/Header";
 import SidebarDrawer from "../components/sidebar/SidebarDrawer";
 //import { historicMaxTemp } from '../historicMaxTempData';
-
-// Stylesheets
-import "./stylesheets/inputs/sidebar.css"
 
 // public access key - rotated periodically
 mapboxgl.accessToken = "add token here"; 
@@ -39,7 +37,8 @@ export default function FarmsMap () {
   //const [historicMaxTemps, sethistoricMaxTemps] = useState([]);
   //const [historicMinTemps, setHistoricMinTemps] = useState([]);
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isTutorialOpen, setIsTutorialOpen] = useState(false);
+  const [isAboutOpen, setIsAboutOpen] = useState(false);
   //const [showSidebar, setShowSidebar] = useState(false);
 
   /*
@@ -469,10 +468,6 @@ export default function FarmsMap () {
     }
   }
 
-  function openModal() {
-    setIsModalOpen(true);
-  }
-
  /* Longitude: {lng} | Latitude: {lat} | Zoom: {zoom} */
 
   return (
@@ -502,20 +497,25 @@ export default function FarmsMap () {
       <div id="main">
       <Header 
         toggleLocationSidebar={toggleLocationSidebar}
+        isTutorialOpen={isTutorialOpen}
+        setIsTutorialOpen={setIsTutorialOpen}
+        isAboutOpen={isAboutOpen}
+        setIsAboutOpen={setIsAboutOpen}
       />
-        <button id="qbtn" className="question-mark-container" onClick={() => openModal()}>
-          ?
-        </button>
         <button 
           id="openLocationSidebar" 
           className="openbtn" 
           onClick={toggleLocationSidebar}>
-            Farm Locations
+            &#171; Farm List
         </button>
         <div ref={mapContainer} className="map-container" />
         <PopupTutorial 
-          isModalOpen={isModalOpen}
-          setIsModalOpen={setIsModalOpen}
+          isTutorialOpen={isTutorialOpen}
+          setIsTutorialOpen={setIsTutorialOpen}
+        />
+        <PopupAbout 
+          isAboutOpen={isAboutOpen}
+          setIsAboutOpen={setIsAboutOpen}
         />
       </div>
     </div>
