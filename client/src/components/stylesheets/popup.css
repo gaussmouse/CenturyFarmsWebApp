@@ -1,0 +1,8 @@
+#about-modal-title, #tutorial-modal-title {
+    font-size: calc(2.0rem + 0.1vw);
+}
+
+#about-modal-source-title {
+    font-size: calc(1.5rem + 0.1vw);
+}
+
