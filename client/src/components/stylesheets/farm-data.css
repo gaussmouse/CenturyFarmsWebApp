@@ -8,7 +8,7 @@
     padding-left: 20px;
   }
   
-  @media (max-width: 768px) {
+  @media screen and (max-width: 768px) {
     /* Apply styles for screens up to 768px width (mobile screens) */
     .outer-container {
       flex-direction: column;
@@ -23,6 +23,11 @@
     }
     img.mobile {
       max-width: 800px;
+    }
+    .mobile-graphs {
+      max-width: 4000px;
+      max-height: 500px;
+      padding: 20px;
     }
   }
 

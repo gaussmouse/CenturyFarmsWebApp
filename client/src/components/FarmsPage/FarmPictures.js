@@ -68,7 +68,9 @@ const FarmPictures = () => {
   return (
     <div>
       <NavBar />
-      <h1 style={{ textAlign: "center", paddingTop: '70px' }}>This farm has no pictures</h1>
+      <h1 style={{ textAlign: "center", paddingTop: "70px" }}>
+        This farm has no pictures
+      </h1>
     </div>
   );
 };

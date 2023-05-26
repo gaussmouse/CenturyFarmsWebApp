@@ -73,41 +73,43 @@ const FutureClimateGraphs = () => {
   return (
     <div>
       <NavBar />
-      <div className="mobile-padding">
+      <div>
         <TransformWrapper>
           <TransformComponent>
             <VictoryChart
               maxDomain={{ y: 1700, x: 28 }}
               minDomain={{ y: 950 }}
-              height={150}
-              width={340}
+              height={300}
+              width={1400}
+              className="mobile-graphs"
               style={{
                 parent: {
-                  maxWidth: 1200,
+                  maxWidth: 1400,
                   maxHeight: 500,
                   minWidth: 250,
                   minHeight: 100,
+                  padding: 80,
                 },
               }}
             >
               <VictoryLabel
                 text="Precipitation Over Time"
-                x={170}
-                y={30}
+                x={725} // Assuming 'width' represents the width of the chart
+                y={20}
                 textAnchor="middle"
-                padding={0}
-                style={{ fontSize: 10 }}
+                style={{ fontSize: 40 }}
               />
               <VictoryAxis
                 label="Year"
                 tickCount={28}
                 style={{
-                  axisLabel: { padding: 25, fontSize: 8 },
+                  axisLabel: { padding: 33, fontSize: 20 },
+                  overflow: "auto",
                   tickLabels: {
                     padding: 5,
                     angle: -45,
                     textAnchor: "end",
-                    fontSize: 5,
+                    fontSize: 12,
                   },
                   ticks: { stroke: "grey", size: 5 },
                 }}
@@ -120,8 +122,8 @@ const FutureClimateGraphs = () => {
                 offsetX={48}
                 style={{
                   grid: { stroke: "#e0e0e0", strokeWidth: 1 },
-                  axisLabel: { padding: 25, fontSize: 8 },
-                  tickLabels: { padding: 5, textAnchor: "end", fontSize: 5 },
+                  axisLabel: { padding: 30, fontSize: 20 },
+                  tickLabels: { padding: 0, textAnchor: "end", fontSize: 10 },
                   ticks: { stroke: "grey", size: 5 },
                 }}
               />
@@ -143,24 +145,25 @@ const FutureClimateGraphs = () => {
           <VictoryChart
             maxDomain={{ y: 75, x: 28 }}
             minDomain={{ y: 35, x: 0 }}
-            height={150}
-            width={340}
+            height={300}
+            width={1400}
             style={{
               parent: {
-                maxWidth: 1200,
-                maxHeight: 500,
-                minWidth: 250,
-                minHeight: 100,
+                maxWidth: 1400,
+                  maxHeight: 500,
+                  minWidth: 250,
+                  minHeight: 100,
+                  padding: 10,
               },
             }}
           >
             <VictoryLabel
               text="Temperature Over Time"
-              x={170}
-              y={30}
+              x={725} // Assuming 'width' represents the width of the chart
+                y={20}
               textAnchor="middle"
               padding={0}
-              style={{ fontSize: 10 }}
+              style={{ fontSize: 40 }}
             />
             <VictoryLine
               data={[fahrenheitMaxTemps[0], ...fahrenheitMaxTemps]}
@@ -171,15 +174,15 @@ const FutureClimateGraphs = () => {
               style={{ data: { stroke: "blue", strokeWidth: 0.25 } }}
             />
             <VictoryLegend
-              x={295}
+              x={1350}
               y={50}
               orientation="vertical"
               gutter={10}
               title="Key"
               style={{
                 border: { stroke: "black" },
-                title: { fontSize: 4 },
-                labels: { fontSize: 3 },
+                title: { fontSize: 20 },
+                labels: { fontSize: 10 },
               }}
               data={[
                 { name: "Average Max \nTemperature", symbol: { fill: "red" } },
@@ -192,12 +195,12 @@ const FutureClimateGraphs = () => {
               //tickCount={28}
               style={{
                 grid: { stroke: "#e0e0e0", strokeWidth: 1 },
-                axisLabel: { padding: 25, fontSize: 8 },
+                axisLabel: { padding: 33, fontSize: 20 },
                 tickLabels: {
                   padding: 5,
                   angle: -45,
                   textAnchor: "end",
-                  fontSize: 5,
+                  fontSize: 11,
                 },
                 ticks: { stroke: "grey", size: 3 },
               }}
@@ -209,8 +212,8 @@ const FutureClimateGraphs = () => {
               tickCount={20}
               style={{
                 grid: { stroke: "#e0e0e0", strokeWidth: 1 },
-                axisLabel: { padding: 25, fontSize: 5 },
-                tickLabels: { padding: 5, textAnchor: "end", fontSize: 5 },
+                axisLabel: { padding: 25, fontSize: 20 },
+                tickLabels: { padding: 5, textAnchor: "end", fontSize: 13 },
                 ticks: { stroke: "grey", size: 3 },
               }}
             />
