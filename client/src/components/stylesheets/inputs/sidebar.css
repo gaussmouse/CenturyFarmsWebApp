@@ -26,30 +26,26 @@
 
 #openLocationSidebar {
   top: 73px;
-  font-size: 20px;
+  font-size: calc(1.0rem + 0.1vw);
   cursor: pointer;
-  background-color: #111;
+  background-color: rgba(35, 55, 75);
   color: white;
-  padding: 10px 15px;
-  border: none;
+  padding: 7px 12px;
+  border: #25921B solid 2px;
   position: absolute;
+  border-radius: 15px;
+  box-shadow: rgb(100, 100, 100 / 40%) 0px 8px 20px;
   z-index: 20; /* button at top of layers */
 }
 
 #openLocationSidebar:hover {
-  background-color: #444;
+  background-color: #25921B;
+  color: white;
 }
 
 #main {
   transition: margin-left .5s;
   padding: 16px;
-}
-
-/* On smaller screens, where width is less than 450px, change the style of the sidenav (less padding and a smaller font size) */
-@media screen and (max-width: 6000px) {
-  #locationSidebar { padding-top: 15px; }
-  .sidebar a { font-size: 18px}
-  #openLocationSidebar { font-size: 16px; }
 }
 
 .heading {
@@ -176,7 +172,7 @@ a:hover {
 .filter-title {
   color: rgb(66, 66, 66);
   font-size: 14px;
-  font-weight: light;
+  font-weight: lighter;
   padding: 0 10px 0 0;
 }
 
@@ -268,4 +264,51 @@ img {
 .active-filter-label {
   padding-top: 0.2em;
   text-decoration-line: underline;
+}
+
+/* On smaller screens, where width is less than 768px, change the style of the sidenav (less padding and a smaller font size) */
+@media screen and (max-width: 768px) {
+  .active-filter, .active-filter-label {
+    font-size: 14px;
+  }
+  .heading h1 {
+    font-size: 18px;
+  }
+  .heading .interviewed-farm-label {
+    font-size: 13px;
+  }
+  #locationSidebar { 
+    padding-top: 15px; 
+    width: 360px;
+  }
+  .outer-filter-container, .filter-container {
+    width: 145px;
+  }
+  .filter-container{
+    margin-top: 5px;
+    padding: 10px;
+  }
+  .filter-container-header, .multi-select {
+    font-size: 14px;
+  }
+  .filter-title {
+    font-size: 13px;
+  }
+  #filter-wrapper {
+    padding: 10px 0 0 0;
+    width: 300px;
+  }
+  .filter-dropdown {
+    height: 45px;
+  }
+  .listings .item .details {
+    font-size: 14px;
+  }
+  #openLocationSidebar { 
+    font-size: 16px; 
+  }
+  .search input[type=text] {
+    width: 300px;
+    font-size: 14px;
+  }
 }
