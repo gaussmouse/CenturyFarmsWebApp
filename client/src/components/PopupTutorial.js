@@ -1,18 +1,19 @@
 import React, { useState } from 'react';
-//import Modal from 'react-modal';
 import { Modal, Box, Typography, Button } from '@mui/material';
 
+// Stylesheets
+import "../components/stylesheets/popup.css"
 
 export default function PopupTutorial(props) {
-  const {isModalOpen, setIsModalOpen} = props;
+  const {isTutorialOpen, setIsTutorialOpen} = props;
 
   function closeModal() {
-    setIsModalOpen(false);
+    setIsTutorialOpen(false);
   }
 
   return (
     <Modal
-      open={isModalOpen}
+      open={isTutorialOpen}
       onClose={closeModal}
       id="tutorial-modal"
       aria-labelledby="tutorial-modal-title"
@@ -32,7 +33,7 @@ export default function PopupTutorial(props) {
         overflow: 'auto',
       }}>
         <Typography id="tutorial-modal-title" variant="h2" component="h2">
-          How to Use This Website
+          How to Use
         </Typography>
         <Typography id="tutorial-modal-description" variant="body1" component="p">
           Welcome to our website! Here are some instructions on how to use it:
