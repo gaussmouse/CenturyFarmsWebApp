@@ -7,7 +7,6 @@ import {
   VictoryAxis,
   VictoryLabel,
 } from "victory";
-import { TransformComponent, TransformWrapper } from "react-zoom-pan-pinch";
 import { useParams } from "react-router-dom";
 import NavBar from "./FarmsPageNav";
 import "../stylesheets/farm-data.css";
@@ -146,152 +145,121 @@ const HistoricClimateGraphs = () => {
 
   return (
     <div>
-      <NavBar />
-      <div className="mobile-padding">
-        <TransformWrapper>
-          <TransformComponent>
-            <VictoryChart
-              maxDomain={{ y: 2300, x: 102 }}
-              minDomain={{ y: 500 }}
-              height={150}
-              width={340}
-              style={{
-                parent: {
-                  maxWidth: 1200,
-                  maxHeight: 500,
-                  minWidth: 250,
-                  minHeight: 100,
-                },
-              }}
-            >
-              <VictoryLabel
-                text="Precipitation Over Time"
-                x={170}
-                y={30}
-                textAnchor="middle"
-                padding={0}
-                style={{ fontSize: 10 }}
-              />
-              <VictoryAxis
-                label="Year"
-                tickCount={21}
-                style={{
-                  axisLabel: { padding: 25, fontSize: 8 },
-                  tickLabels: {
-                    padding: 5,
-                    angle: -45,
-                    textAnchor: "end",
-                    fontSize: 5,
-                  },
-                  ticks: { stroke: "grey", size: 5 },
-                }}
-                tickValues={historicLabels}
-              />
-              <VictoryAxis
-                dependentAxis
-                label="Precipitation (mm)"
-                tickCount={8}
-                offsetX={49.3}
-                style={{
-                  grid: { stroke: "#e0e0e0", strokeWidth: 1 },
-                  axisLabel: { padding: 25, fontSize: 8 },
-                  tickLabels: { padding: 5, textAnchor: "end", fontSize: 5 },
-                  ticks: { stroke: "grey", size: 5 },
-                }}
-              />
-              <VictoryBar
-                width={50}
-                style={{ data: { fill: "#66ccff" } }}
-                data={[
-                  Object.values(historicPrecipitation)[0],
-                  ...Object.values(historicPrecipitation),
-                ]}
-              />
-            </VictoryChart>
-          </TransformComponent>
-        </TransformWrapper>
-      </div>
+    <NavBar />
+    <VictoryChart 
+      maxDomain={{ y: 2300, x: 102}} 
+      minDomain={{ y: 500 }}
+      height={150} 
+      width={340}
+      style={{ 
+      parent: { 
+        maxWidth: 1200,
+        maxHeight: 500, 
+        minWidth: 250, 
+        minHeight: 100, 
+      } 
+    }}
+      >
+    <VictoryLabel 
+      text="Precipitation Over Time" 
+      x={170} 
+      y={30} 
+      textAnchor="middle"
+      padding={0}
+      style={{ fontSize: 10 }}
+      />
+      <VictoryAxis 
+        label="Year"
+        tickCount={21}
+        style={{
+          axisLabel: {padding: 25, fontSize: 8},
+          tickLabels: {padding: 5, angle: -45, textAnchor: 'end', fontSize: 5},
+          ticks: {stroke: "grey", size: 5}
+          }}
+        tickValues={historicLabels}
+        />
+      <VictoryAxis dependentAxis
+        label="Precipitation (mm)"
+        tickCount={8}
+        offsetX={49.3}
+        style={{
+          grid: { stroke: "#e0e0e0", strokeWidth: 1 },
+          axisLabel: {padding: 25, fontSize: 8},
+          tickLabels: {padding: 5, textAnchor: 'end', fontSize: 5},
+          ticks: {stroke: "grey", size: 5}
+          }}
+        />
+      <VictoryBar width={50} style={{data: {fill: "#66ccff"}}} data={[Object.values(historicPrecipitation)[0], ...Object.values(historicPrecipitation)]} />
+    </VictoryChart>
 
-      <TransformWrapper>
-        <TransformComponent>
-          <VictoryChart
-            maxDomain={{ y: 75, x: 102 }}
-            minDomain={{ y: 25, x: 0 }}
-            height={150}
-            width={340}
-            style={{
-              parent: {
-                maxWidth: 1200,
-                maxHeight: 500,
-                minWidth: 250,
-                minHeight: 100,
-              },
+    <VictoryChart 
+      maxDomain={{ y: 75, x: 102}} 
+      minDomain={{ y: 25, x: 0}} 
+      height={150} width={340}
+      style={{ 
+      parent: { 
+        maxWidth: 1200,
+        maxHeight: 500, 
+        minWidth: 250, 
+        minHeight: 100, 
+      } 
+    }}
+      >
+    <VictoryLabel 
+      text="Temperature Over Time" 
+      x={170} 
+      y={30} 
+      textAnchor="middle"
+      padding={0}
+      style={{ fontSize: 10 }}
+      />
+      <VictoryLine 
+        data={[fahrenheitMaxTemps[0], ...fahrenheitMaxTemps]}
+        style={{data: {stroke: "red", strokeWidth: 0.25}}}
+        />
+      <VictoryLine 
+        data={[fahrenheitMinTemps[0], ...fahrenheitMinTemps]}
+        style={{data: {stroke: "blue", strokeWidth: 0.25}}}
+        />
+       <VictoryLegend x={295} y={50}
+          orientation="vertical"
+          gutter={10}
+          title="Key"
+          style={{ 
+            border: { stroke: "black" }, 
+            title: {fontSize: 4},
+            labels: {fontSize: 3 }
             }}
-          >
-            <VictoryLabel
-              text="Temperature Over Time"
-              x={170}
-              y={30}
-              textAnchor="middle"
-              padding={0}
-              style={{ fontSize: 10 }}
-            />
-            <VictoryLine
-              data={[fahrenheitMaxTemps[0], ...fahrenheitMaxTemps]}
-              style={{ data: { stroke: "red", strokeWidth: 0.25 } }}
-            />
-            <VictoryLine
-              data={[fahrenheitMinTemps[0], ...fahrenheitMinTemps]}
-              style={{ data: { stroke: "blue", strokeWidth: 0.25 } }}
-            />
-            <VictoryLegend
-              x={295}
-              y={50}
-              orientation="vertical"
-              gutter={10}
-              title="Key"
-              style={{
-                border: { stroke: "black" },
-                title: { fontSize: 4 },
-                labels: { fontSize: 3 },
-              }}
-              data={[
-                { name: "Average Max \nTemperature", symbol: { fill: "red" } },
-                { name: "Average Min \nTemperature", symbol: { fill: "blue" } },
-              ]}
-              centerTitle
-            />
-            <VictoryAxis
-              label="Year"
-              tickCount={21}
-              style={{
-                grid: { stroke: "#e0e0e0", strokeWidth: 1 },
-                axisLabel: { padding: 25, fontSize: 8 },
-                tickLabels: {
-                  padding: 5,
-                  angle: -45,
-                  textAnchor: "end",
-                  fontSize: 5,
-                },
-                ticks: { stroke: "grey", size: 3 },
-              }}
-              tickValues={historicLabels}
-            />
-            <VictoryAxis
-              dependentAxis
-              label="Temperature (F)"
-              tickCount={10}
-              style={{
-                grid: { stroke: "#e0e0e0", strokeWidth: 1 },
-                axisLabel: { padding: 25, fontSize: 8 },
-                tickLabels: { padding: 5, textAnchor: "end", fontSize: 5 },
-                ticks: { stroke: "grey", size: 3 },
-              }}
-            />
-          </VictoryChart>
-        </TransformComponent>
-      </TransformWrapper>
-    </div>
+          data={[
+            { name: "Average Max \nTemperature", symbol: { fill: "red" } },
+            { name: "Average Min \nTemperature", symbol: { fill: "blue" } },
+          ]}
+          centerTitle
+    /> 
+      <VictoryAxis 
+        label="Year"
+        tickCount={21}
+        style={{
+          grid: { stroke: "#e0e0e0", strokeWidth: 1 },
+          axisLabel: {padding: 25, fontSize: 8},
+          tickLabels: {padding: 5, angle: -45, textAnchor: 'end', fontSize: 5},
+          ticks: {stroke: "grey", size: 3}
+          }}
+        tickValues={historicLabels}
+        />
+      <VictoryAxis dependentAxis
+        label="Temperature (F)"
+        tickCount={10}
+        style={{
+          grid: { stroke: "#e0e0e0", strokeWidth: 1 },
+          axisLabel: {padding: 25, fontSize: 8},
+          tickLabels: {padding: 5, textAnchor: 'end', fontSize: 5},
+          ticks: {stroke: "grey", size: 3}
+          }}
+        />
+    </VictoryChart> 
+
+  </div>
   );
 };
 
