@@ -71,122 +71,144 @@ const FutureClimateGraphs = () => {
 
   return (
     <div>
-        <NavBar />
+      <NavBar />
+      <div className="mobile-padding">
         <VictoryChart
-         maxDomain={{ y: 1700, x: 28}}
-         minDomain={{ y: 950}}
-         height={150} 
-         width={340}
-         style={{ 
-          parent: { 
-            maxWidth: 1200,
-            maxHeight: 500, 
-            minWidth: 250, 
-            minHeight: 100, 
-          } 
-        }}
-         >
-        <VictoryLabel 
-          text="Precipitation Over Time" 
-          x={170} 
-          y={30} 
-          textAnchor="middle"
-          padding={0}
-          style={{ fontSize: 10 }}
+          maxDomain={{ y: 1700, x: 28 }}
+          minDomain={{ y: 950 }}
+          height={150}
+          width={340}
+          style={{
+            parent: {
+              maxWidth: 1200,
+              maxHeight: 500,
+              minWidth: 250,
+              minHeight: 100,
+            },
+          }}
+        >
+          <VictoryLabel
+            text="Precipitation Over Time"
+            x={170}
+            y={30}
+            textAnchor="middle"
+            padding={0}
+            style={{ fontSize: 10 }}
           />
-          <VictoryAxis 
+          <VictoryAxis
             label="Year"
             tickCount={28}
             style={{
-              axisLabel: {padding: 25, fontSize: 8},
-              tickLabels: {padding: 5, angle: -45, textAnchor: 'end', fontSize: 5},
-              ticks: {stroke: "grey", size: 5}
-              }}
+              axisLabel: { padding: 25, fontSize: 8 },
+              tickLabels: {
+                padding: 5,
+                angle: -45,
+                textAnchor: "end",
+                fontSize: 5,
+              },
+              ticks: { stroke: "grey", size: 5 },
+            }}
             tickValues={futureLabels}
-            />
-          <VictoryAxis dependentAxis
+          />
+          <VictoryAxis
+            dependentAxis
             label="Precipitation (mm)"
             tickCount={10}
             offsetX={48}
             style={{
               grid: { stroke: "#e0e0e0", strokeWidth: 1 },
-              axisLabel: {padding: 25, fontSize: 8},
-              tickLabels: {padding: 5, textAnchor: 'end', fontSize: 5},
-              ticks: {stroke: "grey", size: 5}
-              }}
-            />
-          <VictoryBar width={50} style={{data: {fill: "#66ccff"}}} data={[Object.values(futurePrecipitation)[0], ...Object.values(futurePrecipitation)]} />
+              axisLabel: { padding: 25, fontSize: 8 },
+              tickLabels: { padding: 5, textAnchor: "end", fontSize: 5 },
+              ticks: { stroke: "grey", size: 5 },
+            }}
+          />
+          <VictoryBar
+            width={50}
+            style={{ data: { fill: "#66ccff" } }}
+            data={[
+              Object.values(futurePrecipitation)[0],
+              ...Object.values(futurePrecipitation),
+            ]}
+          />
         </VictoryChart>
-   
-        <VictoryChart 
-          maxDomain={{ y: 75, x: 28}} 
-          minDomain={{ y: 35, x: 0}} 
-          height={150} 
-          width={340}
-          style={{ 
-          parent: { 
+      </div>
+
+      <VictoryChart
+        maxDomain={{ y: 75, x: 28 }}
+        minDomain={{ y: 35, x: 0 }}
+        height={150}
+        width={340}
+        style={{
+          parent: {
             maxWidth: 1200,
-            maxHeight: 500, 
-            minWidth: 250, 
-            minHeight: 100, 
-          } 
+            maxHeight: 500,
+            minWidth: 250,
+            minHeight: 100,
+          },
         }}
-          >
-        <VictoryLabel 
-          text="Temperature Over Time" 
-          x={170} 
-          y={30} 
+      >
+        <VictoryLabel
+          text="Temperature Over Time"
+          x={170}
+          y={30}
           textAnchor="middle"
           padding={0}
           style={{ fontSize: 10 }}
-          />
-          <VictoryLine 
-            data={[fahrenheitMaxTemps[0], ...fahrenheitMaxTemps]}
-            style={{data: {stroke: "red", strokeWidth: 0.25}}}
-            />
-          <VictoryLine 
-            data={[fahrenheitMinTemps[0], ...fahrenheitMinTemps]}
-            style={{data: {stroke: "blue", strokeWidth: 0.25}}}
-            />
-           <VictoryLegend x={295} y={50}
-              orientation="vertical"
-              gutter={10}
-              title="Key"
-              style={{ 
-                border: { stroke: "black" }, 
-                title: {fontSize: 4},
-                labels: {fontSize: 3 }
-                }}
-              data={[
-                { name: "Average Max \nTemperature", symbol: { fill: "red" } },
-                { name: "Average Min \nTemperature", symbol: { fill: "blue" } },
-              ]}
-              centerTitle
-        /> 
-          <VictoryAxis 
-            label="Year"
-            //tickCount={28}
-            style={{
-              grid: { stroke: "#e0e0e0", strokeWidth: 1 },
-              axisLabel: {padding: 25, fontSize: 8},
-              tickLabels: {padding: 5, angle: -45, textAnchor: 'end', fontSize: 5},
-              ticks: {stroke: "grey", size: 3}
-              }}
-            tickValues={futureLabels}
-            />
-          <VictoryAxis dependentAxis
-            label="Temperature (F)"
-            tickCount={20}
-            style={{
-              grid: { stroke: "#e0e0e0", strokeWidth: 1 },
-              axisLabel: {padding: 25, fontSize: 5},
-              tickLabels: {padding: 5, textAnchor: 'end', fontSize: 5},
-              ticks: {stroke: "grey", size: 3}
-              }}
-            />
-        </VictoryChart> 
-  
-      </div>
+        />
+        <VictoryLine
+          data={[fahrenheitMaxTemps[0], ...fahrenheitMaxTemps]}
+          style={{ data: { stroke: "red", strokeWidth: 0.25 } }}
+        />
+        <VictoryLine
+          data={[fahrenheitMinTemps[0], ...fahrenheitMinTemps]}
+          style={{ data: { stroke: "blue", strokeWidth: 0.25 } }}
+        />
+        <VictoryLegend
+          x={295}
+          y={50}
+          orientation="vertical"
+          gutter={10}
+          title="Key"
+          style={{
+            border: { stroke: "black" },
+            title: { fontSize: 4 },
+            labels: { fontSize: 3 },
+          }}
+          data={[
+            { name: "Average Max \nTemperature", symbol: { fill: "red" } },
+            { name: "Average Min \nTemperature", symbol: { fill: "blue" } },
+          ]}
+          centerTitle
+        />
+        <VictoryAxis
+          label="Year"
+          //tickCount={28}
+          style={{
+            grid: { stroke: "#e0e0e0", strokeWidth: 1 },
+            axisLabel: { padding: 25, fontSize: 8 },
+            tickLabels: {
+              padding: 5,
+              angle: -45,
+              textAnchor: "end",
+              fontSize: 5,
+            },
+            ticks: { stroke: "grey", size: 3 },
+          }}
+          tickValues={futureLabels}
+        />
+        <VictoryAxis
+          dependentAxis
+          label="Temperature (F)"
+          tickCount={20}
+          style={{
+            grid: { stroke: "#e0e0e0", strokeWidth: 1 },
+            axisLabel: { padding: 25, fontSize: 5 },
+            tickLabels: { padding: 5, textAnchor: "end", fontSize: 5 },
+            ticks: { stroke: "grey", size: 3 },
+          }}
+        />
+      </VictoryChart>
+    </div>
   );
 };
 
