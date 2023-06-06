@@ -22,7 +22,7 @@ body {
 * Map control styles
 */
 .mapboxgl-ctrl-top-right {
-  top: 65px;
+  top: 60px;
   z-index: 10;
 }
 
@@ -50,7 +50,7 @@ body {
   box-sizing: border-box; 
 }
 
-.mapboxgl-popup-content p, a {
+.mapboxgl-popup-content p, .mapboxgl-popup-content a {
   margin: 0;
   padding: 6px;
 }
