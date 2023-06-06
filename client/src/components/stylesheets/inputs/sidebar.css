@@ -4,7 +4,7 @@
 #locationSidebar {
   background-color: rgba(35, 55, 75, 0.9);
   color: #fff;
-  padding: 24px 12px 12px 12px;
+  padding: 20px 12px 12px 12px;
   font-family: monospace;
   height: 100%;
   width: 400px;
@@ -18,14 +18,14 @@
 
 #closeLocationSidebar {
   position: absolute;
-  top: 0;
+  top: 0px;
   right: 0px;
   font-size: 24px;
-  margin-left: 10px;
 }
 
 #openLocationSidebar {
-  top: 73px;
+  top: 67px;
+  left: 10px;
   font-size: calc(1.0rem + 0.1vw);
   cursor: pointer;
   background-color: rgba(35, 55, 75);
@@ -69,6 +69,14 @@
   text-align: right;
   align-self: center;
   color: rgb(255, 208, 0);
+}
+
+.subheading h2 {
+  font-size: 18px;
+  margin: 2px 0 0 0;
+  font-weight: 100;
+  text-align: left;
+  padding: 2px;
 }
 
 a {
@@ -146,7 +154,7 @@ a:hover {
 * Search Styles
 */
 .search input[type=text] {
-  margin-top: 5px;
+  
   width: 320px;
 }
 
@@ -158,7 +166,7 @@ a:hover {
   display: flex;
   justify-content: space-between;
   align-items: stretch;
-  padding: 15px 0 0 0;
+  padding: 4px 0 0 0;
   width: 370px;
 }
 
@@ -181,7 +189,7 @@ a:hover {
 }
 
 .filter-dropdown {
-  height: 55px;
+  height: 45px;
   background: #ffffff;
   display: flex;
   justify-content: space-between;
@@ -295,7 +303,7 @@ img {
     font-size: 13px;
   }
   #filter-wrapper {
-    padding: 10px 0 0 0;
+    padding: 2px 0 0 0;
     width: 300px;
   }
   .filter-dropdown {
