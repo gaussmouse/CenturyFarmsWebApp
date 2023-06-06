@@ -1,0 +1,37 @@
+.map-legend {
+    position: absolute;
+    bottom: 15px;
+    right: 10px;
+    background-color: white;
+    padding: 10px 10px 2px 10px;
+    border-radius: 4px;
+    z-index: 1;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .legend-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+  
+  .marker {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    margin-right: 8px;
+    border-radius: 50%;
+  }
+  
+  .non-interviewed {
+    background-color: #25921B; /* Green marker color */
+  }
+  
+  .interviewed {
+    background-color: rgb(255, 208, 0); /* Yellow marker color */
+  }
+  
+  .legend-label {
+    font-size: 14px;
+  }
+  
