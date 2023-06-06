@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Modal, Box, Typography, Button } from '@mui/material';
 
 // Stylesheets
-import "../components/stylesheets/popup.css"
+import "../stylesheets/popup.css"
 
 export default function PopupTutorial(props) {
   const {isTutorialOpen, setIsTutorialOpen} = props;

@@ -7,7 +7,7 @@ import 'mapbox-gl/dist/mapbox-gl.css';
 import { Route, Routes } from "react-router-dom";
 // Import needed components for routings
 import FarmPage from "./components/FarmsPage/FarmData";
-import FarmsMap from "./components/FarmsMap";
+import FarmsMap from "./components/map-page/FarmsMap";
 import HistoricClimateGraphs from "./components/FarmsPage/HistoricClimateGraphs";
 import FutureClimateGraphs from "./components/FarmsPage/FutureClimateGraphs";
 import FarmPictures from "./components/FarmsPage/FarmPictures";

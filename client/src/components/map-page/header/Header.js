@@ -14,7 +14,7 @@ import {
 
 
 // Stylesheets
-import "../stylesheets/header.css"
+import "../../stylesheets/header.css"
 
 export default function Header(props) {
   //const {toggleLocationSidebar} = useState(props);

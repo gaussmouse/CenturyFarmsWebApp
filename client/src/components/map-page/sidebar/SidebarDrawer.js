@@ -8,7 +8,7 @@ import FarmListings from "../sidebar/FarmListings";
 import ClickAwayListener from '@mui/base/ClickAwayListener';
 
 // Stylesheets
-import "../stylesheets/inputs/sidebar.css"
+import "../../stylesheets/inputs/sidebar.css"
 
 export default function SidebarDrawer(props) {
     const {
@@ -53,8 +53,10 @@ return (
         onClick={toggleLocationSidebar}>
             ×
     </button>
-
     <SearchBar setQuery={setSearchQuery} />
+    <div className="subheading">
+        <h2>Filter by Current:</h2>
+    </div>
     <div id='filter-wrapper'>
         <ClickAwayListener onClickAway={() => {handleClickAway("crop")}}>
             <div className='outer-filter-container'>
