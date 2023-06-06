@@ -25,16 +25,22 @@ To set up the Century Farms Web App locally, follow these steps:
 3. Install the dependencies:
     `cd client && npm install`
     `cd server && npm install`
-4. Start the development server:
+4. Create a Mapbox token:
+    - Visit the [Mapbox website](https://www.mapbox.com/) and sign up for an account.
+    - Once signed in, navigate to the [Account Dashboard](https://account.mapbox.com/).
+    - Create a new access token and make sure it has the necessary permissions for using Mapbox GL JS.
+    - Copy the access token.
+    - Add token at the top of FarmsMap.js file, or store more securely via environmental variable.
+5. Start the development server:
     `cd server && node server.js`
     `cd client && npm start`
-5. Open your web browser and visit http://localhost:3000 to access the app.
+6. Open your web browser and visit http://localhost:3000 to access the app.
 
 ## Technologies Used
 
 The Century Farms Web App is built using the following technologies:
 
-- **Frontend:** React, HTML, CSS
+- **Frontend:** React, Mapbox GL JS, HTML, CSS
 - **Backend:** Node.js, Express
 - **Database:** MongoDB
 
