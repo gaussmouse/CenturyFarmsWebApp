@@ -10,6 +10,10 @@ The Century Farms Web App is a web-based application that allows users to explor
 - **Interactive Map:** The app provides an interactive map that displays the locations of century farms, allowing users to visualize their distribution in the region.
 - **Climate Data:** Users can view precipitation and temperature time-series graphs for any farm to learn about their long-term climate experience.
 
+## Live Demo
+
+Visit the webpage for a live demonstration: https://century-farms.netlify.app/
+
 ## Installation
 
 To set up the Century Farms Web App locally, follow these steps:
